@@ -33,7 +33,7 @@ public class TestGraphics extends Application {
                 if (x > 800) x = -50; // Chạy hết màn hình thì quay lại
 
                 // Vẽ Sprite lên màn hình (ViewLogic)
-                gc.drawImage(sprite, x, 250, 50, 50); // Vẽ tại x, y với size 50x50
+                gc.drawImage(sprite, x, 250, 100, 100); // Vẽ tại x, y với size 50x50
             }
         }.start();
 
