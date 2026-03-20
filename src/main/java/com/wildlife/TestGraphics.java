@@ -1,5 +1,7 @@
 package com.wildlife;
 
+import com.wildlife.core.Constants;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -14,7 +16,7 @@ public class TestGraphics extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Canvas canvas = new Canvas(800, 600);
+        Canvas canvas = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // 1. Nạp ảnh từ thư mục resources
@@ -26,11 +28,11 @@ public class TestGraphics extends Application {
             @Override
             public void handle(long now) {
                 // Xóa màn hình cũ để vẽ khung hình mới
-                gc.clearRect(0, 0, 800, 600);
+                gc.clearRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
                 // Cập nhật logic di chuyển (BioLogic đơn giản)
                 x += 2; 
-                if (x > 800) x = -50; // Chạy hết màn hình thì quay lại
+                if (x > Constants.SCREEN_WIDTH) x = -50; // Chạy hết màn hình thì quay lại
 
                 // Vẽ Sprite lên màn hình (ViewLogic)
                 gc.drawImage(sprite, x, 250, 100, 100); // Vẽ tại x, y với size 50x50
