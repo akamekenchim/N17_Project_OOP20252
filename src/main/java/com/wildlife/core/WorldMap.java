@@ -11,9 +11,18 @@ public class WorldMap {
     public List<BaseEntity> getEntity(){
         return listEntity;
     }
+    //mấy con mà teo r thì xóa đi
+    public void cleaning(){
+        for(int i = listEntity.size() - 1; i>=0; i--){
+            if((listEntity.get(i)).isAlive() == false){
+                listEntity.remove(i);
+            }
+        }
+    }
     public void Update(){
+        cleaning();
         for(BaseEntity e : listEntity){
-            e.update();
+            e.update(); //hàm update chưa có j
         }
     }
 }
