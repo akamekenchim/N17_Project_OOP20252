@@ -5,8 +5,8 @@ import com.wildlife.model.entity.BaseEntity;
 public class WorldMap {
     private List<BaseEntity> listEntity = new ArrayList<>();
 
-    public void addEntity(BaseEntity b){
-        listEntity.add(b);
+    public void addEntity(BaseEntity k){
+        listEntity.add(k);
     }
     public List<BaseEntity> getEntity(){
         return listEntity;
