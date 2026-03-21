@@ -11,4 +11,9 @@ public class WorldMap {
     public List<BaseEntity> getEntity(){
         return listEntity;
     }
+    public void Update(){
+        for(BaseEntity e : listEntity){
+            e.update();
+        }
+    }
 }
