@@ -20,11 +20,11 @@ public class SimEngine {
         AnimationTimer AT = new AnimationTimer() {
             @Override
             public void handle(long now){
-                gc.clearRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT); //xoa toan bo man hinh
-                map.Update(); //update tat ca trang thai cua ban do hien tai (hàm update chưa có gì, ở trong WorldMap)
-                renderEntities(); 
+                gc.clearRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT); // xoa toan bo man hinh
+                map.Update(); //update tat ca trang thai cua ban do hien tai (hàm update chưa có gì, ở trong WorldMap) 
+                renderEntities();
                 /*Duyệt qua tất cả các thực thể, dùng vòng lặp for-each cho list lấy được từ WorldMap (map.getEntity())
-                Với mỗi thực thể duyệt được, gọi hàm render của nó. Truyền vào gc, lấy isGraphic = true (chắc thế)*/
+                Với mỗi thực thể duyệt được, gọi hàm render của nó. Truyền vào gc, lấy isGraphic = true (chắc thế)*/ 
             }
         };
         AT.start();
