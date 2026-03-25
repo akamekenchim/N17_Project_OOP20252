@@ -20,9 +20,9 @@ public class AppRunner extends Application{
         GraphicsContext gc = cv.getGraphicsContext2D(); //Lấy graphicscontext của canvas vừa tạo
 
         WorldMap map = new WorldMap();
-        SimEngine engine = new SimEngine(map, gc);
+        SimEngine GenG = new SimEngine(map, gc);
 
-        engine.Start(); //Trong hàm start này có 3 việc: Xóa màn, update trạng thái của WorldMap, rồi render các thực thể
+        GenG.Start(); //Trong hàm start này có 3 việc: Xóa màn, update trạng thái của WorldMap, rồi render các thực thể
 
         Group gr = new Group(cv);
         Scene scene = new Scene(gr, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
