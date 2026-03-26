@@ -28,6 +28,7 @@ public class AppRunner extends Application{
         Scene scene = new Scene(gr, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
         primaryStage.setScene(scene);
+        primaryStage.setTitle("KénChim đáng yêu");
         primaryStage.show();
     }
     public static void main(String[] args) {

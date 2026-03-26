@@ -1,7 +1,7 @@
 package com.wildlife;
 
 import com.wildlife.core.Constants;
-
+import com.wildlife.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -21,8 +21,8 @@ public class TestGraphics extends Application {
 
         // 1. Nạp ảnh từ thư mục resources
         // Lưu ý: Dấu "/" ở đầu cực kỳ quan trọng để Maven tìm đúng folder resources
-        Image sprite = new Image(getClass().getResourceAsStream("/images/akamesc.jpg"));
-
+        Image sprite = SpriteManager.loadImage("akamesc.jpg");
+        Image testError = SpriteManager.loadImage("femboycute.jpg");
         // 2. Tạo vòng lặp Simulation (60 khung hình/giây)
         new AnimationTimer() {
             @Override
@@ -35,7 +35,9 @@ public class TestGraphics extends Application {
                 if (x > Constants.SCREEN_WIDTH) x = -50; // Chạy hết màn hình thì quay lại
 
                 // Vẽ Sprite lên màn hình (ViewLogic)
-                gc.drawImage(sprite, x, 250, 100, 100); // Vẽ tại x, y với size 50x50
+                gc.drawImage(sprite, x, 250, 100, 100); // Vẽ tại x, y với size 100
+                gc.drawImage(sprite, x, 650, 100, 100); // Vẽ tại x, y với size 100
+                gc.drawImage(testError, x, 450, 100, 100); // Vẽ tại x, y với size 100
             }
         }.start();
 
