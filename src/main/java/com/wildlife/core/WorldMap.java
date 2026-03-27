@@ -21,7 +21,7 @@ public class WorldMap {
     public void Update(){
         cleaning();
         for(BaseEntity e : listEntity){
-            e.update(Constants.DELTA, this); //hàm update chưa có j
+            e.update(Constants.DELTA, this); 
         }
     }
 }

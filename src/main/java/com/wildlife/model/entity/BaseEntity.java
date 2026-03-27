@@ -31,8 +31,7 @@ public abstract class BaseEntity {
     }
     //hàm update: bắt buộc phải có trong các entity thừa kế lớp này (trừ các lớp Animal, Tree vì cũng là lớp abstract.)
     //Giả sử có thêm con bò thì phải @Override lớp update để thực hiện trừ điểm hunger, di chuyển,...
-    //Ae nhớ phải học thêm phần javafx, tốc độ của mấy con vật thì ở trong Constant.java, chẳng hạn update vị trí cho con vật bằng 
-    //this.setX(this.getX() + Constants.RABBIT_SPEED)
+    //Ae nhớ phải học thêm phần javafx, tốc độ của mấy con vật thì ở trong Constant.java
     public abstract void update(double delta, WorldMap map); 
     public abstract void render(GraphicsContext gc, boolean isGraphicMode);
     public String getSpritePath() {
