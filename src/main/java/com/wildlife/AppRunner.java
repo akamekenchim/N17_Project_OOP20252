@@ -3,7 +3,7 @@ package com.wildlife;
 import com.wildlife.core.Constants;
 import com.wildlife.core.SimEngine;
 import com.wildlife.core.WorldMap;
-
+import com.wildlife.control.InputControl;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -29,6 +29,7 @@ public class AppRunner extends Application{
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("KénChim đáng yêu");
+        InputControl.StartListening(scene, map);
         primaryStage.show();
     }
     public static void main(String[] args) {

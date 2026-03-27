@@ -1,6 +1,5 @@
 package com.wildlife.core;
 import java.util.*;
-//phần này ae để t múa
 import com.wildlife.model.entity.BaseEntity;
 public class WorldMap {
     private List<BaseEntity> listEntity = new ArrayList<>();
@@ -22,7 +21,7 @@ public class WorldMap {
     public void Update(){
         cleaning();
         for(BaseEntity e : listEntity){
-            e.update(); //hàm update chưa có j
+            e.update(Constants.DELTA, this); //hàm update chưa có j
         }
     }
 }

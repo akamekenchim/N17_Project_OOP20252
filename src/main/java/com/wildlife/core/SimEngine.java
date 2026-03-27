@@ -19,8 +19,12 @@ public class SimEngine {
     }
     public void Start(){
         AnimationTimer AT = new AnimationTimer() {
-            Image akame = SpriteManager.loadImage("akamesc.jpg"); // ảnh có tồn tại 
-            Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
+            //Image akame = SpriteManager.loadImage("akamesc.jpg"); // ảnh có tồn tại 
+            //Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
+            //Image uma_1 = SpriteManager.loadImage("uma1.png");
+            //Image uma_2 = SpriteManager.loadImage("uma2.png");
+            //Image wolf_1 = SpriteManager.loadImage("wolf1.png");
+            //Image wolf_2 = SpriteManager.loadImage("wolf2.png");
             int x = 0;
             @Override
             public void handle(long now){
@@ -28,12 +32,12 @@ public class SimEngine {
                 map.Update(); //update tat ca trang thai cua ban do hien tai (hàm update chưa có gì, ở trong WorldMap) 
                 renderEntities();
                 x += Constants.RABBIT_SPEED;
-                if(x >= Constants.SCREEN_WIDTH) x = 0;
+                if(x >= Constants.SCREEN_WIDTH) x = -1;
                 /*Duyệt qua tất cả các thực thể, dùng vòng lặp for-each cho list lấy được từ WorldMap (map.getEntity())
                 Với mỗi thực thể duyệt được, gọi hàm render của nó. Truyền vào gc, lấy isGraphic = true (chắc thế)*/ 
-                gc.drawImage(akame, x, 200, 100, 100);
-                gc.drawImage(testError, x, 400, 100, 100); // sẽ in ra ảnh default - ô vuông lưới hồng xanh
-                gc.drawImage(akame, x, 600, 100, 100);
+                //gc.drawImage(wolf_1, x, 200, 150, 150);
+                //gc.drawImage(uma_1, x, 400, 140, 140); // sẽ in ra ảnh default - ô vuông lưới hồng xanh
+                //gc.drawImage(uma_2, x, 600, 140, 140);
 
             }
         };
