@@ -24,4 +24,7 @@ public class WorldMap {
             e.update(Constants.DELTA, this); 
         }
     }
+    public boolean isOccupied(double x, double y){
+        return false;
+    }
 }

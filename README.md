@@ -10,6 +10,8 @@ Hàm update của từng thực thể:
 Gọi hàm bên AI xin trả về vector hướng di chuyển (gồm 2 con số (dx, dy))
 Công thức tính quãng đường di chuyển: x += dx*delta*speed ----- y += dy*delta*speed
 Gọi hàm bên WorldMap xem là có di chuyển được về hướng đó không, nếu không, gọi lại hàm AI yêu cầu hướng di chuyển khác
+hoặc có thể quy định luôn: sẽ đi chếch trái 15-20 độ so với hướng ko đi đc, để nếu có nhiều vật cản thì con vật sẽ xoay đủ 
+360 độ tìm lối đi hợp lí
 (cái này làm sau)
 
 Nếu di chuyển được, cộng thực tiếp x và y như công thức trên vào tọa độ x và y của thực thể.

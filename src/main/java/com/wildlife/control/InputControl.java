@@ -18,11 +18,19 @@ public class InputControl{
 
             int snappedTileX = (int)(rawX / Constants.TILE_SIZE);
             int snappedTileY = (int)(rawY / Constants.TILE_SIZE);
-            //nhóm WorldMap cần thêm 1 hàm trong WorldMap để kiểm tra xem tile này đã 
+            //nhóm WorldMap cần thêm 1 hàm isOccupied trong WorldMap để kiểm tra xem tile này đã 
             //có thực thể nào chưa, nếu có rồi thì không được đặt nữa
-            int tp = event.isAltDown() ? 1:0;
-            Grass g = new Grass(parsed_X, parsed_Y, tp);
-            map.addEntity(g);
+            if(!(map.isOccupied(parsed_X, parsed_Y))){
+                if(event.isShiftDown()){
+                    //Wolf w = new Wolf(parsed_X, parsed_Y);
+                    //map.addEntity(w);
+                }
+                else{
+                    Grass g = new Grass(parsed_X, parsed_Y, 1);
+                    map.addEntity(g);
+                }
+            }
+            else System.out.println("There's already something here!");
             System.out.printf("Omae ga kono tile wo sawatteita: %.2f -- %.2f\n", rawX, rawY);
             
         });
