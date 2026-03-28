@@ -31,8 +31,9 @@ public class TestGraphics extends Application {
                 gc.clearRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
                 // Cập nhật logic di chuyển (BioLogic đơn giản)
-                x += 2; 
-                if (x > Constants.SCREEN_WIDTH) x = -50; // Chạy hết màn hình thì quay lại
+                x += 2;
+                if (x > Constants.SCREEN_WIDTH)
+                    x = -50; // Chạy hết màn hình thì quay lại
 
                 // Vẽ Sprite lên màn hình (ViewLogic)
                 gc.drawImage(sprite, x, 250, 100, 100); // Vẽ tại x, y với size 100
