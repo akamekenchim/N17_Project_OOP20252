@@ -18,3 +18,5 @@ Nếu di chuyển được, cộng thực tiếp x và y như công thức trên
 Tham khảo hàm render t có viết sẵn.
 
 AI: (đã giải thích trên file)
+
+Akame gay
