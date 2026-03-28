@@ -1,5 +1,5 @@
 package com.wildlife.model.strategy;
 
-public class SinhTon {
-    
+public class Strategy {
+
 }

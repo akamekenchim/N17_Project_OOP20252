@@ -1,42 +1,55 @@
-package com.wildlife.model.entity;
+package com.wildlife.model.abstracts;
+
 import javafx.scene.canvas.GraphicsContext;
 import com.wildlife.core.WorldMap;
-//đây là lớp cha của mọi "ENTITY" - các đối tượng có trong project.
+
 public abstract class BaseEntity {
     private double x;
     private double y;
     private boolean isAlive = true;
-    private String spritePath;
-    public BaseEntity(double hoanhdo, double tungdo){
-        this.x = hoanhdo;
-        this.y = tungdo;
+    private String spritePath; // Đây là biến lưu đường dẫn đến ảnh động của vật thể
+
+    public BaseEntity(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
+
     public double getX() {
         return x;
     }
+
     public void setX(double x) {
         this.x = x;
     }
+
     public double getY() {
         return y;
     }
+
     public void setY(double y) {
         this.y = y;
     }
+
     public boolean isAlive() {
         return isAlive;
     }
+
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
     }
-    //hàm update: bắt buộc phải có trong các entity thừa kế lớp này (trừ các lớp Animal, Tree vì cũng là lớp abstract.)
-    //Giả sử có thêm con bò thì phải @Override lớp update để thực hiện trừ điểm hunger, di chuyển,...
-    //Ae nhớ phải học thêm phần javafx, tốc độ của mấy con vật thì ở trong Constant.java
-    public abstract void update(double delta, WorldMap map); 
+
+    // Phương thức để cập nhật trạng thái vật thể
+    public abstract void update(double delta, WorldMap map);
+
+    // Phương thức để render ra giao diện đồ họa
     public abstract void render(GraphicsContext gc, boolean isGraphicMode);
+
+    // Phương thức để lấy đường dẫn hình ảnh của vật thể
     public String getSpritePath() {
         return spritePath;
     }
+
+    // Phương thức để cập nhật đường dẫn hình ảnh của vật thể
     public void setSpritePath(String spritePath) {
         this.spritePath = spritePath;
     }
