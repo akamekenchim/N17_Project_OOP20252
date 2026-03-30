@@ -2,15 +2,15 @@ package com.wildlife;
 
 import com.wildlife.core.Constants;
 import com.wildlife.core.SimEngine;
-import com.wildlife.core.WorldMap;
-
-import javafx.animation.AnimationTimer;
+import com.wildlife.worldmap.WorldMap;
+import com.wildlife.control.InputControl;
+//import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+//import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class AppRunner extends Application{
@@ -28,6 +28,8 @@ public class AppRunner extends Application{
         Scene scene = new Scene(gr, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
         primaryStage.setScene(scene);
+        primaryStage.setTitle("KénChim đáng yêu");
+        InputControl.StartListening(scene, map);
         primaryStage.show();
     }
     public static void main(String[] args) {

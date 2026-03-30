@@ -1,6 +1,6 @@
 package com.wildlife;
 
-public class Main {
+public class HelloWorld {
     public static void main(String[] args) {
         //test
         System.out.println("Hello world!");
