@@ -2,7 +2,7 @@ package com.wildlife.worldmap;
 
 import java.util.*;
 
-import com.wildlife.core.Constants;
+//import com.wildlife.core.Constants;
 import com.wildlife.model.abstracts.BaseEntity;
 
 public class WorldMap {
@@ -25,10 +25,10 @@ public class WorldMap {
         }
     }
 
-    public void Update() {
+    public void Update(double Delta) {
         cleaning();
         for (BaseEntity e : listEntity) {
-            e.update(Constants.DELTA, this);
+            e.update(Delta, this);
         }
     }
 
