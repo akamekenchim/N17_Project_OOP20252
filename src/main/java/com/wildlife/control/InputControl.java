@@ -2,8 +2,8 @@ package com.wildlife.control;
 
 import javafx.event.*;
 import com.wildlife.core.Constants;
-import com.wildlife.core.WorldMap;
 import com.wildlife.model.entities.enviroment.Grass;
+import com.wildlife.worldmap.WorldMap;
 
 import javafx.scene.*;
 

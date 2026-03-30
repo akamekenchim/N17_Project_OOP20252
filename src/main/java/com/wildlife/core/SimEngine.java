@@ -12,6 +12,7 @@ import java.util.*;
 
 import com.wildlife.model.abstracts.BaseEntity;
 import com.wildlife.view.*;
+import com.wildlife.worldmap.WorldMap;
 
 public class SimEngine {
     private WorldMap map;

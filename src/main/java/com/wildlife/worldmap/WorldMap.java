@@ -1,7 +1,8 @@
-package com.wildlife.core;
+package com.wildlife.worldmap;
 
 import java.util.*;
 
+import com.wildlife.core.Constants;
 import com.wildlife.model.abstracts.BaseEntity;
 
 public class WorldMap {

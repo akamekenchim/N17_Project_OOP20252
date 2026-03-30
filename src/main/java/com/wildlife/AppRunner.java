@@ -2,7 +2,7 @@ package com.wildlife;
 
 import com.wildlife.core.Constants;
 import com.wildlife.core.SimEngine;
-import com.wildlife.core.WorldMap;
+import com.wildlife.worldmap.WorldMap;
 import com.wildlife.control.InputControl;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;

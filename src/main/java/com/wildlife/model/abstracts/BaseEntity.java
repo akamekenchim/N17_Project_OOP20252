@@ -1,7 +1,8 @@
 package com.wildlife.model.abstracts;
 
+import com.wildlife.worldmap.WorldMap;
+
 import javafx.scene.canvas.GraphicsContext;
-import com.wildlife.core.WorldMap;
 
 public abstract class BaseEntity {
     private double x;
