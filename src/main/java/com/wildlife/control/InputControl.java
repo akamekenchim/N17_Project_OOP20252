@@ -2,6 +2,7 @@ package com.wildlife.control;
 
 import javafx.event.*;
 import com.wildlife.core.Constants;
+import com.wildlife.core.SimEngine;
 import com.wildlife.model.entities.enviroment.*;
 import com.wildlife.model.entities.animal.passive.*;
 import com.wildlife.model.entities.animal.predator.*;
@@ -11,9 +12,10 @@ import com.wildlife.worldmap.WorldMap;
 import javafx.scene.*;
 
 public class InputControl {
+    public static boolean isZoomed = false;
     public static int hoverx = 0;
     public static int hovery = 0;
-    public static int typeAnimal = -1;
+    public static int typeAnimal = -2;
     public static double temp = 0;
     public static boolean isPaused = false;
     public static void StartListening(Scene scene, WorldMap map) {
@@ -59,13 +61,18 @@ public class InputControl {
                         isPaused = false;
                     }
                     break;
+                case R:
+                    SimEngine.camX = 0;
+                    SimEngine.camY = 0;
+                    SimEngine.zoomLevel = 1.0;
+                    isZoomed = false;
                 default:
                     break;
             }
         });
         scene.setOnMouseClicked(event -> {
-            double rawX = event.getX();
-            double rawY = event.getY();
+            double rawX = SimEngine.screenToWorldX(event.getX());
+            double rawY = SimEngine.screenToWorldY(event.getY());
             if (rawX <= 20 || rawY <= 15 || rawX >= Constants.SCREEN_WIDTH - 20
                     || rawY >= Constants.SCREEN_HEIGHT - 15) {
                 System.out.println("Khong duoc dat o day!");
@@ -105,16 +112,43 @@ public class InputControl {
             System.out.printf("Omae ga kono tile wo sawatteita: %.2f -- %.2f\n", rawX, rawY);    
         });  
         scene.setOnMouseMoved(event -> {
-            double rawX = event.getX();
-            double rawY = event.getY();
+            double worldX = SimEngine.screenToWorldX(event.getX());
+            double worldY = SimEngine.screenToWorldY(event.getY());
             
-            int snapped_X = ((int)(rawX) / Constants.TILE_SIZE) * Constants.TILE_SIZE;
-            int snapped_Y = ((int)(rawY) / Constants.TILE_SIZE) * Constants.TILE_SIZE; 
+            int snapped_X = ((int)(worldX) / Constants.TILE_SIZE) * Constants.TILE_SIZE;
+            int snapped_Y = ((int)(worldY) / Constants.TILE_SIZE) * Constants.TILE_SIZE; 
 
             hoverx = snapped_X;
             hovery = snapped_Y;
 
             //System.out.println("Hovering on tile (" + snapped_X + ", " + snapped_Y + ")");
         });
+        scene.setOnScroll(event -> {
+            double scroll_y = event.getDeltaY();
+            double mouse_positionX = event.getSceneX();
+            double mouse_positionY = event.getSceneY();
+            double worldX_Before = (mouse_positionX - SimEngine.camX) / SimEngine.zoomLevel;     
+            double worldY_Before = (mouse_positionY - SimEngine.camY) / SimEngine.zoomLevel;    
+            double oldzoom = SimEngine.zoomLevel;
+            if(scroll_y > 0){
+                SimEngine.zoomLevel = Math.min(5.0, SimEngine.zoomLevel + 0.1);
+            }
+            if(scroll_y < 0){
+                SimEngine.zoomLevel = Math.max(1.0, SimEngine.zoomLevel - 0.1);
+            }
+            if(oldzoom != SimEngine.zoomLevel){
+                SimEngine.camX = mouse_positionX - (worldX_Before * SimEngine.zoomLevel);
+                SimEngine.camY = mouse_positionY - (worldY_Before * SimEngine.zoomLevel);
+                isZoomed = SimEngine.zoomLevel > 1 ? true:false;
+            }
+        });
+        /*scene.setOnMouseDragged(event -> {
+            if(isZoomed){
+                double x = event.getSceneX();
+                double y = event.getSceneY();
+                SimEngine.camX = x - (x - SimEngine.camX);
+                SimEngine.camY = y - (y - SimEngine.camY);
+            }
+        });*/
     }
 }
