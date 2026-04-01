@@ -7,9 +7,10 @@ import javafx.animation.AnimationTimer;
 //import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.*;
 //import javafx.stage.Stage;
 import java.util.*;
-
+import com.wildlife.control.*;
 import com.wildlife.model.abstracts.BaseEntity;
 import com.wildlife.view.*;
 import com.wildlife.worldmap.WorldMap;
@@ -25,11 +26,9 @@ public class SimEngine {
 
     public void Start() {
         AnimationTimer AT = new AnimationTimer() {
-            // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không
-            // tồn tại
-            Image uma_2 = SpriteManager.loadImage("uma2.png");
-            // Image wolf_1 = SpriteManager.loadImage("wolf1.png");
+            // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
             // Image wolf_2 = SpriteManager.loadImage("wolf2.png");
+            Image uma_2 = SpriteManager.loadImage("uma2.png");
             Image geng = SpriteManager.loadImage("haiten.png");
             double x = 0;
             long lastTime = 0;
@@ -55,6 +54,10 @@ public class SimEngine {
                  */
                 gc.drawImage(uma_2, x, 600, 140, 140);
                 gc.drawImage(geng, 15, 15, 50, 50);
+                //gc.setStroke(Color.PINK);
+                //gc.strokeRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE, Constants.TILE_SIZE);
+                gc.setFill(Color.rgb(255, 182, 193, 0.5));
+                gc.fillRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE, Constants.TILE_SIZE);
             }
         };
         AT.start();
