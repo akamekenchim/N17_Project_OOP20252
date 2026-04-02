@@ -75,9 +75,10 @@ public class InputControl {
         scene.setOnMouseClicked(event -> {
             double rawX = SimEngine.screenToWorldX(event.getX());
             double rawY = SimEngine.screenToWorldY(event.getY());
-            if (rawX <= 20 || rawY <= 15 || rawX >= Constants.SCREEN_WIDTH - 20
-                    || rawY >= Constants.SCREEN_HEIGHT - 15) {
-                System.out.println("Khong duoc dat o day!");
+            int MAP_WIDTH_PIXELS = 37 * Constants.TILE_SIZE;
+            int MAP_HEIGHT_PIXELS = 26 * Constants.TILE_SIZE;
+            if (rawX < 0 || rawY < 0 || rawX >= MAP_WIDTH_PIXELS || rawY >= MAP_HEIGHT_PIXELS) {
+                System.out.println("Ngoài phạm vi bản đồ!");
                 return;
             }
             int parsed_X = (int) (rawX / Constants.TILE_SIZE) * Constants.TILE_SIZE;
