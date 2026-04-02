@@ -18,6 +18,8 @@ public class InputControl {
     public static int typeAnimal = -2;
     public static double temp = 0;
     public static boolean isPaused = false;
+    public static double lastMouseX = 0.0;
+    public static double lastMouseY = 0.0;
     public static void StartListening(Scene scene, WorldMap map) {
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()){
@@ -111,17 +113,15 @@ public class InputControl {
                 System.out.println("There's already something here!");
             System.out.printf("Omae ga kono tile wo sawatteita: %.2f -- %.2f\n", rawX, rawY);    
         });  
-        scene.setOnMouseMoved(event -> {
-            double worldX = SimEngine.screenToWorldX(event.getX());
-            double worldY = SimEngine.screenToWorldY(event.getY());
-            
-            int snapped_X = ((int)(worldX) / Constants.TILE_SIZE) * Constants.TILE_SIZE;
-            int snapped_Y = ((int)(worldY) / Constants.TILE_SIZE) * Constants.TILE_SIZE; 
+        scene.setOnMouseMoved(event->{
+            double rawX = SimEngine.screenToWorldX(event.getX());
+            double rawY = SimEngine.screenToWorldY(event.getY());
+
+            int snapped_X = ((int)(rawX) / Constants.TILE_SIZE) * Constants.TILE_SIZE;
+            int snapped_Y = ((int)(rawY) / Constants.TILE_SIZE) * Constants.TILE_SIZE;
 
             hoverx = snapped_X;
             hovery = snapped_Y;
-
-            //System.out.println("Hovering on tile (" + snapped_X + ", " + snapped_Y + ")");
         });
         scene.setOnScroll(event -> {
             double scroll_y = event.getDeltaY();
@@ -142,13 +142,26 @@ public class InputControl {
                 isZoomed = SimEngine.zoomLevel > 1 ? true:false;
             }
         });
-        /*scene.setOnMouseDragged(event -> {
+        scene.setOnMousePressed(event -> {
+            lastMouseX = event.getSceneX();
+            lastMouseY = event.getSceneY();
+        });
+        scene.setOnMouseDragged(event -> {
             if(isZoomed){
-                double x = event.getSceneX();
-                double y = event.getSceneY();
-                SimEngine.camX = x - (x - SimEngine.camX);
-                SimEngine.camY = y - (y - SimEngine.camY);
+                double cur_x = SimEngine.screenToWorldX(event.getSceneX());
+                double cur_y = SimEngine.screenToWorldY(event.getSceneY());
+                
+                double deltaX = cur_x - lastMouseX;
+                double deltaY = cur_y - lastMouseY;
+
+                //if(SimEngine.camX + (deltaX / SimEngine.zoomLevel) > 1184 || SimEngine.camX + (deltaX / SimEngine.zoomLevel) < 0 ) SimEngine.camX = 0;
+                SimEngine.camX += (deltaX*2 / SimEngine.zoomLevel);
+                //if(SimEngine.camY + (deltaY / SimEngine.zoomLevel) > 832 || SimEngine.camY + (deltaY / SimEngine.zoomLevel) < 0) SimEngine.camY = 0;
+                SimEngine.camY += (deltaY*2 / SimEngine.zoomLevel);
+
+                lastMouseX = cur_x;
+                lastMouseY = cur_y;
             }
-        });*/
+        });
     }
 }
