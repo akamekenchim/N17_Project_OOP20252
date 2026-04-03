@@ -1,0 +1,56 @@
+package com.wildlife.model.strategy;
+
+import com.wildlife.model.abstracts.BaseEntity;
+import com.wildlife.model.abstracts.Passive;
+import com.wildlife.model.abstracts.Predator;
+import com.wildlife.worldmap.WorldMap;
+
+import java.util.List;
+import java.util.Random;
+
+public class HunterStratery {
+    private static final double SCAN_RADIUS = 200.0;
+    private Random random = new Random();
+
+    public void execute(Predator hunter, WorldMap map, double delta, double speed) {
+        List<BaseEntity> entities = map.getEntity();
+        Passive closestPrey = null;
+        double minDistance = SCAN_RADIUS;
+
+        // Quét bán kính xung quanh tìm động vật ăn cỏ (Passive)
+        for (BaseEntity entity : entities) {
+            if (entity instanceof Passive && entity.isAlive()) {
+                double dist = getDistance(hunter.getX(), hunter.getY(), entity.getX(), entity.getY());
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestPrey = (Passive) entity;
+                }
+            }
+        }
+
+        if (closestPrey != null) {
+            // Đuổi theo con mồi
+            double dx = closestPrey.getX() - hunter.getX();
+            double dy = closestPrey.getY() - hunter.getY();
+            double length = Math.sqrt(dx * dx + dy * dy);
+            
+            if (length > 0) {
+                // Di chuyển theo vector hướng về con mồi
+                hunter.setX(hunter.getX() + (dx / length) * speed * delta);
+                hunter.setY(hunter.getY() + (dy / length) * speed * delta);
+            }
+        } else {
+            // Di chuyển bừa (Random wander)
+            double randomAngle = random.nextDouble() * 2 * Math.PI;
+            double dx = Math.cos(randomAngle);
+            double dy = Math.sin(randomAngle);
+            
+            hunter.setX(hunter.getX() + dx * speed * delta);
+            hunter.setY(hunter.getY() + dy * speed * delta);
+        }
+    }
+
+    private double getDistance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+}
