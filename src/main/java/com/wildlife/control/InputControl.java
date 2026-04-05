@@ -6,6 +6,7 @@ import com.wildlife.core.SimEngine;
 import com.wildlife.model.entities.enviroment.*;
 import com.wildlife.model.entities.animal.passive.*;
 import com.wildlife.model.entities.animal.predator.*;
+import com.wildlife.worldmap.MatrixManager;
 //import com.wildlife.model.entities.animal.priority.*;
 import com.wildlife.worldmap.WorldMap;
 
@@ -84,15 +85,17 @@ public class InputControl {
             int parsed_X = (int) (rawX / Constants.TILE_SIZE) * Constants.TILE_SIZE;
             int parsed_Y = (int) (rawY / Constants.TILE_SIZE) * Constants.TILE_SIZE;
 
-            //int snappedTileX = (int) (rawX / Constants.TILE_SIZE);
-            //int snappedTileY = (int) (rawY / Constants.TILE_SIZE);
+            int snappedTileX = (int) (rawX / Constants.TILE_SIZE);
+            int snappedTileY = (int) (rawY / Constants.TILE_SIZE);
             // nhóm WorldMap cần thêm 1 hàm isOccupied trong WorldMap để kiểm tra xem tile
             // này đã
             // có thực thể nào chưa, nếu có rồi thì không được đặt nữa
             if (!(map.isOccupied(parsed_X, parsed_Y))) {
-                if(typeAnimal == 4){
+                if(typeAnimal == 1){
                     Grass g = new Grass(parsed_X, parsed_Y, 0);
-                    map.addEntity(g);
+                    if(MatrixManager.MAP_LAYOUT[snappedTileY][snappedTileX] == 0) {
+                        map.addEntity(g);
+                    }
                 }
                 if(typeAnimal == 0){
                     Rock g = new Rock(parsed_X, parsed_Y);
@@ -136,6 +139,28 @@ public class InputControl {
             }
             if(scroll_y < 0){
                 SimEngine.zoomLevel = Math.max(1.0, SimEngine.zoomLevel - 0.1);
+                SimEngine.camX = 0;
+                SimEngine.camY = 0;
+
+                double nextCamX = SimEngine.camX ;
+                double nextCamY = SimEngine.camY ;//+ (deltaY / SimEngine.zoomLevel);
+
+                double mapDisplayWidth = Constants.SCREEN_WIDTH * SimEngine.zoomLevel;
+                double mapDisplayHeight = Constants.SCREEN_HEIGHT * SimEngine.zoomLevel;
+
+                double minCamX = Constants.SCREEN_WIDTH - mapDisplayWidth;
+                double minCamY = Constants.SCREEN_HEIGHT - mapDisplayHeight;
+                if(mapDisplayWidth > Constants.SCREEN_WIDTH){
+                    SimEngine.camX = Math.max(minCamX,Math.min(0, nextCamX));
+                } else {
+                    SimEngine.camX = 0;
+                }
+                if (mapDisplayHeight > Constants.SCREEN_HEIGHT) {
+                    //double minY = Constants.SCREEN_HEIGHT - mapDisplayHeight;
+                    SimEngine.camY = Math.max(minCamY, Math.min(0, nextCamY));
+                } else {
+                    SimEngine.camY = 0;
+                }
             }
             if(oldzoom != SimEngine.zoomLevel){
                 SimEngine.camX = mouse_positionX - (worldX_Before * SimEngine.zoomLevel);
@@ -149,19 +174,41 @@ public class InputControl {
         });
         scene.setOnMouseDragged(event -> {
             if(isZoomed){
-                double cur_x = SimEngine.screenToWorldX(event.getSceneX());
-                double cur_y = SimEngine.screenToWorldY(event.getSceneY());
-                
-                double deltaX = cur_x - lastMouseX;
-                double deltaY = cur_y - lastMouseY;
+               // double cur_x = SimEngine.screenToWorldX(event.getSceneX());
+               // double cur_y = SimEngine.screenToWorldY(event.getSceneY());
+                double deltaX = (event.getSceneX() - lastMouseX) * Constants.PANNING_SPEED;
+                double deltaY = (event.getSceneY() - lastMouseY) * Constants.PANNING_SPEED;
+                double nextCamX = SimEngine.camX + (deltaX / SimEngine.zoomLevel);
+                double nextCamY = SimEngine.camY + (deltaY / SimEngine.zoomLevel);
 
+                double mapDisplayWidth = Constants.SCREEN_WIDTH * SimEngine.zoomLevel;
+                double mapDisplayHeight = Constants.SCREEN_HEIGHT * SimEngine.zoomLevel;
+
+                double minCamX = Constants.SCREEN_WIDTH - mapDisplayWidth;
+                double minCamY = Constants.SCREEN_HEIGHT - mapDisplayHeight;
+                if(mapDisplayWidth > Constants.SCREEN_WIDTH){
+                    SimEngine.camX = Math.max(minCamX,Math.min(0, nextCamX));
+                } else {
+                    SimEngine.camX = 0;
+                }
+                if (mapDisplayHeight > Constants.SCREEN_HEIGHT) {
+                    //double minY = Constants.SCREEN_HEIGHT - mapDisplayHeight;
+                    SimEngine.camY = Math.max(minCamY, Math.min(0, nextCamY));
+                } else {
+                    SimEngine.camY = 0;
+                }
+                /*double temp1 = SimEngine.camX;
+                double temp2 = SimEngine.camY;
                 //if(SimEngine.camX + (deltaX / SimEngine.zoomLevel) > 1184 || SimEngine.camX + (deltaX / SimEngine.zoomLevel) < 0 ) SimEngine.camX = 0;
-                SimEngine.camX += (deltaX*2 / SimEngine.zoomLevel);
+                SimEngine.camX += (deltaX / SimEngine.zoomLevel);
+                System.out.println("Hien tai dang o: "+SimEngine.camX); 
+                if(SimEngine.camX > 0 || SimEngine.camX < Constants.SCREEN_WIDTH - Constants.SCREEN_WIDTH * SimEngine.zoomLevel) SimEngine.camX = temp1;
                 //if(SimEngine.camY + (deltaY / SimEngine.zoomLevel) > 832 || SimEngine.camY + (deltaY / SimEngine.zoomLevel) < 0) SimEngine.camY = 0;
-                SimEngine.camY += (deltaY*2 / SimEngine.zoomLevel);
-
-                lastMouseX = cur_x;
-                lastMouseY = cur_y;
+                SimEngine.camY += (deltaY/ SimEngine.zoomLevel);
+                if(SimEngine.camY > 0 || SimEngine.camY < Constants.SCREEN_HEIGHT - Constants.SCREEN_HEIGHT * SimEngine.zoomLevel) SimEngine.camY = temp2;
+                */
+                lastMouseX = event.getSceneX();
+                lastMouseY = event.getSceneY();
             }
         });
     }
