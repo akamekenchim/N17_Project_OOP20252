@@ -14,16 +14,19 @@ import com.wildlife.control.*;
 import com.wildlife.model.abstracts.BaseEntity;
 import com.wildlife.view.*;
 import com.wildlife.worldmap.WorldMap;
+import com.wildlife.worldmap.WorldRender;
 
 public class SimEngine {
     private WorldMap map;
     private GraphicsContext gc;
+    private WorldRender renderer;
     public static double zoomLevel = 1.0;
     public static double camX = 0.0;
     public static double camY = 0.0;
-    public SimEngine(WorldMap wm, GraphicsContext g) {
+    public SimEngine(WorldMap wm, GraphicsContext g, WorldRender ren) {
         this.map = wm;
         this.gc = g;
+        this.renderer = ren;
     }
     public static double screenToWorldX(double screenX) {
         return(screenX - camX) / zoomLevel;
@@ -40,7 +43,6 @@ public class SimEngine {
             Image geng = SpriteManager.loadImage("haiten.png");
             double x = 0;
             long lastTime = 0;
-
             @Override
             public void handle(long now) {
                 if(lastTime == 0){ lastTime = now; return; }
@@ -52,7 +54,8 @@ public class SimEngine {
                 gc.save();
                 gc.translate(camX, camY);
                 gc.scale(zoomLevel, zoomLevel);
-                map.Update(deltaTime); // update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
+                gc.drawImage(renderer.getMapCache(), 0, 0);
+                map.update(deltaTime); // update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
                 renderEntities();
                 x += deltaTime*Constants.RABBIT_SPEED;
                 if (x >= Constants.SCREEN_WIDTH)
@@ -69,7 +72,6 @@ public class SimEngine {
                 //gc.strokeRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE, Constants.TILE_SIZE);
                 gc.setFill(Color.rgb(255, 182, 193, 0.5));
                 gc.fillRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE, Constants.TILE_SIZE);
-
                 gc.restore();
             }
         };
