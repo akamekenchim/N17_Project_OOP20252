@@ -12,9 +12,9 @@ import javafx.scene.paint.*;
 import java.util.*;
 import com.wildlife.control.*;
 import com.wildlife.model.abstracts.BaseEntity;
+import com.wildlife.model.entities.enviroment.Grass;
 import com.wildlife.view.*;
-import com.wildlife.worldmap.WorldMap;
-import com.wildlife.worldmap.WorldRender;
+import com.wildlife.worldmap.*;
 
 public class SimEngine {
     private WorldMap map;
@@ -37,6 +37,8 @@ public class SimEngine {
     }
     public void Start() {
         AnimationTimer AT = new AnimationTimer() {
+            int currentTime = 0;
+            Random r = new Random();
             // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
             // Image wolf_2 = SpriteManager.loadImage("wolf2.png");
             Image uma_2 = SpriteManager.loadImage("uma2.png");
@@ -45,6 +47,7 @@ public class SimEngine {
             long lastTime = 0;
             @Override
             public void handle(long now) {
+                currentTime++;
                 if(lastTime == 0){ lastTime = now; return; }
                 double deltaTime = (now - lastTime) / 1_000_000_000.0;
                 lastTime = now;
@@ -55,6 +58,15 @@ public class SimEngine {
                 gc.translate(camX, camY);
                 gc.scale(zoomLevel, zoomLevel);
                 gc.drawImage(renderer.getMapCache(), 0, 0);
+                if(currentTime % 200 == 0 && Grass.grassCount < 30){
+                    int placeX = r.nextInt(36);
+                    int placeY = r.nextInt(25);
+                    if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
+                        Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE, 0);
+                        map.addEntity(g);
+                    }
+                    
+                }
                 map.update(deltaTime); // update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
                 renderEntities();
                 x += deltaTime*Constants.RABBIT_SPEED;
@@ -73,6 +85,7 @@ public class SimEngine {
                 gc.setFill(Color.rgb(255, 182, 193, 0.5));
                 gc.fillRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE, Constants.TILE_SIZE);
                 gc.restore();
+
             }
         };
         AT.start();

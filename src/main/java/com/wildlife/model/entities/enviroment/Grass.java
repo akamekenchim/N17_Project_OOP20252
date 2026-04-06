@@ -9,10 +9,12 @@ import com.wildlife.worldmap.WorldMap;
 
 public class Grass extends BaseEntity {
     private int type;
+    public static int grassCount = 0;
 
     public Grass(double x, double y, int type) {
         super(x, y);
         this.type = type;
+        grassCount++;
     }
 
     @Override
