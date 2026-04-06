@@ -58,7 +58,7 @@ public class SimEngine {
                 gc.translate(camX, camY);
                 gc.scale(zoomLevel, zoomLevel);
                 gc.drawImage(renderer.getMapCache(), 0, 0);
-                if(currentTime % 200 == 0 && Grass.grassCount < 30){
+                /*if(currentTime % 200 == 0 && Grass.grassCount < 30){
                     int placeX = r.nextInt(36);
                     int placeY = r.nextInt(25);
                     if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
@@ -66,7 +66,7 @@ public class SimEngine {
                         map.addEntity(g);
                     }
                     
-                }
+                }*/ // Logic add cỏ theo thời gian
                 map.update(deltaTime); // update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
                 renderEntities();
                 x += deltaTime*Constants.RABBIT_SPEED;
