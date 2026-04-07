@@ -1,8 +1,10 @@
 package com.wildlife.worldmap;
 
 import java.util.Objects;
+
 import com.wildlife.model.abstracts.BaseEntity;
 import com.wildlife.model.entities.enviroment.Grass;
+import com.wildlife.core.Constants;
 
 public class Tile {
     private final int x;
@@ -18,12 +20,10 @@ public class Tile {
     private boolean isGrowingActive;
     public static final long GROW_DELAY_MS = 10000;
 
-    private static final int MAP_WIDTH = 37;
-
     public Tile(int x, int y, TerrainType type) {
         this.x = x;
         this.y = y;
-        this.id = y * MAP_WIDTH + x;
+        this.id = y * Constants.MAP_WIDTH + x;
         
         this.type = type;
         this.isGrowingActive = false;
@@ -73,7 +73,7 @@ public class Tile {
     }
 
     public void setOccupant(BaseEntity entity) { 
-        if (entity != null && !type.isPassable()) {
+        if (entity != null && isPassable()) {
             return; 
         }
         this.occupant = entity; 
@@ -104,7 +104,7 @@ public class Tile {
     
     public double getOpacity() { return type.getOpacity(); }
     public double getSpeedModifier() { return type.getSpeedModifier(); }
-    public boolean isWalkable() { return type.isPassable(); }
+    public boolean isPassable() { return type.isPassable(); }
     
     public TerrainType getType() { return type; }
     public void setType(TerrainType type) { this.type = type; }
