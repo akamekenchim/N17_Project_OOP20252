@@ -23,6 +23,7 @@ public class SimEngine {
     public static double zoomLevel = 1.0;
     public static double camX = 0.0;
     public static double camY = 0.0;
+    public static int currentTime = 0;
     public SimEngine(WorldMap wm, GraphicsContext g, WorldRender ren) {
         this.map = wm;
         this.gc = g;
@@ -37,7 +38,7 @@ public class SimEngine {
     }
     public void Start() {
         AnimationTimer AT = new AnimationTimer() {
-            int currentTime = 0;
+            
             Random r = new Random();
             // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
             // Image wolf_2 = SpriteManager.loadImage("wolf2.png");
