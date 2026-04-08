@@ -37,6 +37,22 @@ public class AggressiveStrategy_Test {
                     return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
                 }
             }
+
+            else if (entity != herbivore && entity instanceof Passive && entity.isAlive()){
+                double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
+                if (dist < 15.0) {
+                    Random r = new Random();
+                    int k = r.nextInt(5);
+                    if(k % 2 == 0){
+                        entity.setAlive(false);
+                        return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
+                    }
+                    else if(k % 2 > 0){
+                        herbivore.setAlive(false);
+                        return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
+                    }
+                }
+            }
         }
 
         // Logic Aggressive khi hunger < 30
