@@ -79,7 +79,7 @@ public class SimEngine {
                  * Với mỗi thực thể duyệt được, gọi hàm render của nó. Truyền vào gc, lấy
                  * isGraphic = true (chắc thế)
                  */
-                gc.drawImage(uma_2, x, 600, 140, 140);
+                //gc.drawImage(uma_2, x, 600, 140, 140);
                 gc.drawImage(geng, 15, 15, 50, 50);
                 //gc.setStroke(Color.PINK);
                 //gc.strokeRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE, Constants.TILE_SIZE);

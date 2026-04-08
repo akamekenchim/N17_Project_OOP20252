@@ -68,6 +68,7 @@ public class InputControl {
                     SimEngine.camX = 0;
                     SimEngine.camY = 0;
                     SimEngine.zoomLevel = 1.0;
+                    Constants.SIM_SPEED = 1.0;
                     isZoomed = false;
                 default:
                     break;
@@ -101,12 +102,12 @@ public class InputControl {
                     Rock g = new Rock(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
-                if(typeAnimal == -1){
-                    Grass g = new Grass(parsed_X, parsed_Y, 0);
+                if(typeAnimal == 2){
+                    Kenchim g = new Kenchim(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
-                if(typeAnimal == -1){
-                    Grass g = new Grass(parsed_X, parsed_Y, 0);
+                if(typeAnimal == 3){
+                    Kohane g = new Kohane(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
                 if(typeAnimal == -1){
