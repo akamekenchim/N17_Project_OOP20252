@@ -10,5 +10,7 @@ public class Constants {
     public static final double UMA_SPEED = 90.0;
     public static final double DELTA = 0.4;
     public static final int TILE_SIZE = 32;
+    public static final int MAP_WIDTH = 37;
+    public static final int MAP_HEIGHT = 26;
     public static final double PANNING_SPEED = 3;
 }

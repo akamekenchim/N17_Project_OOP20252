@@ -21,7 +21,7 @@ public enum TerrainType {
         this.speedModifier = speedModifier;
     }
 
-    public int getCoding() { return encoding; }
+    public int getEncoding() { return encoding; }
     public double getOpacity() { return opacity; }
     public boolean isPassable() { return passable; }
     public double getSpeedModifier() { return speedModifier; }
