@@ -23,11 +23,12 @@ public class WorldRender {
         Canvas cvTemp = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         GraphicsContext gcTemp = cvTemp.getGraphicsContext2D();
 
-        Image img = SpriteManager.loadImage("grassW.png");
+        Image img = SpriteManager.loadImage("grass3_0.png");
         Image img2 = SpriteManager.loadImage("water3.png");
         Image img3 = SpriteManager.loadImage("water2.png");
         Image img4 = SpriteManager.loadImage("water_with_rock.png");
         Image img5 = SpriteManager.loadImage("water_lake.png");
+        Image img6 = SpriteManager.loadImage("dirt.png");
         //Image tree = SpriteManager.loadImage("treewuwa.png");
         for(int i = 0; i<26; i++){
             for(int j = 0; j<37; j++){
@@ -42,6 +43,9 @@ public class WorldRender {
                 }
                 else if(MatrixManager.MAP_LAYOUT[i][j] == 3){
                     gcTemp.drawImage(img5, j*32, i*32, 32, 32);
+                }
+                else if(MatrixManager.MAP_LAYOUT[i][j] == 4){
+                    gcTemp.drawImage(img6, j*32, i*32, 32, 32);
                 }
             }
         }

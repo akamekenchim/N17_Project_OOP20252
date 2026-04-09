@@ -19,7 +19,7 @@ public class Kenchim extends Passive {
         this.setInnerTime(this.getInnerTime() + Constants.SIM_SPEED);
         this.setInnerDirectionTime(this.getInnerDirectionTime() + Constants.SIM_SPEED);
         Vector direction = new Vector(this.getDx(), this.getDy());
-        if(this.getInnerTime() > 10) {
+        if(this.getInnerTime() > Constants.UPDATE_INTERVAL) {
             direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
             this.setInnerTime(this.getInnerTime() -10);
 
@@ -43,7 +43,7 @@ public class Kenchim extends Passive {
         else{
             gc.rotate(rotateAngle);
         }
-        gc.drawImage(img, -32, -32, 64, 64);
+        gc.drawImage(img, -32, -32, 32, 32);
         gc.restore();
     }
 }

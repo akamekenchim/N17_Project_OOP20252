@@ -1,5 +1,6 @@
 package com.wildlife.model.strategy;
 
+import com.wildlife.core.Constants;
 import com.wildlife.core.SimEngine;
 import com.wildlife.model.abstracts.BaseEntity;
 import com.wildlife.model.abstracts.Passive;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AggressiveStrategy_Test {
-    private static final double SCAN_RADIUS = 200.0;
+    private static final double SCAN_RADIUS = 150.0;
     private Random random = new Random();
 
     public Vector execute(Passive herbivore, WorldMap map, double delta, double speed) {
@@ -86,7 +87,7 @@ public class AggressiveStrategy_Test {
         }
         
         // Nếu không đói hoặc không thấy thực thể nào trong bán kính, di chuyển bừa
-        if(herbivore.getInnerDirectionTime() > 120){
+        if(herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL){
             double randomAngle = random.nextDouble() * 2 * Math.PI;
             double dx = Math.cos(randomAngle);
             double dy = Math.sin(randomAngle);

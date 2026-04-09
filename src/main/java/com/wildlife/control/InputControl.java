@@ -13,12 +13,12 @@ import com.wildlife.worldmap.WorldMap;
 import javafx.scene.*;
 
 public class InputControl {
-    public static boolean isZoomed = false;
-    public static int hoverx = 0;
-    public static int hovery = 0;
-    public static int typeAnimal = -2;
+    public static boolean isZoomed = false; // Kiểm tra xem màn hình có bị zoom ko -> nếu có, thì cho panning
+    public static int hoverx = 0; //Tọa độ chuột hover
+    public static int hovery = 0; //Tọa độ chuột hover
+    public static int typeAnimal = -2; // Mặc định -2; khi click sẽ không ra cái gì
     public static double temp = 0;
-    public static boolean isPaused = false;
+    public static boolean isPaused = false; //Kiểm tra xem program có đang bị tạm dừng ko
     public static double lastMouseX = 0.0;
     public static double lastMouseY = 0.0;
     public static void StartListening(Scene scene, WorldMap map) {

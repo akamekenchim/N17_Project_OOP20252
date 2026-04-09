@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class HunterStrategy_Test {
-    private static final double SCAN_RADIUS = 300.0;
+    private static final double SCAN_RADIUS = 200.0;
     private Random random = new Random();
 
     public Vector execute(Predator hunter, WorldMap map, double delta, double speed) {
@@ -46,7 +46,7 @@ public class HunterStrategy_Test {
             else{
                 return (new Vector(hunter.getDx(), hunter.getDy()));
             }
-        } else if(hunter.getInnerDirectionTime() > 120) {
+        } else if(hunter.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
             // Di chuyển bừa (Random wander)
             double randomAngle = random.nextDouble() * 2 * Math.PI;
             double dx = Math.cos(randomAngle);
