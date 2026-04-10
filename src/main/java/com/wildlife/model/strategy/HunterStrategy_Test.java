@@ -1,10 +1,11 @@
 package com.wildlife.model.strategy;
 
-import com.wildlife.model.abstracts.BaseEntity;
-import com.wildlife.model.abstracts.Passive;
-import com.wildlife.model.abstracts.Predator;
-import com.wildlife.worldmap.WorldMap;
-import com.wildlife.core.*;
+import com.wildlife.constant.*;
+import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.passive.Passive;
+import com.wildlife.model.animals.predator.Predator;
+import com.wildlife.model.worldmap.WorldMap;
+
 import java.util.List;
 import java.util.Random;
 
@@ -36,28 +37,27 @@ public class HunterStrategy_Test {
             double dx = closestPrey.getX() - hunter.getX();
             double dy = closestPrey.getY() - hunter.getY();
             double length = Math.sqrt(dx * dx + dy * dy);
-            //System.out.println("Chase prey, distance: " + length + ", Prey pos: (" + closestPrey.getX() + ", " + closestPrey.getY() + ")");
+            // System.out.println("Chase prey, distance: " + length + ", Prey pos: (" +
+            // closestPrey.getX() + ", " + closestPrey.getY() + ")");
             if (length > 0) {
                 // Di chuyển theo vector hướng về con mồi
-                //hunter.setX(hunter.getX() + (dx / length) * speed * delta);
-                //hunter.setY(hunter.getY() + (dy / length) * speed * delta);
-                return (new Vector(dx/length, dy/length));
-            }
-            else{
+                // hunter.setX(hunter.getX() + (dx / length) * speed * delta);
+                // hunter.setY(hunter.getY() + (dy / length) * speed * delta);
+                return (new Vector(dx / length, dy / length));
+            } else {
                 return (new Vector(hunter.getDx(), hunter.getDy()));
             }
-        } else if(hunter.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
+        } else if (hunter.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
             // Di chuyển bừa (Random wander)
             double randomAngle = random.nextDouble() * 2 * Math.PI;
             double dx = Math.cos(randomAngle);
             double dy = Math.sin(randomAngle);
             hunter.setInnerDirectionTime(hunter.getInnerDirectionTime() - 120);
-            //hunter.setX(hunter.getX() + dx * speed * delta);
-            //hunter.setY(hunter.getY() + dy * speed * delta);
+            // hunter.setX(hunter.getX() + dx * speed * delta);
+            // hunter.setY(hunter.getY() + dy * speed * delta);
             return (new Vector(dx, dy));
 
-        }
-        else{
+        } else {
             return (new Vector(hunter.getDx(), hunter.getDy()));
         }
     }

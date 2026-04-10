@@ -1,12 +1,13 @@
 package com.wildlife.model.strategy;
 
-import com.wildlife.core.Constants;
-import com.wildlife.core.SimEngine;
-import com.wildlife.model.abstracts.BaseEntity;
-import com.wildlife.model.abstracts.Passive;
-import com.wildlife.model.abstracts.Predator;
-import com.wildlife.worldmap.WorldMap;
-import com.wildlife.model.entities.enviroment.Grass;
+import com.wildlife.constant.Constants;
+import com.wildlife.controller.SimulationController;
+import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.passive.Passive;
+import com.wildlife.model.animals.predator.Predator;
+import com.wildlife.model.plants.Grass;
+import com.wildlife.model.worldmap.WorldMap;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,7 +18,8 @@ public class AggressiveStrategy_Test {
     private Random random = new Random();
 
     public Vector execute(Passive herbivore, WorldMap map, double delta, double speed) {
-        if (!herbivore.isAlive()) return (new Vector(herbivore.getDx(), herbivore.getDy()));
+        if (!herbivore.isAlive())
+            return (new Vector(herbivore.getDx(), herbivore.getDy()));
 
         List<BaseEntity> entities = map.getEntity();
 
@@ -39,16 +41,15 @@ public class AggressiveStrategy_Test {
                 }
             }
 
-            else if (entity != herbivore && entity instanceof Passive && entity.isAlive()){
+            else if (entity != herbivore && entity instanceof Passive && entity.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
                 if (dist < 15.0) {
                     Random r = new Random();
                     int k = r.nextInt(5);
-                    if(k % 2 == 0){
+                    if (k % 2 == 0) {
                         entity.setAlive(false);
                         return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
-                    }
-                    else if(k % 2 > 0){
+                    } else if (k % 2 > 0) {
                         herbivore.setAlive(false);
                         return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
                     }
@@ -63,7 +64,8 @@ public class AggressiveStrategy_Test {
                 if (entity != herbivore && entity.isAlive() && (entity instanceof Passive || entity instanceof Grass)) {
                     double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
                     if (dist <= SCAN_RADIUS) {
-                       // System.out.printf("Detected entity at position (%.2f, %.2f), distance: %.2f\n", entity.getX(), entity.getY(), dist);
+                        // System.out.printf("Detected entity at position (%.2f, %.2f), distance:
+                        // %.2f\n", entity.getX(), entity.getY(), dist);
                         scannedEntities.add(entity);
                     }
                 }
@@ -80,30 +82,28 @@ public class AggressiveStrategy_Test {
                 double length = Math.sqrt(dx * dx + dy * dy);
 
                 if (length > 0) {
-                    return (new Vector(dx/length, dy/length));
+                    return (new Vector(dx / length, dy / length));
                 }
                 return (new Vector(herbivore.getDx(), herbivore.getDy()));
             }
         }
-        
+
         // Nếu không đói hoặc không thấy thực thể nào trong bán kính, di chuyển bừa
-        if(herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL){
+        if (herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
             double randomAngle = random.nextDouble() * 2 * Math.PI;
             double dx = Math.cos(randomAngle);
             double dy = Math.sin(randomAngle);
             herbivore.setInnerDirectionTime(herbivore.getInnerDirectionTime() - 120);
             return (new Vector(dx, dy));
-        }
-        else return (new Vector(herbivore.getDx(), herbivore.getDy()));
-        //herbivore.setX(herbivore.getX() + dx * speed * delta);
-        //herbivore.setY(herbivore.getY() + dy * speed * delta);
+        } else
+            return (new Vector(herbivore.getDx(), herbivore.getDy()));
+        // herbivore.setX(herbivore.getX() + dx * speed * delta);
+        // herbivore.setY(herbivore.getY() + dy * speed * delta);
     }
 
     // Hàm SortDist giúp sắp xếp list thực thể theo khoảng cách so với bản thân
     private void sortDist(BaseEntity self, List<BaseEntity> entities) {
-        entities.sort(Comparator.comparingDouble(e -> 
-            getDistance(self.getX(), self.getY(), e.getX(), e.getY())
-        ));
+        entities.sort(Comparator.comparingDouble(e -> getDistance(self.getX(), self.getY(), e.getX(), e.getY())));
     }
 
     private double getDistance(double x1, double y1, double x2, double y2) {
