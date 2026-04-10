@@ -1,7 +1,7 @@
 package com.wildlife.model.strategy;
 
 import com.wildlife.constant.Constants;
-import com.wildlife.controller.SimulationController;
+
 import com.wildlife.model.BaseEntity;
 import com.wildlife.model.animals.passive.Passive;
 import com.wildlife.model.animals.predator.Predator;

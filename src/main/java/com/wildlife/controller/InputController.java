@@ -1,7 +1,4 @@
 package com.wildlife.controller;
-
-import javafx.event.*;
-
 import com.wildlife.model.plants.Grass;
 import com.wildlife.model.plants.Rock;
 import com.wildlife.model.worldmap.MatrixManager;

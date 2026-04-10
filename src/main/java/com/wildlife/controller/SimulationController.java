@@ -13,7 +13,7 @@ import java.util.*;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
-import com.wildlife.model.plants.Grass;
+//import com.wildlife.model.plants.Grass;
 import com.wildlife.model.worldmap.*;
 import com.wildlife.view.*;
 
@@ -43,11 +43,9 @@ public class SimulationController {
     public void Start() {
         AnimationTimer AT = new AnimationTimer() {
 
-            Random r = new Random();
-            // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không
-            // tồn tại
-            // Image wolf_2 = SpriteManager.loadImage("wolf2.png");
-            Image uma_2 = SpriteManager.loadImage("uma2.png");
+            //Random r = new Random();
+            // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
+            
             Image geng = SpriteManager.loadImage("haiten.png");
             double x = 0;
             long lastTime = 0;
@@ -92,7 +90,7 @@ public class SimulationController {
                  * Với mỗi thực thể duyệt được, gọi hàm render của nó. Truyền vào gc, lấy
                  * isGraphic = true (chắc thế)
                  */
-                // gc.drawImage(uma_2, x, 600, 140, 140);
+                
                 gc.drawImage(geng, 15, 15, 50, 50);
                 // gc.setStroke(Color.PINK);
                 // gc.strokeRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE,
