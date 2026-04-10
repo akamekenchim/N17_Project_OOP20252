@@ -1,4 +1,5 @@
-package com.wildlife.core;
+package com.wildlife.constant;
+
 //file này là chứa các hằng số, ae có thể thêm tốc độ của mấy con vật vào đây 
 public class Constants {
     public static double SIM_SPEED = 1.0;

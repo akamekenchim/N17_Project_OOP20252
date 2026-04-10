@@ -1,4 +1,6 @@
-package com.wildlife.model.abstracts;
+package com.wildlife.model.animals;
+
+import com.wildlife.model.BaseEntity;
 
 public abstract class Animal extends BaseEntity {
     private int hunger = 100;
@@ -6,18 +8,23 @@ public abstract class Animal extends BaseEntity {
     private double dy = 0;
     private double innerTime = 0;
     private double innerDirectionTime = 0;
+
     public void setInnerTime(double innerTime) {
         this.innerTime = innerTime;
     }
+
     public void setInnerDirectionTime(double innerDirectionTime) {
         this.innerDirectionTime = innerDirectionTime;
     }
+
     public double getInnerTime() {
         return innerTime;
     }
-    public double getInnerDirectionTime(){
+
+    public double getInnerDirectionTime() {
         return this.innerDirectionTime;
     }
+
     public double getDx() {
         return dx;
     }

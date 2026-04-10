@@ -1,9 +1,9 @@
 package com.wildlife.model.strategy;
 
-import com.wildlife.model.abstracts.BaseEntity;
-import com.wildlife.model.abstracts.Passive;
-import com.wildlife.model.abstracts.Predator;
-import com.wildlife.worldmap.WorldMap;
+import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.passive.Passive;
+import com.wildlife.model.animals.predator.Predator;
+import com.wildlife.model.worldmap.WorldMap;
 
 import java.util.List;
 import java.util.Random;
@@ -33,7 +33,7 @@ public class HunterStratery {
             double dx = closestPrey.getX() - hunter.getX();
             double dy = closestPrey.getY() - hunter.getY();
             double length = Math.sqrt(dx * dx + dy * dy);
-            
+
             if (length > 0) {
                 // Di chuyển theo vector hướng về con mồi
                 hunter.setX(hunter.getX() + (dx / length) * speed * delta);
@@ -44,7 +44,7 @@ public class HunterStratery {
             double randomAngle = random.nextDouble() * 2 * Math.PI;
             double dx = Math.cos(randomAngle);
             double dy = Math.sin(randomAngle);
-            
+
             hunter.setX(hunter.getX() + dx * speed * delta);
             hunter.setY(hunter.getY() + dy * speed * delta);
         }

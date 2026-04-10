@@ -1,7 +1,7 @@
-package com.wildlife.worldmap;
+package com.wildlife.model.worldmap;
 
 public enum TerrainType {
-    //Tên(Encoding, Opacity, Passable, SpeedModifier)
+    // Tên(Encoding, Opacity, Passable, SpeedModifier)
     DIRT(0, 1.0, true, 1.0),
     GRASS(1, 0.8, true, 0.9),
     BUSH(2, 0.5, true, 0.7),
@@ -21,8 +21,19 @@ public enum TerrainType {
         this.speedModifier = speedModifier;
     }
 
-    public int getEncoding() { return encoding; }
-    public double getOpacity() { return opacity; }
-    public boolean isPassable() { return passable; }
-    public double getSpeedModifier() { return speedModifier; }
+    public int getEncoding() {
+        return encoding;
+    }
+
+    public double getOpacity() {
+        return opacity;
+    }
+
+    public boolean isPassable() {
+        return passable;
+    }
+
+    public double getSpeedModifier() {
+        return speedModifier;
+    }
 }

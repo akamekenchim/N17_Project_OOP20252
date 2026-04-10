@@ -1,6 +1,6 @@
-package com.wildlife.model.abstracts;
+package com.wildlife.model;
 
-import com.wildlife.worldmap.WorldMap;
+import com.wildlife.model.worldmap.WorldMap;
 
 import javafx.scene.canvas.GraphicsContext;
 

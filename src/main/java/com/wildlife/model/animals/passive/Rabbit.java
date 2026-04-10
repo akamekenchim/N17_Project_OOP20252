@@ -1,5 +1,5 @@
-package com.wildlife.model.entities.animal.passive;
+package com.wildlife.model.animals.passive;
 
 public class Rabbit {
-    
+
 }

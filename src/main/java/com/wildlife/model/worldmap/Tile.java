@@ -1,10 +1,10 @@
-package com.wildlife.worldmap;
+package com.wildlife.model.worldmap;
 
 import java.util.Objects;
 
-import com.wildlife.model.abstracts.BaseEntity;
-import com.wildlife.model.entities.enviroment.Grass;
-import com.wildlife.core.Constants;
+import com.wildlife.constant.Constants;
+import com.wildlife.model.BaseEntity;
+import com.wildlife.model.plants.Grass;
 
 public class Tile {
     private final int x;
@@ -14,7 +14,7 @@ public class Tile {
     private TerrainType type;
     private BaseEntity occupant;
     private Grass grassEntity;
-    
+
     // Logic mọc cỏ
     private long startGrowingTime;
     private boolean isGrowingActive;
@@ -24,14 +24,14 @@ public class Tile {
         this.x = x;
         this.y = y;
         this.id = y * Constants.MAP_WIDTH + x;
-        
+
         this.type = type;
         this.isGrowingActive = false;
         this.startGrowingTime = 0;
         this.occupant = null;
         this.grassEntity = null;
     }
-    
+
     public void activateGrowth() {
         if (type == TerrainType.DIRT && grassEntity == null && !isGrowingActive) {
             this.startGrowingTime = System.currentTimeMillis();
@@ -47,24 +47,24 @@ public class Tile {
         }
         return false;
     }
-    
+
     private void tryToGrowGrass() {
         if (type == TerrainType.DIRT && grassEntity == null) {
-            double growthChance = 0.3; 
-            
+            double growthChance = 0.3;
+
             if (Math.random() < growthChance) {
                 this.grassEntity = new Grass(x, y, 1);
             }
         }
     }
-    
+
     public void onEntityStepped() {
         activateGrowth();
     }
-    
+
     public boolean eatGrass() {
         if (grassEntity != null && grassEntity.isAlive()) {
-            //grassEntity.beEaten();
+            // grassEntity.beEaten();
             grassEntity = null;
 
             return true;
@@ -72,22 +72,25 @@ public class Tile {
         return false;
     }
 
-    public void setOccupant(BaseEntity entity) { 
+    public void setOccupant(BaseEntity entity) {
         if (entity != null && isPassable()) {
-            return; 
+            return;
         }
-        this.occupant = entity; 
-        if (entity != null) onEntityStepped();
+        this.occupant = entity;
+        if (entity != null)
+            onEntityStepped();
     }
-    
-    public void removeOccupant() { 
-        this.occupant = null; 
+
+    public void removeOccupant() {
+        this.occupant = null;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Tile tile = (Tile) o;
         return x == tile.x && y == tile.y;
     }
@@ -97,19 +100,55 @@ public class Tile {
         return Objects.hash(x, y);
     }
 
-    public boolean hasGrass() { return grassEntity != null && grassEntity.isAlive(); }
-    public Grass getGrassEntity() { return grassEntity; }
-    public boolean hasOccupant() { return occupant != null; }
-    public BaseEntity getOccupant() { return occupant; }
-    
-    public double getOpacity() { return type.getOpacity(); }
-    public double getSpeedModifier() { return type.getSpeedModifier(); }
-    public boolean isPassable() { return type.isPassable(); }
-    
-    public TerrainType getType() { return type; }
-    public void setType(TerrainType type) { this.type = type; }
-    public int getX() { return x; }
-    public int getY() { return y; }
-    public int getId() { return id; }
-    public boolean isGrowingActive() { return isGrowingActive; }
+    public boolean hasGrass() {
+        return grassEntity != null && grassEntity.isAlive();
+    }
+
+    public Grass getGrassEntity() {
+        return grassEntity;
+    }
+
+    public boolean hasOccupant() {
+        return occupant != null;
+    }
+
+    public BaseEntity getOccupant() {
+        return occupant;
+    }
+
+    public double getOpacity() {
+        return type.getOpacity();
+    }
+
+    public double getSpeedModifier() {
+        return type.getSpeedModifier();
+    }
+
+    public boolean isPassable() {
+        return type.isPassable();
+    }
+
+    public TerrainType getType() {
+        return type;
+    }
+
+    public void setType(TerrainType type) {
+        this.type = type;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isGrowingActive() {
+        return isGrowingActive;
+    }
 }

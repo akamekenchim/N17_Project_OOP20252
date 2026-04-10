@@ -1,6 +1,6 @@
-package com.wildlife;
+package com.wildlife.test;
 
-import com.wildlife.core.Constants;
+import com.wildlife.constant.Constants;
 import com.wildlife.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;

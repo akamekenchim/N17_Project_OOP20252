@@ -1,11 +1,11 @@
-package com.wildlife.model.entities.enviroment;
-
-import com.wildlife.model.abstracts.BaseEntity;
+package com.wildlife.model.plants;
 
 import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
+
+import com.wildlife.model.BaseEntity;
+import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.view.SpriteManager;
-import com.wildlife.worldmap.WorldMap;
 
 public class Grass extends BaseEntity {
     private int type;

@@ -1,9 +1,9 @@
 package com.wildlife.model.strategy;
 
-import com.wildlife.model.abstracts.BaseEntity;
-import com.wildlife.model.abstracts.Passive;
-import com.wildlife.model.abstracts.Predator;
-import com.wildlife.worldmap.WorldMap;
+import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.passive.Passive;
+import com.wildlife.model.animals.predator.Predator;
+import com.wildlife.model.worldmap.WorldMap;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,7 +15,8 @@ public class AggressiveStrategy {
     private Random random = new Random();
 
     public void execute(Passive herbivore, WorldMap map, double delta, double speed) {
-        if (!herbivore.isAlive()) return;
+        if (!herbivore.isAlive())
+            return;
 
         List<BaseEntity> entities = map.getEntity();
 
@@ -64,16 +65,14 @@ public class AggressiveStrategy {
         double randomAngle = random.nextDouble() * 2 * Math.PI;
         double dx = Math.cos(randomAngle);
         double dy = Math.sin(randomAngle);
-        
+
         herbivore.setX(herbivore.getX() + dx * speed * delta);
         herbivore.setY(herbivore.getY() + dy * speed * delta);
     }
 
     // Hàm SortDist giúp sắp xếp list thực thể theo khoảng cách so với bản thân
     private void sortDist(BaseEntity self, List<BaseEntity> entities) {
-        entities.sort(Comparator.comparingDouble(e -> 
-            getDistance(self.getX(), self.getY(), e.getX(), e.getY())
-        ));
+        entities.sort(Comparator.comparingDouble(e -> getDistance(self.getX(), self.getY(), e.getX(), e.getY())));
     }
 
     private double getDistance(double x1, double y1, double x2, double y2) {

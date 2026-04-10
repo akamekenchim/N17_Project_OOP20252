@@ -1,8 +1,9 @@
-package com.wildlife.worldmap;
+package com.wildlife.model.worldmap;
 
 import java.util.*;
-import com.wildlife.model.abstracts.BaseEntity;
-import com.wildlife.core.Constants;
+
+import com.wildlife.constant.Constants;
+import com.wildlife.model.BaseEntity;
 
 public class WorldMap {
     private final Tile[][] tiles;
@@ -60,7 +61,8 @@ public class WorldMap {
         Tile oldTile = getTile(oldTileX, oldTileY);
         Tile newTile = getTile(newTileX, newTileY);
 
-        if (newTile == null || !newTile.isPassable() || newTile.hasOccupant()) return false;
+        if (newTile == null || !newTile.isPassable() || newTile.hasOccupant())
+            return false;
 
         if (oldTile != null && oldTile.getOccupant() == entity) {
             oldTile.removeOccupant();
@@ -105,7 +107,8 @@ public class WorldMap {
         int size = growingQueue.size();
         for (int i = 0; i < size; i++) {
             Tile tile = growingQueue.poll();
-            if (tile == null) continue;
+            if (tile == null)
+                continue;
 
             boolean finished = tile.updateGrowth(currentTime);
             if (!finished) {
@@ -137,8 +140,7 @@ public class WorldMap {
         return t != null && t.hasOccupant();
     }
 
-
-    //Hàm này chưa lọc theo đối tượng, chỉ lấy tất cả những vật thể trong phạm vi
+    // Hàm này chưa lọc theo đối tượng, chỉ lấy tất cả những vật thể trong phạm vi
     public List<BaseEntity> getEntitiesInRange(double x, double y, double range) {
         List<BaseEntity> nearbyEntities = new ArrayList<>();
         for (BaseEntity entity : listEntity) {
@@ -151,8 +153,8 @@ public class WorldMap {
         return nearbyEntities;
     }
 
-    //xem sói có thấy thỏ sau đá/trong bụi cây không
-    boolean canSee(BaseEntity observer, BaseEntity target){
+    // xem sói có thấy thỏ sau đá/trong bụi cây không
+    boolean canSee(BaseEntity observer, BaseEntity target) {
         int observerTileX = (int) observer.getX() / Constants.TILE_SIZE;
         int observerTileY = (int) observer.getY() / Constants.TILE_SIZE;
 
@@ -164,88 +166,83 @@ public class WorldMap {
 
         int stepX = (targetTileX > observerTileX) ? 1 : (targetTileX < observerTileX) ? -1 : 0;
         int stepY = (targetTileY > observerTileY) ? 1 : (targetTileY < observerTileY) ? -1 : 0;
-        
+
         int err = dx - dy;
 
         double visibility = 1.0;
 
-        while(true){
+        while (true) {
             Tile tile = getTile(observerTileX, observerTileY);
 
-            if(tile != null){
+            if (tile != null) {
                 visibility *= tile.getOpacity();
-                if(visibility < 0.1) return false; //cái này có thể thay đổi tùy vào độ nhạy của mắt các con vật 
+                if (visibility < 0.1)
+                    return false; // cái này có thể thay đổi tùy vào độ nhạy của mắt các con vật
             }
 
-            if(observerTileX == targetTileX && observerTileY == targetTileY){
+            if (observerTileX == targetTileX && observerTileY == targetTileY) {
                 return true;
             }
 
             int err2 = err * 2;
-            if(err2 > -dy){
+            if (err2 > -dy) {
                 err -= dy;
                 observerTileX += stepX;
             }
-            if(err2 < dx){
+            if (err2 < dx) {
                 err += dx;
                 observerTileY += stepY;
             }
         }
     }
 
-
     public List<BaseEntity> getEntity() {
         return listEntity;
     }
 
-    public int getGrowingQueueSize() { return growingQueue.size(); }
-
+    public int getGrowingQueueSize() {
+        return growingQueue.size();
+    }
 
 }
 
-
-
-
-
-
-
-
-
-/*package com.wildlife.worldmap;
-
-import java.util.*;
-
-//import com.wildlife.core.Constants;
-import com.wildlife.model.abstracts.BaseEntity;
-
-public class WorldMap {
-    private List<BaseEntity> listEntity = new ArrayList<>();
-
-    public void addEntity(BaseEntity k) {
-        listEntity.add(k);
-    }
-
-    public List<BaseEntity> getEntity() {
-        return listEntity;
-    }
-
-    // mấy con mà teo r thì xóa đi
-    public void cleaning() {
-        for (int i = listEntity.size() - 1; i >= 0; i--) {
-            if ((listEntity.get(i)).isAlive() == false) {
-                listEntity.remove(i);
-            }
-        }
-    }
-
-    public void Update(double Delta) {
-        cleaning();
-        for (BaseEntity e : listEntity) {
-            e.update(Delta, this);
-        }
-    }
-
-    public boolean isOccupied(double x, double y) {
-        return false;
-    }
-}*/
+/*
+ * package com.wildlife.worldmap;
+ * 
+ * import java.util.*;
+ * 
+ * //import com.wildlife.core.Constants;
+ * import com.wildlife.model.abstracts.BaseEntity;
+ * 
+ * public class WorldMap {
+ * private List<BaseEntity> listEntity = new ArrayList<>();
+ * 
+ * public void addEntity(BaseEntity k) {
+ * listEntity.add(k);
+ * }
+ * 
+ * public List<BaseEntity> getEntity() {
+ * return listEntity;
+ * }
+ * 
+ * // mấy con mà teo r thì xóa đi
+ * public void cleaning() {
+ * for (int i = listEntity.size() - 1; i >= 0; i--) {
+ * if ((listEntity.get(i)).isAlive() == false) {
+ * listEntity.remove(i);
+ * }
+ * }
+ * }
+ * 
+ * public void Update(double Delta) {
+ * cleaning();
+ * for (BaseEntity e : listEntity) {
+ * e.update(Delta, this);
+ * }
+ * }
+ * 
+ * public boolean isOccupied(double x, double y) {
+ * return false;
+ * }
+ * }
+ */

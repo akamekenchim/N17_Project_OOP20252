@@ -1,4 +1,4 @@
-package com.wildlife.model.entities.animal.predator;
+package com.wildlife.model.animals.predator;
 
 public class Fox {
 
