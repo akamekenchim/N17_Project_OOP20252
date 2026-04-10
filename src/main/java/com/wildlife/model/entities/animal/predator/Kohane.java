@@ -29,8 +29,8 @@ public class Kohane extends Predator {
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
 
-        this.setX(Math.min(Constants.SCREEN_WIDTH - 72, Math.max(0, this.getX() + this.getDx() * delta * Constants.WOLF_SPEED)));
-        this.setY(Math.min(Constants.SCREEN_HEIGHT - 72, Math.max(0, this.getY() + this.getDy() * delta * Constants.WOLF_SPEED)));
+        this.setX(Math.min(Constants.SCREEN_WIDTH - 32, Math.max(0, this.getX() + this.getDx() * delta * Constants.WOLF_SPEED)));
+        this.setY(Math.min(Constants.SCREEN_HEIGHT - 32, Math.max(0, this.getY() + this.getDy() * delta * Constants.WOLF_SPEED)));
     }
     @Override
     public void render(GraphicsContext gc, boolean isGraphic){

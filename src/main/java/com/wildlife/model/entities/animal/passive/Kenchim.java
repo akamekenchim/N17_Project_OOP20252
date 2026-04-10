@@ -26,8 +26,8 @@ public class Kenchim extends Passive {
         }
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
-        this.setX(Math.min(Constants.SCREEN_WIDTH - 64, Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
-        this.setY(Math.min(Constants.SCREEN_HEIGHT - 64, Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
+        this.setX(Math.min(Constants.SCREEN_WIDTH - 32, Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
+        this.setY(Math.min(Constants.SCREEN_HEIGHT - 32, Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
     }
 
     @Override
