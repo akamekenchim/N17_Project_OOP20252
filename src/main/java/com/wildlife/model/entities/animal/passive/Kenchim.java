@@ -33,7 +33,7 @@ public class Kenchim extends Passive {
     @Override
     // Đéo hiểu, mai đọc
     public void render(GraphicsContext gc, boolean isGraphic) {
-        gc.save();
+        /*gc.save();
         gc.translate(getX()+32, getY()+32);
         double rotateAngle = Math.toDegrees(Math.atan2(this.getDy(), this.getDx()));
         if(this.getDx() < 0){
@@ -42,8 +42,7 @@ public class Kenchim extends Passive {
         }
         else{
             gc.rotate(rotateAngle);
-        }
-        gc.drawImage(img, -32, -32, 32, 32);
-        gc.restore();
+        }*/
+        gc.drawImage(img, getX(), getY(), 32, 32);
     }
 }

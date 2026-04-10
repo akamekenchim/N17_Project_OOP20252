@@ -35,7 +35,7 @@ public class Kohane extends Predator {
     @Override
     public void render(GraphicsContext gc, boolean isGraphic){
         //gc.drawImage(img, getX(), getY(), 64, 64);
-        double rotateAngle = Math.toDegrees(Math.atan2(this.getDy(), this.getDx()));
+        /*double rotateAngle = Math.toDegrees(Math.atan2(this.getDy(), this.getDx()));
         gc.save();
         gc.translate(getX()+32, getY()+32);
         if(this.getDx() < 0){
@@ -44,8 +44,7 @@ public class Kohane extends Predator {
         }
         else{
             gc.rotate(rotateAngle);
-        }
-        gc.drawImage(img, -32, -32, 32, 32);
-        gc.restore();
+        }*/
+        gc.drawImage(img, getX(), getY(), 32, 32);
     }
 }
