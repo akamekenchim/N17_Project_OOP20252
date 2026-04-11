@@ -137,6 +137,15 @@ public class WorldMap {
         }
         return null;
     }
+    //Overload
+    public Tile getTile(double rawX, double rawY) {
+    // 1. Chuyển đổi tọa độ pixel sang chỉ số ô lưới (Snap to Grid)
+    // Công thức: index = floor(pixel / TILE_SIZE)
+        int tx = (int) (rawX / Constants.TILE_SIZE);
+        int ty = (int) (rawY / Constants.TILE_SIZE);
+    // 2. Gọi hàm getTile(int, int) để kiểm tra biên và trả về kết quả
+        return getTile(tx, ty);
+    }
 
     public boolean isOccupied(int x, int y) {
         Tile t = getTile(x, y);

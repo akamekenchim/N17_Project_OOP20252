@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AggressiveStrategy_Test {
-    private static final double SCAN_RADIUS = 150.0;
+    private static final double SCAN_RADIUS = 100.0;
     private Random random = new Random();
 
     public Vector execute(Passive herbivore, WorldMap map, double delta, double speed) {
@@ -90,10 +90,11 @@ public class AggressiveStrategy_Test {
 
         // Nếu không đói hoặc không thấy thực thể nào trong bán kính, di chuyển bừa
         if (herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
-            double randomAngle = random.nextDouble() * 2 * Math.PI;
-            double dx = Math.cos(randomAngle);
-            double dy = Math.sin(randomAngle);
-            herbivore.setInnerDirectionTime(herbivore.getInnerDirectionTime() - 120);
+            double randomAngle = (random.nextDouble() * 180) - 90;
+            double rotateAngle = (Math.PI / 180) * randomAngle;
+            double dx = herbivore.getDx()*Math.cos(rotateAngle) - herbivore.getDy()*Math.sin(rotateAngle);
+            double dy = herbivore.getDx()*Math.sin(rotateAngle) + herbivore.getDy()*Math.cos(rotateAngle);
+            herbivore.setInnerDirectionTime(herbivore.getInnerDirectionTime() - Constants.DIRECTION_UPDATE_INTERVAL);
             return (new Vector(dx, dy));
         } else
             return (new Vector(herbivore.getDx(), herbivore.getDy()));
