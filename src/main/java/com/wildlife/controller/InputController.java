@@ -2,6 +2,7 @@ package com.wildlife.controller;
 import com.wildlife.model.plants.Grass;
 import com.wildlife.model.plants.Rock;
 import com.wildlife.model.worldmap.MatrixManager;
+import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.constant.Constants;
 import com.wildlife.model.animals.passive.*;
@@ -116,6 +117,21 @@ public class InputController {
             } else
                 System.out.println("There's already something here!");
             System.out.printf("Omae ga kono tile wo sawatteita: %.2f -- %.2f\n", rawX, rawY);
+            TerrainType type = (map.tiles[snappedTileY][snappedTileX]).getType();
+            switch(type){
+                case TerrainType.DIRT:
+                    System.out.println("This is a DIRT tile");
+                    break;
+                case TerrainType.GRASS:
+                    System.out.println("This is a GRASS tile");
+                    break;
+                case TerrainType.WATER:
+                    System.out.println("This is a WATER tile");
+                    break;
+                default:
+                    System.out.println("This is a DIRT tile");
+                    break;
+            }
         });
         scene.setOnMouseMoved(event -> {
             double rawX = SimulationController.screenToWorldX(event.getX());

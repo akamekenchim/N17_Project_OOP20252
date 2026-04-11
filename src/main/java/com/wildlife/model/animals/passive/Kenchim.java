@@ -3,6 +3,7 @@ package com.wildlife.model.animals.passive;
 import com.wildlife.constant.*;
 import com.wildlife.view.SpriteManager;
 import com.wildlife.model.strategy.*;
+import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -25,11 +26,36 @@ public class Kenchim extends Passive {
         Vector direction = new Vector(this.getDx(), this.getDy());
         if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
             direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
-            this.setInnerTime(this.getInnerTime() - 10);
+            this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);
 
         }
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
+        int testX = (int) (Math.min(Constants.SCREEN_WIDTH - 32,
+                Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED * 0.2)) / Constants.TILE_SIZE);
+        int testY = (int) (Math.min(Constants.SCREEN_HEIGHT - 32,
+                Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED * 0.2)) / Constants.TILE_SIZE);
+        double prevDx = this.getDx();
+        double prevDy = this.getDy();
+        int safety = 0;
+        while((mp.getTile(testX, testY)).getType() == TerrainType.WATER){
+            this.setDx(prevDx*Math.cos(Constants.ROTATION) - prevDy*Math.sin(Constants.ROTATION));
+            this.setDy(prevDx*Math.sin(Constants.ROTATION) + prevDy*Math.cos(Constants.ROTATION));
+            prevDx = this.getDx();
+            prevDy = this.getDy();
+            testX = (int) (Math.min(Constants.SCREEN_WIDTH - 32,
+                Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)) / Constants.TILE_SIZE);
+            testY = (int) (Math.min(Constants.SCREEN_HEIGHT - 32,
+                Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)) / Constants.TILE_SIZE); 
+            safety++;
+            if (safety >= 36) {
+                this.setDx(-this.getDx());
+                this.setDy(-this.getDy());
+                // Đừng quên cập nhật lastAngle để con thú quay đầu nhìn về hướng mới
+                //this.lastAngle = Math.toDegrees(Math.atan2(this.getDy(), this.getDx()));
+                break;
+            }      
+        }
         this.setX(Math.min(Constants.SCREEN_WIDTH - 32,
                 Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
         this.setY(Math.min(Constants.SCREEN_HEIGHT - 32,

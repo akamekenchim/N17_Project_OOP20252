@@ -6,7 +6,7 @@ import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
 
 public class WorldMap {
-    private final Tile[][] tiles;
+    public final Tile[][] tiles;
     private final List<BaseEntity> listEntity = new ArrayList<>();
 
     private final Queue<Tile> growingQueue = new LinkedList<>();
@@ -21,14 +21,17 @@ public class WorldMap {
                 TerrainType type;
 
                 switch (value) {
+                    case 0:
+                        type = TerrainType.GRASS;
+                        break;
                     case 1:
                         type = TerrainType.WATER;
                         break;
                     case 2:
-                        type = TerrainType.ROCK;
+                        type = TerrainType.WATER;
                         break;
                     case 3:
-                        type = TerrainType.FOREST;
+                        type = TerrainType.WATER;
                         break;
                     default:
                         type = TerrainType.DIRT;
