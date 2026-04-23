@@ -26,7 +26,7 @@ public class InputController {
                 case UP:
                     System.out.println("Pressed UP ARROW");
                     if (!isPaused)
-                        Constants.SIM_SPEED += 0.25;
+                        Constants.SIM_SPEED = Math.min(3.0, Constants.SIM_SPEED + 0.25);
                     break;
                 case DOWN:
                     System.out.println("Pressed DOWN ARROW");
