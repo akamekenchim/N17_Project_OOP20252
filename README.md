@@ -18,3 +18,10 @@ Nếu di chuyển được, cộng thực tiếp x và y như công thức trên
 Tham khảo hàm render t có viết sẵn.
 
 AI: (đã giải thích trên file)
+
+Bấm 1 + chuột trái để tạo cỏ
+Bấm 2 + chuột trái để tạo con vật ăn cỏ (Aggressive) (mới chỉ test)
+Bấm 3 + Chuột trái để tạo con vật ăn thịt (mới chỉ test)
+Bấm Spacebar để tạm dừng mô phỏng
+Có thể dùng lăn chuột kết hợp kéo chuột trái để Panning/Zooming
+Bấm mũi tên lên / xuống để tăng tốc/giảm tốc cho mô phỏng

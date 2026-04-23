@@ -103,11 +103,11 @@ public class InputController {
                     map.addEntity(g);
                 }
                 if (typeAnimal == 2) {
-                    Kenchim g = new Kenchim(parsed_X, parsed_Y);
+                    Cat g = new Cat(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
                 if (typeAnimal == 3) {
-                    Kohane g = new Kohane(parsed_X, parsed_Y);
+                    Wolf g = new Wolf(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
                 if (typeAnimal == -1) {

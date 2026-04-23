@@ -8,12 +8,12 @@ import com.wildlife.model.worldmap.WorldMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Kohane extends Predator {
+public class Wolf extends Predator {
     private HunterStrategy_Test brain = new HunterStrategy_Test();
 
     private Image img = SpriteManager.loadImage("wolf2.png");
 
-    public Kohane(double x, double y) {
+    public Wolf(double x, double y) {
         super(x, y);
         this.setDx(0.9);
         this.setDy(0.01);

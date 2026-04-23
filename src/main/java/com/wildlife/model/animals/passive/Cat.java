@@ -9,11 +9,11 @@ import com.wildlife.model.worldmap.WorldMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Kenchim extends Passive {
+public class Cat extends Passive {
     private AggressiveStrategy_Test brain = new AggressiveStrategy_Test();
     private Image img = SpriteManager.loadImage("wolf1.png");
     
-    public Kenchim(double x, double y) {
+    public Cat(double x, double y) {
         super(x, y);
         this.setDx(0.9);
         this.setDy(0.01);
@@ -73,7 +73,6 @@ public class Kenchim extends Passive {
     }
 
     @Override
-    // Đéo hiểu, mai đọc
     public void render(GraphicsContext gc, boolean isGraphic) {
         /*
          * gc.save();
