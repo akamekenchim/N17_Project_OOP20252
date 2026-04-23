@@ -15,6 +15,6 @@ public class Constants {
     public static final int MAP_HEIGHT = 26;
     public static final double PANNING_SPEED = 2.5;
     public static final int DIRECTION_UPDATE_INTERVAL = 80;
-    public static final int UPDATE_INTERVAL = 20;
+    public static final int UPDATE_INTERVAL = 10;
     public static final double ROTATION = (Math.PI/180) * 10; 
 }

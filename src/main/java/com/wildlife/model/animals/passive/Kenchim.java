@@ -33,26 +33,27 @@ public class Kenchim extends Passive {
         }
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
-        double testX = (Math.min(Constants.SCREEN_WIDTH - 32,
+        double testX = (Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
-        double testY = (Math.min(Constants.SCREEN_HEIGHT - 32,
+        double testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
         double prevDx = this.getDx();
         double prevDy = this.getDy();
         int safety = 0;
-        boolean hitWater = false;
+        boolean hitBoundary = false;
         while((mp.getTile(testX, testY)).getType() == TerrainType.WATER ||
                 (mp.getTile(testX, testY + 30)).getType() == TerrainType.WATER ||
                 (mp.getTile(testX + 30, testY)).getType() == TerrainType.WATER ||
-                (mp.getTile(testX+30, testY+30)).getType() == TerrainType.WATER){
-            hitWater = true;
+                (mp.getTile(testX+30, testY+30)).getType() == TerrainType.WATER ||
+                testX - 10 < 0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT){
+            hitBoundary = true;
             this.setDx(prevDx*Math.cos(Constants.ROTATION) - prevDy*Math.sin(Constants.ROTATION));
             this.setDy(prevDx*Math.sin(Constants.ROTATION) + prevDy*Math.cos(Constants.ROTATION));
             prevDx = this.getDx();
             prevDy = this.getDy();
-            testX = (Math.min(Constants.SCREEN_WIDTH - 32,
+            testX = (Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
-            testY = (Math.min(Constants.SCREEN_HEIGHT - 32,
+            testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
             safety++;
             if (safety >= 36) {
@@ -63,12 +64,12 @@ public class Kenchim extends Passive {
                 break;
             }      
         }
-        if(hitWater){
-            avoidanceTimer = 20;
+        if(hitBoundary){
+            avoidanceTimer = 30;
         }
-        this.setX(Math.min(Constants.SCREEN_WIDTH - 32,
+        this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
-        this.setY(Math.min(Constants.SCREEN_HEIGHT - 32,
+        this.setY(Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
     }
 
@@ -77,7 +78,7 @@ public class Kenchim extends Passive {
     public void render(GraphicsContext gc, boolean isGraphic) {
         /*
          * gc.save();
-         * gc.translate(getX()+32, getY()+32);
+         * gc.translate(getX()+Constants.TILE_SIZE, getY()+Constants.TILE_SIZE);
          * double rotateAngle = Math.toDegrees(Math.atan2(this.getDy(), this.getDx()));
          * if(this.getDx() < 0){
          * gc.scale(-1, 1);
@@ -87,6 +88,6 @@ public class Kenchim extends Passive {
          * gc.rotate(rotateAngle);
          * }
          */
-        gc.drawImage(img, getX(), getY(), 32, 32);
+        gc.drawImage(img, getX(), getY(), Constants.TILE_SIZE, Constants.TILE_SIZE);
     }
 }

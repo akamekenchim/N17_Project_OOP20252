@@ -14,17 +14,18 @@ import java.util.List;
 import java.util.Random;
 
 public class AggressiveStrategy_Test {
-    private static final double SCAN_RADIUS = 100.0;
-    private Random random = new Random();
+    private static final double SCAN_RADIUS = 100.0; //bán kính quét để tìm mồi
+    private Random random = new Random(); // khởi tạo hàm random
 
     public Vector execute(Passive herbivore, WorldMap map, double delta, double speed) {
         if (!herbivore.isAlive())
-            return (new Vector(herbivore.getDx(), herbivore.getDy()));
+            return (new Vector(herbivore.getDx(), herbivore.getDy())); //Nếu con vật đã chết, ngừng việc update ngay. Sau đó nó sẽ được xóa bỏ
 
-        List<BaseEntity> entities = map.getEntity();
+        List<BaseEntity> entities = map.getEntity(); 
 
-        // Kiểm tra khoảng cách với động vật ăn thịt, nếu < 10 thì con ăn cỏ chết
+        // Vòng lặp quét các thực thể, phân loại rõ ràng - đv ăn thịt, ăn cỏ, cỏ
         for (BaseEntity entity : entities) {
+            // Nếu quét mà thấy bị gần con ăn thịt quá thì cho con ăn cỏ chết
             if (entity instanceof Predator && entity.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
                 if (dist < 20.0) {
@@ -32,20 +33,20 @@ public class AggressiveStrategy_Test {
                     return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
                 }
             }
-
+            //Nếu quét được cỏ: Cỏ gần quá thì set alive của cỏ = false, thể hiện đã ăn cỏ
             else if (entity instanceof Grass && entity.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
-                if (dist < 20.0) {
+                if (dist < 30.0) {
                     entity.setAlive(false);
                     return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
                 }
             }
-
+            //Đây là AggressiveStrategy - con vật sẽ ăn cả con ăn cỏ, cho dù nó cũng là ăn cỏ (do đói quá)
+            //2 con ăn cỏ lao vào nhau thì 1 con chết và 1 con sống, tỉ lệ 50/50
             else if (entity != herbivore && entity instanceof Passive && entity.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
-                if (dist < 15.0) {
-                    Random r = new Random();
-                    int k = r.nextInt(5);
+                if (dist < 20.0) {
+                    int k = random.nextInt(2);
                     if (k % 2 == 0) {
                         entity.setAlive(false);
                         return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
@@ -57,7 +58,7 @@ public class AggressiveStrategy_Test {
             }
         }
 
-        // Logic Aggressive khi hunger < 30
+        // Logic Aggressive khi hunger < 30: Quét cả cỏ lẫn con ăn cỏ
         if (herbivore.getHunger() > 0) {
             List<BaseEntity> scannedEntities = new ArrayList<>();
             for (BaseEntity entity : entities) {
