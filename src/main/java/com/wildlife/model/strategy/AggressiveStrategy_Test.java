@@ -90,7 +90,7 @@ public class AggressiveStrategy_Test {
         }
 
         // Nếu không đói hoặc không thấy thực thể nào trong bán kính, di chuyển bừa
-        if (herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
+        if (herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL && herbivore.avoidanceTimer <= 0) {
             double randomAngle = (random.nextDouble() * 180) - 90;
             double rotateAngle = (Math.PI / 180) * randomAngle;
             double dx = herbivore.getDx()*Math.cos(rotateAngle) - herbivore.getDy()*Math.sin(rotateAngle);

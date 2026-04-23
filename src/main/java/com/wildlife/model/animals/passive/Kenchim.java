@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 public class Kenchim extends Passive {
     private AggressiveStrategy_Test brain = new AggressiveStrategy_Test();
     private Image img = SpriteManager.loadImage("wolf1.png");
-    private int avoidanceTimer = 0;
+    
     public Kenchim(double x, double y) {
         super(x, y);
         this.setDx(0.9);
@@ -25,11 +25,10 @@ public class Kenchim extends Passive {
         this.setInnerDirectionTime(this.getInnerDirectionTime() + Constants.SIM_SPEED);
         Vector direction = new Vector(this.getDx(), this.getDy());
         if (this.avoidanceTimer > 0) this.avoidanceTimer--;
-        if(avoidanceTimer <= 0){
-            if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
-                direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
-                this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);
-            }
+        
+        if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
+            direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
+            this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);
         }
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
