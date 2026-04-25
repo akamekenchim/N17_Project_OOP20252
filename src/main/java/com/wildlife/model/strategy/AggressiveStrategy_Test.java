@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Random;
 
 public class AggressiveStrategy_Test {
-    private static final double SCAN_RADIUS = 100.0; //bán kính quét để tìm mồi
+    private static final double SCAN_RADIUS = 120.0; //bán kính quét để tìm mồi
     private Random random = new Random(); // khởi tạo hàm random
 
-    public Vector execute(Passive herbivore, WorldMap map, double delta, double speed) {
+    public Vector execute(Passive herbivore, WorldMap map) {
         if (!herbivore.isAlive())
             return (new Vector(herbivore.getDx(), herbivore.getDy())); //Nếu con vật đã chết, ngừng việc update ngay. Sau đó nó sẽ được xóa bỏ
 
@@ -36,7 +36,7 @@ public class AggressiveStrategy_Test {
             //Nếu quét được cỏ: Cỏ gần quá thì set alive của cỏ = false, thể hiện đã ăn cỏ
             else if (entity instanceof Grass && entity.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), entity.getX(), entity.getY());
-                if (dist < 30.0) {
+                if (dist < 20.0) {
                     entity.setAlive(false);
                     return (new Vector(herbivore.getDx(), herbivore.getDy())); // Chết thì dừng hành động
                 }
@@ -72,7 +72,7 @@ public class AggressiveStrategy_Test {
                 }
             }
 
-            if (!scannedEntities.isEmpty()) {
+            if (!scannedEntities.isEmpty() && herbivore.getAvoidanceTimer() <= 0) {
                 // Ưu tiên chọn con mồi gần nhất bằng hàm SortDist
                 sortDist(herbivore, scannedEntities);
                 BaseEntity target = scannedEntities.get(0);

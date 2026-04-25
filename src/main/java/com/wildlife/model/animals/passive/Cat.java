@@ -10,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Cat extends Passive {
-    private AggressiveStrategy_Test brain = new AggressiveStrategy_Test();
+    private PassiveStrategy brain = new PassiveStrategy();
     private Image img = SpriteManager.loadImage("wolf1.png");
     
     public Cat(double x, double y) {
@@ -27,7 +27,7 @@ public class Cat extends Passive {
         if (this.avoidanceTimer > 0) this.avoidanceTimer--;
         
         if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
-            direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
+            direction = brain.execute(this, mp);
             this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);
         }
         this.setDx(direction.getDx());
@@ -44,7 +44,7 @@ public class Cat extends Passive {
                 (mp.getTile(testX, testY + 30)).getType() == TerrainType.WATER ||
                 (mp.getTile(testX + 30, testY)).getType() == TerrainType.WATER ||
                 (mp.getTile(testX+30, testY+30)).getType() == TerrainType.WATER ||
-                testX - 10 < 0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT){
+                testX -10 <  0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT){
             hitBoundary = true;
             this.setDx(prevDx*Math.cos(Constants.ROTATION) - prevDy*Math.sin(Constants.ROTATION));
             this.setDy(prevDx*Math.sin(Constants.ROTATION) + prevDy*Math.cos(Constants.ROTATION));
@@ -55,7 +55,7 @@ public class Cat extends Passive {
             testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
             safety++;
-            if (safety >= 36) {
+            if (safety >= Constants.THANH_HOA) {
                 this.setDx(-this.getDx());
                 this.setDy(-this.getDy());
                 // Đừng quên cập nhật lastAngle để con thú quay đầu nhìn về hướng mới
@@ -64,7 +64,7 @@ public class Cat extends Passive {
             }      
         }
         if(hitBoundary){
-            avoidanceTimer = 30;
+            avoidanceTimer = Constants.THANH_HOA;
         }
         this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
