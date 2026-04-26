@@ -8,7 +8,7 @@ public abstract class Animal extends BaseEntity {
     private double dy = 0;
     private double innerTime = 0;
     private double innerDirectionTime = 0;
-
+    protected int avoidanceTimer = 0;
     public void setInnerTime(double innerTime) {
         this.innerTime = innerTime;
     }
@@ -52,5 +52,10 @@ public abstract class Animal extends BaseEntity {
     public Animal(double x, double y) {
         super(x, y);
     }
-
+    public int getAvoidanceTimer() {
+        return avoidanceTimer;
+    }
+    public void setAvoidanceTimer(int avoidanceTimer) {
+        this.avoidanceTimer = avoidanceTimer;
+    }
 }
