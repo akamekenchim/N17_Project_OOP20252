@@ -64,7 +64,7 @@ public class Wolf extends Predator {
                 (mp.getTile(testX, testY + 30)).getType() == TerrainType.WATER ||
                 (mp.getTile(testX + 30, testY)).getType() == TerrainType.WATER ||
                 (mp.getTile(testX+30, testY+30)).getType() == TerrainType.WATER ||
-                testX  <  0 || testX + 35 > Constants.SCREEN_WIDTH || testY < 0 || testY + 35 > Constants.SCREEN_HEIGHT){
+                testX - 10 <  0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT){
             hitBoundary = true;
             this.setDx(prevDx*Math.cos(Constants.ROTATION) - prevDy*Math.sin(Constants.ROTATION));
             this.setDy(prevDx*Math.sin(Constants.ROTATION) + prevDy*Math.cos(Constants.ROTATION));
