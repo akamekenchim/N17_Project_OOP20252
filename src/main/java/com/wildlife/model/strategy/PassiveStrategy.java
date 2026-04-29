@@ -35,8 +35,10 @@ public class PassiveStrategy {
             }
             if(e instanceof Grass && e.isAlive() == true){
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
-                if(dist < 20){
+                if(dist < 20 && herbivore.getHunger() < 70){
                     e.setAlive(false);
+                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 5));
+                    //System.out.println("New hunger: " + herbivore.getHunger());
                     return new Vector(herbivore.getDx(), herbivore.getDy());
                 }
                 if(dist < minDistGrass && dist <= MAX_SCAN){
@@ -56,7 +58,7 @@ public class PassiveStrategy {
             }
             return (new Vector(herbivore.getDx(), herbivore.getDy()));
         }
-        else if (closestGrass != null && herbivore.getAvoidanceTimer() <= 0) {
+        else if (closestGrass != null && herbivore.getAvoidanceTimer() <= 0 && herbivore.getHunger() < 70) {
             // Lao đến ăn
             double dx = closestGrass.getX() - herbivore.getX();
             double dy = closestGrass.getY() - herbivore.getY();

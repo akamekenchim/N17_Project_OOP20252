@@ -3,7 +3,7 @@ package com.wildlife.model.animals;
 import com.wildlife.model.BaseEntity;
 
 public abstract class Animal extends BaseEntity {
-    private int hunger = 100;
+    private double hunger = 100;
     private double dx = 0;
     private double dy = 0;
     private double innerTime = 0;
@@ -41,11 +41,11 @@ public abstract class Animal extends BaseEntity {
         this.dy = dy;
     }
 
-    public int getHunger() {
+    public double getHunger() {
         return hunger;
     }
 
-    public void setHunger(int hunger) {
+    public void setHunger(double hunger) {
         this.hunger = hunger;
     }
 

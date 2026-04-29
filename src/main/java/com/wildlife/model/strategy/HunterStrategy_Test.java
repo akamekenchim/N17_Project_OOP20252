@@ -26,7 +26,9 @@ public class HunterStrategy_Test {
                     minDistance = dist;
                     closestPrey = (Passive) entity;
                 }
-                if (dist < 20.0) {
+                if (dist < 25.0) {
+                    hunter.setHunger(Math.min(100, hunter.getHunger() + 15));
+                   // System.out.println("New hunger: " + hunter.getHunger());
                     entity.setAlive(false);
                     return (new Vector(hunter.getDx(), hunter.getDy())); // Chết thì dừng hành động
                 }
