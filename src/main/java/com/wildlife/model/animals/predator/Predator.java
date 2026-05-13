@@ -21,7 +21,7 @@ public abstract class Predator extends Animal {
     }
     @Override
     public void update(double delta, WorldMap mp){
-        if(this.getHunger() <= 0){
+        if(this.getHunger() <= 0 || this.getThirst() <= 0){
             this.setAlive(false);
             return;
         }
@@ -32,6 +32,7 @@ public abstract class Predator extends Animal {
         
         if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
             this.setHunger(this.getHunger() - (random.nextDouble() / 3));
+            this.setThirst(this.getThirst() - (random.nextDouble() / 8));
             //System.out.println("Current hunger: " + this.getHunger());
             direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
             this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);

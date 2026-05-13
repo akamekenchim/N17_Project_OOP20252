@@ -4,11 +4,14 @@ import com.wildlife.model.BaseEntity;
 
 public abstract class Animal extends BaseEntity {
     private double hunger = 100;
+    private double thirst = 100;
+    private double tiredness = 100;
     private double dx = 0;
     private double dy = 0;
     private double innerTime = 0;
     private double innerDirectionTime = 0;
     protected int avoidanceTimer = 0;
+    protected double speed = 0;
     public void setInnerTime(double innerTime) {
         this.innerTime = innerTime;
     }
@@ -57,5 +60,20 @@ public abstract class Animal extends BaseEntity {
     }
     public void setAvoidanceTimer(int avoidanceTimer) {
         this.avoidanceTimer = avoidanceTimer;
+    }
+    public double getThirst() {
+        return thirst;
+    }
+
+    public void setThirst(double thirst) {
+        this.thirst = thirst;
+    }
+
+    public double getTiredness() {
+        return tiredness;
+    }
+
+    public void setTiredness(double tiredness) {
+        this.tiredness = tiredness;
     }
 }

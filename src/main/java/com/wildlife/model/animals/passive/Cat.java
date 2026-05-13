@@ -15,6 +15,7 @@ public class Cat extends Passive {
         super(x, y);
         this.setDx(0.9);
         this.setDy(0.01);
+        this.speed = Constants.UMA_SPEED;
     }
     @Override
     public void update(double delta, WorldMap mp) {

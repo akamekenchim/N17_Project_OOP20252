@@ -18,7 +18,7 @@ public abstract class Passive extends Animal {
     }
     @Override 
     public void update(double delta, WorldMap mp){
-        if(this.getHunger() <= 0){
+        if(this.getHunger() <= 0 || this.getThirst() <= 0){
             this.setAlive(false);
             return;
         }
@@ -29,6 +29,7 @@ public abstract class Passive extends Animal {
         
         if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
             this.setHunger(this.getHunger() - (random.nextDouble() / 5));
+            this.setThirst(this.getThirst() - (random.nextDouble() / 8));
             //System.out.println("Current hunger: " + this.getHunger());
             direction = brain.execute(this, mp);
             this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);
@@ -36,9 +37,9 @@ public abstract class Passive extends Animal {
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
         double testX = (Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
-                Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
+                Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
         double testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
-                Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
+                Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
         double prevDx = this.getDx();
         double prevDy = this.getDy();
         int safety = 0;
@@ -54,9 +55,9 @@ public abstract class Passive extends Animal {
             prevDx = this.getDx();
             prevDy = this.getDy();
             testX = (Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
-                Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
+                Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
             testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
-                Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
+                Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
             safety++;
             if (safety >= Constants.THANH_HOA) {
                 this.setDx(-this.getDx());
@@ -70,8 +71,8 @@ public abstract class Passive extends Animal {
             avoidanceTimer = Constants.THANH_HOA;
         }
         this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
-                Math.max(0, this.getX() + this.getDx() * delta * Constants.FOX_SPEED)));
+                Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
         this.setY(Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
-                Math.max(0, this.getY() + this.getDy() * delta * Constants.FOX_SPEED)));
+                Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
     }
 }
