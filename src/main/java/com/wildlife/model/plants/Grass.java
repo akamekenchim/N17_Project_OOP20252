@@ -29,7 +29,7 @@ public class Grass extends BaseEntity {
             Image im = SpriteManager.loadImage("wolf2.png");
             gc.drawImage(im, this.getX(), this.getY(), 70, 70);
         } else {
-            Image im = SpriteManager.loadImage("grass1.png");
+            Image im = SpriteManager.loadImage("lampgrass_full.png");
             gc.drawImage(im, this.getX(), this.getY(), 32, 32);
         }
     }

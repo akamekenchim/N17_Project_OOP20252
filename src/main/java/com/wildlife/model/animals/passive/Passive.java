@@ -36,34 +36,39 @@ public abstract class Passive extends Animal {
         }
         this.setDx(direction.getDx());
         this.setDy(direction.getDy());
+        // Trong Passive.java (và cả Predator.java sau này)
         double testX = (Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
         double testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
+        
         double prevDx = this.getDx();
         double prevDy = this.getDy();
         int safety = 0;
         boolean hitBoundary = false;
-        while((mp.getTile(testX, testY)).getType() == TerrainType.WATER ||
-                (mp.getTile(testX, testY + 30)).getType() == TerrainType.WATER ||
-                (mp.getTile(testX + 30, testY)).getType() == TerrainType.WATER ||
-                (mp.getTile(testX+30, testY+30)).getType() == TerrainType.WATER ||
-                testX - 10 <  0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT){
+
+        // KIỂM TRA 4 GÓC CỦA CON VẬT QUA HÀM isObstacle
+        while(mp.isObstacle(testX, testY, this) ||
+              mp.isObstacle(testX, testY + 30, this) ||
+              mp.isObstacle(testX + 30, testY, this) ||
+              mp.isObstacle(testX + 30, testY + 30, this) || testX - 10 <  0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT) {
+            
             hitBoundary = true;
-            this.setDx(prevDx*Math.cos(Constants.ROTATION) - prevDy*Math.sin(Constants.ROTATION));
-            this.setDy(prevDx*Math.sin(Constants.ROTATION) + prevDy*Math.cos(Constants.ROTATION));
+            this.setDx(prevDx * Math.cos(Constants.ROTATION) - prevDy * Math.sin(Constants.ROTATION));
+            this.setDy(prevDx * Math.sin(Constants.ROTATION) + prevDy * Math.cos(Constants.ROTATION));
+            
             prevDx = this.getDx();
             prevDy = this.getDy();
+            
             testX = (Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
             testY = (Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
+                
             safety++;
             if (safety >= Constants.THANH_HOA) {
                 this.setDx(-this.getDx());
                 this.setDy(-this.getDy());
-                // Đừng quên cập nhật lastAngle để con thú quay đầu nhìn về hướng mới
-                //this.lastAngle = Math.toDegrees(Math.atan2(this.getDy(), this.getDx()));
                 break;
             }      
         }

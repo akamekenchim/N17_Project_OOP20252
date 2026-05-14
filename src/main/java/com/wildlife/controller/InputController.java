@@ -91,7 +91,7 @@ public class InputController {
             // nhóm WorldMap cần thêm 1 hàm isOccupied trong WorldMap để kiểm tra xem tile
             // này đã
             // có thực thể nào chưa, nếu có rồi thì không được đặt nữa
-            if (!(map.isOccupied(parsed_X, parsed_Y))) {
+            if (!(map.isOccupied(snappedTileX, snappedTileY))) {
                 if (typeAnimal == 1) {
                     Grass g = new Grass(parsed_X, parsed_Y, 0);
                     if (MatrixManager.MAP_LAYOUT[snappedTileY][snappedTileX] == 0) {

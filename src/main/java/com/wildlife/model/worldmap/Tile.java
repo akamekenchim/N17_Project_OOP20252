@@ -14,6 +14,7 @@ public class Tile {
     private TerrainType type;
     private BaseEntity occupant;
     private Grass grassEntity;
+    private boolean occupied = false;
 
     // Logic mọc cỏ
     private long startGrowingTime;
@@ -73,7 +74,7 @@ public class Tile {
     }
 
     public void setOccupant(BaseEntity entity) {
-        if (entity != null && isPassable()) {
+        if (entity != null && !isPassable()) {
             return;
         }
         this.occupant = entity;
@@ -150,5 +151,14 @@ public class Tile {
 
     public boolean isGrowingActive() {
         return isGrowingActive;
+    }
+
+
+    public boolean getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 }

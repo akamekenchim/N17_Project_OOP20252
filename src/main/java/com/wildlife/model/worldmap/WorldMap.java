@@ -8,7 +8,7 @@ import com.wildlife.model.BaseEntity;
 public class WorldMap {
     public final Tile[][] tiles;
     private final List<BaseEntity> listEntity = new ArrayList<>();
-
+    private Random random = new Random();
     private final Queue<Tile> growingQueue = new LinkedList<>();
 
     public WorldMap() {
@@ -123,12 +123,29 @@ public class WorldMap {
     public void update(double delta) {
 
         updateGrassGrowth();
-
+        checkAllTiles();
         for (BaseEntity entity : listEntity) {
             entity.update(delta, this);
+
         }
 
         cleaning();
+    }
+
+    public void checkAllTiles(){
+        for(int i = 0; i<26; i++){
+            for(int j = 0; j<37; j++){
+                Tile t = getTile(j, i);
+                t.setOccupied(false);
+            }
+        }
+        for(BaseEntity e : listEntity){
+            int rawX = (int)(e.getX());
+            int rawY = (int)(e.getY());
+            int snappedTileX = (int) (rawX / Constants.TILE_SIZE);
+            int snappedTileY = (int) (rawY / Constants.TILE_SIZE);
+            (getTile(snappedTileX, snappedTileY)).setOccupied(true);
+        }
     }
 
     public Tile getTile(int x, int y) {
@@ -149,7 +166,7 @@ public class WorldMap {
 
     public boolean isOccupied(int x, int y) {
         Tile t = getTile(x, y);
-        return t != null && t.hasOccupant();
+        return t != null && t.getOccupied();
     }
 
     // Hàm này chưa lọc theo đối tượng, chỉ lấy tất cả những vật thể trong phạm vi
@@ -216,6 +233,36 @@ public class WorldMap {
         return growingQueue.size();
     }
 
+    // Thêm hàm này vào WorldMap.java
+    public boolean isObstacle(double pixelX, double pixelY, BaseEntity self) {
+        // 1. KIỂM TRA BIÊN TRƯỚC TIÊN (Fix dứt điểm lỗi Crash OutOfBounds)
+        if (pixelX < 0 || pixelX >= Constants.SCREEN_WIDTH || pixelY < 0 || pixelY >= Constants.SCREEN_HEIGHT) {
+            return true; 
+        }
+
+        Tile t = getTile(pixelX, pixelY);
+        if (t == null) return true;
+
+        // 2. TẬN DỤNG isPassable() ĐỂ CHẶN NƯỚC (Hoặc TerrainType.ROCK nếu có)
+        if (!t.isPassable()) {
+            return true;
+        }
+
+        // 3. CHẶN VẬT CẢN LÀ ENTITY (Cục Đá)
+        // Quét xem ô này có chứa Đá do InputController đặt xuống không
+        for (BaseEntity e : listEntity) {
+            if (e != self && e instanceof com.wildlife.model.plants.Rock) {
+                int rockTileX = (int) (e.getX() / Constants.TILE_SIZE);
+                int rockTileY = (int) (e.getY() / Constants.TILE_SIZE);
+                if (rockTileX == t.getX() && rockTileY == t.getY()) {
+                    return true; // Dẫm trúng cục đá -> Bị chặn
+                }
+            }
+        }
+
+        return false; // Đường trống, đi thoải mái!
+    }
+    
 }
 
 /*
