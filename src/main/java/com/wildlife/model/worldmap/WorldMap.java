@@ -260,19 +260,25 @@ public class WorldMap {
 
     // 2. KIỂM TRA ĐỒNG LOẠI (Va chạm mềm)
     public boolean isCompanion(double nextX, double nextY, BaseEntity self) {
-        // Lấy tâm dự kiến của con vật để so sánh cho mượt
         double centerX = nextX + 15; 
         double centerY = nextY + 15;
 
         for (BaseEntity e : listEntity) {
-            if (e != self && ((e instanceof Predator && self instanceof Predator) || (e instanceof Passive && self instanceof Passive))) {
+            // Chỉ xét đồng loại và đang sống
+            if (e != self && e.isAlive() && 
+               ((e instanceof Predator && self instanceof Predator) || 
+                (e instanceof Passive && self instanceof Passive))) {
+                
                 double eCenterX = e.getX() + 15;
                 double eCenterY = e.getY() + 15;
-                
-                // Tính bình phương khoảng cách (Không dùng sqrt để tối ưu FPS)
                 double distSq = (centerX - eCenterX) * (centerX - eCenterX) + (centerY - eCenterY) * (centerY - eCenterY);
-                if (distSq < 400) { // Bán kính va chạm 20 pixel (Thú lọt vào vòng tròn của nhau)
-                    return true;
+                
+                if (distSq < 400) { 
+                    // PHÁ VỠ THẾ BẾ TẮC: Chỉ dừng lại nếu con vật kia có "độ ưu tiên" cao hơn
+                    // Chúng ta dùng System.identityHashCode để so sánh ngẫu nhiên nhưng cố định
+                    if (System.identityHashCode(self) < System.identityHashCode(e)) {
+                        return true; 
+                    }
                 }
             }
         }

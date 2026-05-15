@@ -84,14 +84,16 @@ public abstract class Passive extends Animal {
                 // CHỈ GIẢM TỐC (Đi chậm lại 80% để chờ con phía trước đi qua)
                 
                 // *Lưu ý: Lead dùng this.speed hoặc Constants.FOX_SPEED tùy theo file nhé
-                testX = this.getX() + this.getDx() * delta * (this.speed * 0.2); 
-                testY = this.getY() + this.getDy() * delta * (this.speed * 0.2);
+                testX = this.getX() + this.getDx() * delta * (this.speed * 0.05); 
+                testY = this.getY() + this.getDy() * delta * (this.speed * 0.05);
             }
         }
-        this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
-                Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
-        this.setY(Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
-                Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
+        //this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
+                //Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
+        //this.setY(Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
+                //Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
+        this.setX(testX);
+        this.setY(testY);
     }
     @Override
     public void render(GraphicsContext gc, boolean isGraphic){

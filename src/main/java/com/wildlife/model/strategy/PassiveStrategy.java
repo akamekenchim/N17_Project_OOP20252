@@ -31,6 +31,7 @@ public class PassiveStrategy {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
                 if(dist < 20){
                     herbivore.setAlive(false);
+                    ((Predator) e).setHunger(Math.min(100, ((Predator) e).getHunger() + 40));
                     return new Vector(herbivore.getDx(), herbivore.getDy());
                 }
                 if(dist < minDistPred && dist <= MAX_SCAN + 50){
@@ -64,7 +65,7 @@ public class PassiveStrategy {
             return (new Vector(herbivore.getDx(), herbivore.getDy()));
         }
         // Ưu tiên 2: GIẢI KHÁT (Chỉ đi tìm khi an toàn)
-        if (herbivore.getThirst() < 90 && herbivore.getAvoidanceTimer() <= 0) {
+        if (herbivore.getThirst() < 40 && herbivore.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(herbivore, map);
             if (waterDir != null) return waterDir;
         }
@@ -134,7 +135,7 @@ public class PassiveStrategy {
         if (targetX != -1) {
             double realDist = Math.sqrt(minDist);
             if (realDist < 20) {
-                herbivore.setThirst(Math.min(100, herbivore.getThirst() + 10));
+                herbivore.setThirst(Math.min(100, herbivore.getThirst() + 70));
                 System.out.println("Thirst: " + herbivore.getThirst());
                 return new Vector(0, 0);
             }

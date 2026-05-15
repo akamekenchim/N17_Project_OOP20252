@@ -13,7 +13,7 @@ import java.util.Random;
 public class HunterStrategy_Test {
     private static final double SCAN_RADIUS = 200.0;
     private static final double MAX_WATER_SCAN = 300.0;
-    private static final int MAX_CYCLE = 20;
+    private static final int MAX_CYCLE = 15;
     private int cycle = 0;
     private Random random = new Random();
 
@@ -31,14 +31,14 @@ public class HunterStrategy_Test {
                     closestPrey = (Passive) entity;
                 }
                 if (dist < 25.0) {
-                    hunter.setHunger(Math.min(100, hunter.getHunger() + 15));
+                    hunter.setHunger(Math.min(100, hunter.getHunger() + 40));
                    // System.out.println("New hunger: " + hunter.getHunger());
                     entity.setAlive(false);
                     return (new Vector(hunter.getDx(), hunter.getDy())); // Chết thì dừng hành động
                 }
             }
         }
-        if (hunter.getThirst() < 90 && hunter.getAvoidanceTimer() <= 0) {
+        if (hunter.getThirst() < 40 && hunter.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(hunter, map);
             if (waterDir != null) return waterDir;
         }
@@ -110,7 +110,7 @@ public class HunterStrategy_Test {
         if (targetX != -1) {
             double realDist = Math.sqrt(minDist);
             if (realDist < 20) {
-                hunter.setThirst(Math.min(100, hunter.getThirst() + 10));
+                hunter.setThirst(Math.min(100, hunter.getThirst() + 70));
                 System.out.println("Thirst: " + hunter.getThirst());
                 return new Vector(0, 0);
             }
