@@ -74,10 +74,27 @@ public abstract class Passive extends Animal {
         }
         if(hitBoundary){
             avoidanceTimer = Constants.THANH_HOA;
+        } 
+        else {
+            // 2. LOGIC "BẦY ĐÀN" (Chỉ chạy nếu đường trống trải không có đá/nước)
+            // Nếu phát hiện có đồng loại cản đường phía trước
+            if (mp.isCompanion(testX, testY, this)) {
+                
+                // BÍ QUYẾT: KHÔNG đổi hướng (dx, dy giữ nguyên)
+                // CHỈ GIẢM TỐC (Đi chậm lại 80% để chờ con phía trước đi qua)
+                
+                // *Lưu ý: Lead dùng this.speed hoặc Constants.FOX_SPEED tùy theo file nhé
+                testX = this.getX() + this.getDx() * delta * (this.speed * 0.2); 
+                testY = this.getY() + this.getDy() * delta * (this.speed * 0.2);
+            }
         }
         this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
                 Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
         this.setY(Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
                 Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
+    }
+    @Override
+    public void render(GraphicsContext gc, boolean isGraphic){
+        super.render(gc, isGraphic);
     }
 }

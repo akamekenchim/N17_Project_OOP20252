@@ -4,7 +4,8 @@ import java.util.*;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
-
+import com.wildlife.model.animals.passive.Passive;
+import com.wildlife.model.animals.predator.Predator;
 public class WorldMap {
     public final Tile[][] tiles;
     private final List<BaseEntity> listEntity = new ArrayList<>();
@@ -233,34 +234,49 @@ public class WorldMap {
         return growingQueue.size();
     }
 
-    // Thêm hàm này vào WorldMap.java
+    // 1. KIỂM TRA CHƯỚNG NGẠI VẬT CỨNG (Phải xoay đầu)
     public boolean isObstacle(double pixelX, double pixelY, BaseEntity self) {
-        // 1. KIỂM TRA BIÊN TRƯỚC TIÊN (Fix dứt điểm lỗi Crash OutOfBounds)
         if (pixelX < 0 || pixelX >= Constants.SCREEN_WIDTH || pixelY < 0 || pixelY >= Constants.SCREEN_HEIGHT) {
             return true; 
         }
 
         Tile t = getTile(pixelX, pixelY);
-        if (t == null) return true;
-
-        // 2. TẬN DỤNG isPassable() ĐỂ CHẶN NƯỚC (Hoặc TerrainType.ROCK nếu có)
-        if (!t.isPassable()) {
-            return true;
+        if (t == null || !t.isPassable()) {
+            return true; // Chặn Nước, Rìa map
         }
 
-        // 3. CHẶN VẬT CẢN LÀ ENTITY (Cục Đá)
-        // Quét xem ô này có chứa Đá do InputController đặt xuống không
+        // CHỈ CHẶN ĐÁ (Đã xóa logic kiểm tra đồng loại ở đây)
         for (BaseEntity e : listEntity) {
             if (e != self && e instanceof com.wildlife.model.plants.Rock) {
                 int rockTileX = (int) (e.getX() / Constants.TILE_SIZE);
                 int rockTileY = (int) (e.getY() / Constants.TILE_SIZE);
                 if (rockTileX == t.getX() && rockTileY == t.getY()) {
-                    return true; // Dẫm trúng cục đá -> Bị chặn
+                    return true;
                 }
             }
         }
+        return false;
+    }
 
-        return false; // Đường trống, đi thoải mái!
+    // 2. KIỂM TRA ĐỒNG LOẠI (Va chạm mềm)
+    public boolean isCompanion(double nextX, double nextY, BaseEntity self) {
+        // Lấy tâm dự kiến của con vật để so sánh cho mượt
+        double centerX = nextX + 15; 
+        double centerY = nextY + 15;
+
+        for (BaseEntity e : listEntity) {
+            if (e != self && ((e instanceof Predator && self instanceof Predator) || (e instanceof Passive && self instanceof Passive))) {
+                double eCenterX = e.getX() + 15;
+                double eCenterY = e.getY() + 15;
+                
+                // Tính bình phương khoảng cách (Không dùng sqrt để tối ưu FPS)
+                double distSq = (centerX - eCenterX) * (centerX - eCenterX) + (centerY - eCenterY) * (centerY - eCenterY);
+                if (distSq < 400) { // Bán kính va chạm 20 pixel (Thú lọt vào vòng tròn của nhau)
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
 }

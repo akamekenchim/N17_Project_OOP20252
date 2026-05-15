@@ -37,6 +37,7 @@ public class Wolf extends Predator {
          * }
          */
         gc.drawImage(img, getX(), getY(), 32, 32);
+        super.render(gc, isGraphic);
     }
 }
 
