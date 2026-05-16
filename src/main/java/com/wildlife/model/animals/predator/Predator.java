@@ -52,9 +52,9 @@ public abstract class Predator extends Animal {
 
         // KIỂM TRA 4 GÓC CỦA CON VẬT QUA HÀM isObstacle
         while(mp.isObstacle(testX, testY, this) ||
-              mp.isObstacle(testX, testY + 30, this) ||
-              mp.isObstacle(testX + 30, testY, this) ||
-              mp.isObstacle(testX + 30, testY + 30, this)
+              mp.isObstacle(testX, testY + 25, this) ||
+              mp.isObstacle(testX + 25, testY, this) ||
+              mp.isObstacle(testX + 25, testY + 25, this)
             || testX - 10 <  0 || testX + 35 > Constants.SCREEN_WIDTH || testY - 10 < 0 || testY + 35 > Constants.SCREEN_HEIGHT) {
             
             hitBoundary = true;

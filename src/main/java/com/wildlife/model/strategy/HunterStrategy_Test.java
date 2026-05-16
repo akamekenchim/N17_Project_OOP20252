@@ -5,6 +5,7 @@ import com.wildlife.model.BaseEntity;
 import com.wildlife.model.animals.passive.Passive;
 import com.wildlife.model.animals.predator.Predator;
 import com.wildlife.model.worldmap.TerrainType;
+import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
 
 import java.util.List;
@@ -86,35 +87,83 @@ public class HunterStrategy_Test {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
-    private Vector findWaterVector(Predator hunter, WorldMap map) {
-        double curX = hunter.getX();
-        double curY = hunter.getY();
+    private Vector findWaterVector(Predator herbivore, WorldMap map) {
+        double curX = herbivore.getX();
+        double curY = herbivore.getY();
         double minDist = Double.MAX_VALUE;
+        
+        // Lưu tọa độ TÂM của bờ hồ và TÂM của ô nước
         double targetX = -1, targetY = -1;
+        double bestWaterX = -1, bestWaterY = -1; 
+
+        // 4 hướng quét ô hàng xóm liền kề: Trái, Phải, Trên, Dưới
+        int[] dx = {-Constants.TILE_SIZE, Constants.TILE_SIZE, 0, 0};
+        int[] dy = {0, 0, -Constants.TILE_SIZE, Constants.TILE_SIZE};
 
         for (double x = curX - MAX_WATER_SCAN; x <= curX + MAX_WATER_SCAN; x += Constants.TILE_SIZE) {
             for (double y = curY - MAX_WATER_SCAN; y <= curY + MAX_WATER_SCAN; y += Constants.TILE_SIZE) {
-                // Kiểm tra biên an toàn
+                
+                // 1. Kiểm tra ô gốc có nằm trong bản đồ và là NƯỚC không
                 if (x >= 0 && x < Constants.SCREEN_WIDTH && y >= 0 && y < Constants.SCREEN_HEIGHT) {
-                    if (map.getTile(x, y).getType() == TerrainType.WATER) {
-                        double d2 = (x - curX) * (x - curX) + (y - curY) * (y - curY);
-                        if (d2 < minDist) {
-                            minDist = d2;
-                            targetX = x; targetY = y;
+                    Tile waterTile = map.getTile(x, y);
+                    if (waterTile != null && waterTile.getType() == TerrainType.WATER) {
+                        
+                        // 2. KHẢO SÁT 4 Ô XUNG QUANH ĐỂ TÌM "BỜ HỒ"
+                        for (int i = 0; i < 4; i++) {
+                            double nx = x + dx[i];
+                            double ny = y + dy[i];
+
+                            if (nx >= 0 && nx < Constants.SCREEN_WIDTH && ny >= 0 && ny < Constants.SCREEN_HEIGHT) {
+                                Tile neighborTile = map.getTile(nx, ny);
+                                
+                                if (neighborTile != null && neighborTile.isPassable()) {
+                                    
+                                    // ĐIỂM CHUẨN 1: Tính tọa độ TÂM của ô đất để con vật đi mượt hơn
+                                    double centerNx = nx + (Constants.TILE_SIZE / 2.0);
+                                    double centerNy = ny + (Constants.TILE_SIZE / 2.0);
+                                    double animalCenterX = curX + 15; // Giả sử con vật rộng 30
+                                    double animalCenterY = curY + 15;
+
+                                    double d2 = (centerNx - animalCenterX)*(centerNx - animalCenterX) + (centerNy - animalCenterY)*(centerNy - animalCenterY);
+                                    
+                                    if (d2 < minDist) {
+                                        minDist = d2;
+                                        targetX = centerNx;
+                                        targetY = centerNy;
+                                        
+                                        // ĐIỂM CHUẨN 2: Lưu lại TÂM của mặt nước
+                                        bestWaterX = x + (Constants.TILE_SIZE / 2.0);
+                                        bestWaterY = y + (Constants.TILE_SIZE / 2.0);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
+        // 3. ĐIỀU HƯỚNG VÀ UỐNG NƯỚC
         if (targetX != -1) {
-            double realDist = Math.sqrt(minDist);
-            if (realDist < 20) {
-                hunter.setThirst(Math.min(100, hunter.getThirst() + 70));
-                System.out.println("Thirst: " + hunter.getThirst());
-                return new Vector(0, 0);
+            double animalCenterX = curX + 15;
+            double animalCenterY = curY + 15;
+            
+            // Tính khoảng cách THỰC TẾ từ Tâm con vật đến Tâm mặt nước
+            double distToWater = Math.sqrt((bestWaterX - animalCenterX)*(bestWaterX - animalCenterX) + (bestWaterY - animalCenterY)*(bestWaterY - animalCenterY));
+            
+            // Nếu khoảng cách <= TILE_SIZE + 5 pixel (sai số), nghĩa là con vật đang đứng sát mép nước
+            if (distToWater <= Constants.TILE_SIZE + 5) {
+                herbivore.setThirst(Math.min(100, herbivore.getThirst() + 70));
+                // System.out.println("Thirst: " + herbivore.getThirst());
+                return new Vector(0, 0); // Cúi xuống uống nước
             }
-            return new Vector((targetX - curX) / realDist, (targetY - curY) / realDist);
+            
+            // Nếu chưa tới sát mép, tiếp tục đi về phía TÂM của bờ hồ
+            double moveDx = targetX - animalCenterX;
+            double moveDy = targetY - animalCenterY;
+            double length = Math.sqrt(moveDx * moveDx + moveDy * moveDy);
+            
+            return new Vector(moveDx / length, moveDy / length);
         }
         return null;
     }
