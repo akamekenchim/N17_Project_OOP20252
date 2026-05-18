@@ -14,6 +14,7 @@ public class PassiveStrategy {
     public static final double MAX_SCAN = 120.0;
     public static final double MAX_WATER_SCAN = 200.0;
     public static final int MAX_CYCLE = 20;
+    public static final int THIRST_THRESHOLD = 40;
     private int cycle = 0;
     private Random random = new Random();
     public Vector execute(Passive herbivore, WorldMap map){
@@ -33,6 +34,7 @@ public class PassiveStrategy {
                 if(dist < 20){
                     herbivore.setAlive(false);
                     ((Predator) e).setHunger(Math.min(100, ((Predator) e).getHunger() + 40));
+                    herbivore.setDrinking(false);
                     return new Vector(herbivore.getDx(), herbivore.getDy());
                 }
                 if(dist < minDistPred && dist <= MAX_SCAN + 50){
@@ -66,7 +68,7 @@ public class PassiveStrategy {
             return (new Vector(herbivore.getDx(), herbivore.getDy()));
         }
         // Ưu tiên 2: GIẢI KHÁT (Chỉ đi tìm khi an toàn)
-        if (herbivore.getThirst() < 90 && herbivore.getAvoidanceTimer() <= 0) {
+        if (herbivore.getThirst() < THIRST_THRESHOLD && herbivore.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(herbivore, map);
             if (waterDir != null) return waterDir;
         }
@@ -87,9 +89,11 @@ public class PassiveStrategy {
         if (herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL && herbivore.getAvoidanceTimer() <= 0) {
             if (herbivore.getDx() == 0 && herbivore.getDy() == 0) {
                 if(cycle < MAX_CYCLE){
+                    herbivore.setDrinking(true);
                     cycle++;
                     return new Vector(0, 0);
                 } 
+                herbivore.setDrinking(false);
                 cycle = 0;
                 double randomAngle = random.nextDouble() * 360; 
                 double rad = Math.toRadians(randomAngle);
@@ -177,7 +181,7 @@ public class PassiveStrategy {
             double distToWater = Math.sqrt((bestWaterX - animalCenterX)*(bestWaterX - animalCenterX) + (bestWaterY - animalCenterY)*(bestWaterY - animalCenterY));
             
             // Nếu khoảng cách <= TILE_SIZE + 5 pixel (sai số), nghĩa là con vật đang đứng sát mép nước
-            if (distToWater <= Constants.TILE_SIZE + 5) {
+            if (distToWater <= Constants.TILE_SIZE + 15) {
                 herbivore.setThirst(Math.min(100, herbivore.getThirst() + 70));
                 // System.out.println("Thirst: " + herbivore.getThirst());
                 return new Vector(0, 0); // Cúi xuống uống nước

@@ -5,6 +5,7 @@ import com.wildlife.model.worldmap.MatrixManager;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.constant.Constants;
+import com.wildlife.model.BaseEntity;
 import com.wildlife.model.animals.passive.*;
 import com.wildlife.model.animals.predator.*;
 
@@ -99,8 +100,28 @@ public class InputController {
                     }
                 }
                 if (typeAnimal == 0) {
-                    Rock g = new Rock(parsed_X, parsed_Y);
-                    map.addEntity(g);
+                    // Tính tâm của ô gạch định đặt đá (Cộng thêm nửa TILE_SIZE)
+                    double centerX = parsed_X + (Constants.TILE_SIZE / 2.0);
+                    double centerY = parsed_Y + (Constants.TILE_SIZE / 2.0);
+                    
+                    boolean hasAnimalNearby = false;
+
+                    // Gọi hàm getEntitiesInRange của Lead để lấy các thực thể trong bán kính 32 pixel
+                    for (BaseEntity e : map.getEntitiesInRange(centerX, centerY, 35)) {
+                        // Nếu trong vùng quét có con vật (Passive hoặc Predator) đang đứng
+                        if (e instanceof Passive || e instanceof Predator) {
+                            hasAnimalNearby = true;
+                            break; // Có một con là chặn luôn, bẻ vòng lặp để tiết kiệm CPU
+                        }
+                    }
+
+                    // Nếu an toàn (không có con vật nào) thì mới cho đặt đá
+                    if (!hasAnimalNearby) {
+                        Rock g = new Rock(parsed_X, parsed_Y);
+                        map.addEntity(g);
+                    } else {
+                        System.out.println("Không thể đặt đá: Có con thú đang ở quá gần!");
+                    }
                 }
                 if (typeAnimal == 2) {
                     Cat g = new Cat(parsed_X, parsed_Y);

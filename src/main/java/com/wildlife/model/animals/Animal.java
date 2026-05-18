@@ -2,8 +2,10 @@ package com.wildlife.model.animals;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.view.SpriteManager;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public abstract class Animal extends BaseEntity {
@@ -16,6 +18,8 @@ public abstract class Animal extends BaseEntity {
     private double innerDirectionTime = 0;
     protected int avoidanceTimer = 0;
     protected double speed = 0;
+    protected boolean isDrinking = false;
+    protected Image WATER_DROPLET = SpriteManager.loadImage("waterdroplet.png");
     public void setInnerTime(double innerTime) {
         this.innerTime = innerTime;
     }
@@ -79,6 +83,12 @@ public abstract class Animal extends BaseEntity {
 
     public void setTiredness(double tiredness) {
         this.tiredness = tiredness;
+    }
+    public boolean isDrinking() {
+        return isDrinking;
+    }
+    public void setDrinking(boolean isDrinking) {
+        this.isDrinking = isDrinking;
     }
     @Override
     public void render(GraphicsContext gc, boolean isGraphic){
@@ -171,6 +181,9 @@ public abstract class Animal extends BaseEntity {
         for (int i = 1; i < segments; i++) {
             double lineX = thirstBarX + (segmentWidth * i);
             gc.strokeLine(lineX, thirstBarX, lineX, thirstBarY + barHeight2);
+        }
+        if(isDrinking){
+            gc.drawImage(this.WATER_DROPLET, getX()+30, getY(), 16, 16);
         }
     }
 }

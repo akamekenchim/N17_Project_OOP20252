@@ -151,8 +151,8 @@ public class HunterStrategy_Test {
             // Tính khoảng cách THỰC TẾ từ Tâm con vật đến Tâm mặt nước
             double distToWater = Math.sqrt((bestWaterX - animalCenterX)*(bestWaterX - animalCenterX) + (bestWaterY - animalCenterY)*(bestWaterY - animalCenterY));
             
-            // Nếu khoảng cách <= TILE_SIZE + 5 pixel (sai số), nghĩa là con vật đang đứng sát mép nước
-            if (distToWater <= Constants.TILE_SIZE + 5) {
+            // Nếu khoảng cách <= TILE_SIZE + 15 pixel (sai số), nghĩa là con vật đang đứng sát mép nước
+            if (distToWater <= Constants.TILE_SIZE + 15) {
                 herbivore.setThirst(Math.min(100, herbivore.getThirst() + 70));
                 // System.out.println("Thirst: " + herbivore.getThirst());
                 return new Vector(0, 0); // Cúi xuống uống nước
