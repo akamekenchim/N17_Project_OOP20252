@@ -21,6 +21,7 @@ public class Constants {
     public static final int DIRECTION_UPDATE_INTERVAL = 80;
     public static final int UPDATE_INTERVAL = 10;
     public static final double ROTATION = (Math.PI/180) * 10;
+    public static final double TIGER_SPEED = 65.0;
     
     
 

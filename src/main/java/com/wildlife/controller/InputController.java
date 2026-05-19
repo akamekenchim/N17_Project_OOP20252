@@ -55,6 +55,9 @@ public class InputController {
                 case DIGIT6:
                     typeAnimal = 6;
                     break;
+                case DIGIT7:
+                    typeAnimal = -2;
+                    break;
                 case SPACE:
                     if (Constants.SIM_SPEED != 0) {
                         temp = Constants.SIM_SPEED;
@@ -124,17 +127,26 @@ public class InputController {
                     }
                 }
                 if (typeAnimal == 2) {
-                    Cat g = new Cat(parsed_X, parsed_Y);
+                    Deer g = new Deer(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
                 if (typeAnimal == 3) {
                     Wolf g = new Wolf(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
-                if (typeAnimal == -1) {
-                    Grass g = new Grass(parsed_X, parsed_Y, 0);
+                if (typeAnimal == 4) {
+                    Rabbit g = new Rabbit(parsed_X, parsed_Y);
                     map.addEntity(g);
                 }
+                if (typeAnimal == 5) {
+                    Fox g = new Fox(parsed_X, parsed_Y);
+                    map.addEntity(g);
+                }
+                if(typeAnimal == 6) {
+                    Tiger g = new Tiger(parsed_X, parsed_Y);
+                    map.addEntity(g);
+                }
+                
             } else
                 System.out.println("There's already something here!");
             System.out.printf("Omae ga kono tile wo sawatteita: %.2f -- %.2f\n", rawX, rawY);

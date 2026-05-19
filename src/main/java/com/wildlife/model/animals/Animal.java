@@ -104,7 +104,7 @@ public abstract class Animal extends BaseEntity {
         
         // Đặt tọa độ (Ngay trên đầu con vật 10 pixel)
         double barX = getX();
-        double barY = getY() - 10; 
+        double barY = getY() - 7; 
 
         // Bước 2.1: Vẽ nền thanh (Background - Màu xám tối)
         gc.setFill(Color.DARKGRAY);
@@ -148,7 +148,7 @@ public abstract class Animal extends BaseEntity {
         
         // Đặt tọa độ (Ngay trên đầu con vật 10 pixel)
         double thirstBarX = getX();
-        double thirstBarY = getY() - 5; 
+        double thirstBarY = getY() - 2; 
 
         // Bước 2.1: Vẽ nền thanh (Background - Màu xám tối)
         gc.setFill(Color.DARKGRAY);
