@@ -5,6 +5,7 @@ import com.wildlife.constant.*;
 import com.wildlife.view.SpriteManager;
 import com.wildlife.model.strategy.*;
 import com.wildlife.model.worldmap.TerrainType;
+import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
@@ -76,22 +77,27 @@ public abstract class Passive extends Animal {
             avoidanceTimer = Constants.THANH_HOA;
         } 
         else {
-            // 2. LOGIC "BẦY ĐÀN" (Chỉ chạy nếu đường trống trải không có đá/nước)
-            // Nếu phát hiện có đồng loại cản đường phía trước
+            // Lấy ô gạch ở TÂM con vật tại vị trí sắp bước tới
+            // Nhờ hàm getTile(double, double) Lead viết sẵn trong WorldMap, ta truyền thẳng pixel vào luôn!
+            Tile targetTile = mp.getTile(testX + 15, testY + 15);
+            boolean isDirt = (targetTile != null && targetTile.getType() == TerrainType.DIRT);
+
+            // ƯU TIÊN 1: LOGIC "BẦY ĐÀN" (Vướng đồng loại thì đi cực chậm - 5% tốc độ)
             if (mp.isCompanion(testX, testY, this)) {
-                
-                // BÍ QUYẾT: KHÔNG đổi hướng (dx, dy giữ nguyên)
-                // CHỈ GIẢM TỐC (Đi chậm lại 80% để chờ con phía trước đi qua)
-                
-                // *Lưu ý: Lead dùng this.speed hoặc Constants.FOX_SPEED tùy theo file nhé
                 testX = this.getX() + this.getDx() * delta * (this.speed * 0.05); 
                 testY = this.getY() + this.getDy() * delta * (this.speed * 0.05);
             }
+            // ƯU TIÊN 2: LOGIC "BÙN ĐẤT" (Lội bùn thì đi chậm vừa - 50% tốc độ)
+            else if (isDirt) {
+                testX = this.getX() + this.getDx() * delta * (this.speed * 0.7); 
+                testY = this.getY() + this.getDy() * delta * (this.speed * 0.7);
+            }
+            // Trờng hợp còn lại (Đi trên cỏ): Giữ nguyên testX, testY ở tốc độ 100%
         }
         //this.setX(Math.min(Constants.SCREEN_WIDTH - Constants.TILE_SIZE,
-                //Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
+          //      Math.max(0, this.getX() + this.getDx() * delta * this.speed)));
         //this.setY(Math.min(Constants.SCREEN_HEIGHT - Constants.TILE_SIZE,
-                //Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
+         //       Math.max(0, this.getY() + this.getDy() * delta * this.speed)));
         this.setX(testX);
         this.setY(testY);
     }

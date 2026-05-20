@@ -22,7 +22,7 @@ public class Constants {
     public static final int UPDATE_INTERVAL = 10;
     public static final double ROTATION = (Math.PI/180) * 10;
     public static final double TIGER_SPEED = 65.0;
-    
+    public static boolean BASIC_VIEW = false;
     
 
     public static final int THANH_HOA = 36;
