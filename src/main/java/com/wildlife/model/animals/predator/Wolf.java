@@ -1,15 +1,10 @@
 package com.wildlife.model.animals.predator;
 
-import java.net.ContentHandler;
-
 import com.wildlife.constant.*;
 import com.wildlife.view.SpriteManager;
-import com.wildlife.model.strategy.*;
-import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Wolf extends Predator {
@@ -48,23 +43,3 @@ public class Wolf extends Predator {
  * gc.rotate(rotateAngle);
  * }
  */
-
-/*@Override
-    public void update(double delta, WorldMap mp) {
-        this.setInnerTime(this.getInnerTime() + Constants.SIM_SPEED);
-        this.setInnerDirectionTime(this.getInnerDirectionTime() + Constants.SIM_SPEED);
-        Vector direction = new Vector(this.getDx(), this.getDy());
-        if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
-            direction = brain.execute(this, mp, delta, Constants.RABBIT_SPEED);
-            this.setInnerTime(this.getInnerTime() - 10);
-
-        }
-        this.setDx(direction.getDx());
-        this.setDy(direction.getDy());
-
-        this.setX(Math.min(Constants.SCREEN_WIDTH - 32,
-                Math.max(0, this.getX() + this.getDx() * delta * Constants.WOLF_SPEED)));
-        this.setY(Math.min(Constants.SCREEN_HEIGHT - 32,
-                Math.max(0, this.getY() + this.getDy() * delta * Constants.WOLF_SPEED)));
-    }
-    */

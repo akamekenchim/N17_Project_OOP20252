@@ -1,4 +1,6 @@
-package com.wildlife;
+package com.wildlife.test;
+
+import com.wildlife.AppRunner;
 
 public class AppLauncher {
     public static void main(String[] args) {

@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.aggressive.Aggressive;
 import com.wildlife.model.animals.passive.Passive;
 import com.wildlife.model.animals.predator.Predator;
 public class WorldMap {
@@ -321,7 +322,9 @@ public class WorldMap {
             // Chỉ xét đồng loại và đang sống
             if (e != self && e.isAlive() && 
                ((e instanceof Predator && self instanceof Predator) || 
-                (e instanceof Passive && self instanceof Passive))) {
+                (e instanceof Passive && self instanceof Passive) || (e instanceof Aggressive && self instanceof Aggressive)) || (e instanceof Aggressive
+                    && self instanceof Passive) || (e instanceof Passive && self instanceof Aggressive)
+                ) {
                 
                 double eCenterX = e.getX() + 15;
                 double eCenterY = e.getY() + 15;

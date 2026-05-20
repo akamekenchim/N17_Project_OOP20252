@@ -1,9 +1,5 @@
 package com.wildlife.constant;
 
-import com.wildlife.view.SpriteManager;
-
-import javafx.scene.image.Image;
-
 //file này là chứa các hằng số, ae có thể thêm tốc độ của mấy con vật vào đây 
 public class Constants {
     public static double SIM_SPEED = 1.0;

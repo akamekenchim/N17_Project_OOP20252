@@ -9,8 +9,6 @@ import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 // Động vật ăn cỏ, kế thừa từ Animal
 public abstract class Passive extends Animal {
     protected Random random = new Random();

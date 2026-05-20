@@ -12,7 +12,7 @@ import com.wildlife.model.worldmap.WorldMap;
 import java.util.List;
 import java.util.Random;
 
-public class HunterStrategy_Test {
+public class HunterStrategy {
     private static final double SCAN_RADIUS = 200.0;
     private static final double MAX_WATER_SCAN = 300.0;
     private static final int MAX_CYCLE = 15;

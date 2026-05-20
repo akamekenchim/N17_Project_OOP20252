@@ -1,19 +1,13 @@
 package com.wildlife.controller;
 
 import javafx.animation.AnimationTimer;
-//import javafx.application.Application;
-//import javafx.scene.Group;
-//import javafx.scene.Scene;
-//import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.*;
-//import javafx.stage.Stage;
 import java.util.*;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
-//import com.wildlife.model.plants.Grass;
 import com.wildlife.model.worldmap.*;
 import com.wildlife.view.*;
 

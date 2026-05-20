@@ -5,19 +5,13 @@ import com.wildlife.model.animals.Animal;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
-import com.wildlife.constant.*;
-import com.wildlife.view.SpriteManager;
 import com.wildlife.model.strategy.*;
-import com.wildlife.model.worldmap.TerrainType;
-import com.wildlife.model.worldmap.WorldMap;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 // Động vật ăn thịt, kế thừa từ Animal
 public abstract class Aggressive extends Animal {
     private Random random = new Random(); 
-    protected AggressiveStrategy_Test brain = new AggressiveStrategy_Test();
+    protected AggressiveStrategy brain = new AggressiveStrategy();
     public Aggressive(double x, double y) {
         super(x, y);
     }

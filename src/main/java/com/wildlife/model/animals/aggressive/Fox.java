@@ -2,13 +2,9 @@ package com.wildlife.model.animals.aggressive;
 
 import com.wildlife.constant.*;
 import com.wildlife.view.SpriteManager;
-import com.wildlife.model.animals.predator.Predator;
-import com.wildlife.model.strategy.*;
-import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Fox extends Aggressive {

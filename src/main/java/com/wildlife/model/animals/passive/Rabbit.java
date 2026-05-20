@@ -2,13 +2,8 @@ package com.wildlife.model.animals.passive;
 
 import com.wildlife.constant.*;
 import com.wildlife.view.SpriteManager;
-import com.wildlife.model.strategy.*;
-import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
-import java.util.Random;
-
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Rabbit extends Passive {
