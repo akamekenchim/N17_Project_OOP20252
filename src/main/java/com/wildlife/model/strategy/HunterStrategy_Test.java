@@ -2,6 +2,7 @@ package com.wildlife.model.strategy;
 
 import com.wildlife.constant.*;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.aggressive.Aggressive;
 import com.wildlife.model.animals.passive.Passive;
 import com.wildlife.model.animals.predator.Predator;
 import com.wildlife.model.worldmap.TerrainType;
@@ -20,45 +21,51 @@ public class HunterStrategy_Test {
 
     public Vector execute(Predator hunter, WorldMap map) {
         List<BaseEntity> entities = map.getEntity();
-        Passive closestPrey = null;
+        
+        // 1. SỬA ĐỔI: Dùng 1 biến BaseEntity duy nhất để lưu con mồi (không phân biệt Thỏ hay Cáo)
+        BaseEntity targetPrey = null; 
         double minDistance = SCAN_RADIUS;
 
-        // Quét bán kính xung quanh tìm động vật ăn cỏ (Passive)
+        // Quét bán kính xung quanh tìm mồi
         for (BaseEntity entity : entities) {
-            if (entity instanceof Passive && entity.isAlive()) {
+            if ((entity instanceof Passive || entity instanceof Aggressive) && entity.isAlive() && entity != hunter) {
                 double dist = getDistance(hunter.getX(), hunter.getY(), entity.getX(), entity.getY());
+                
+                // 2. SỬA ĐỔI: Gán thẳng mục tiêu gần nhất vào targetPrey
                 if (dist < minDistance && dist > 20) {
                     minDistance = dist;
-                    closestPrey = (Passive) entity;
+                    targetPrey = entity; 
                 }
+                
+                // Logic cắn (Giữ nguyên theo ý bạn)
                 if (dist < 25.0) {
                     hunter.setHunger(Math.min(100, hunter.getHunger() + 40));
-                   // System.out.println("New hunger: " + hunter.getHunger());
                     entity.setAlive(false);
-                    return (new Vector(hunter.getDx(), hunter.getDy())); // Chết thì dừng hành động
+                    return (new Vector(hunter.getDx(), hunter.getDy())); 
                 }
             }
         }
+        
+        // (Logic khát nước giữ nguyên)
         if (hunter.getThirst() < 40 && hunter.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(hunter, map);
             if (waterDir != null) return waterDir;
         }
-        if (closestPrey != null) {
+        
+        // 3. SỬA ĐỔI: Cho sói đuổi theo targetPrey (áp dụng cho cả Thỏ và Cáo)
+        if (targetPrey != null) {
             // Đuổi theo con mồi
-            double dx = closestPrey.getX() - hunter.getX();
-            double dy = closestPrey.getY() - hunter.getY();
+            double dx = targetPrey.getX() - hunter.getX();
+            double dy = targetPrey.getY() - hunter.getY();
             double length = Math.sqrt(dx * dx + dy * dy);
-            // System.out.println("Chase prey, distance: " + length + ", Prey pos: (" +
-            // closestPrey.getX() + ", " + closestPrey.getY() + ")");
+            
             if (length > 0) {
-                // Di chuyển theo vector hướng về con mồi
-                // hunter.setX(hunter.getX() + (dx / length) * speed * delta);
-                // hunter.setY(hunter.getY() + (dy / length) * speed * delta);
                 return (new Vector(dx / length, dy / length));
             } else {
                 return (new Vector(hunter.getDx(), hunter.getDy()));
             }
-        } else if (hunter.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
+        }
+        else if (hunter.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
             if (hunter.getDx() == 0 && hunter.getDy() == 0) {
                 if(cycle < MAX_CYCLE){
                     cycle++;
