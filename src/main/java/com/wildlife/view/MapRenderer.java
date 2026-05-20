@@ -16,6 +16,7 @@ import javafx.scene.image.WritableImage;
 
 public class MapRenderer {
     private static WritableImage mapCache;
+    private static Image snowImg = SpriteManager.loadImage("snow.png");
     // private static final int MAP_WIDTH = 37 * 32;
     // private static final int MAP_HEIGHT = 26 * 32;
 
@@ -48,6 +49,9 @@ public class MapRenderer {
                 }
             }
         }
+        if (snowImg == null) {
+            snowImg = SpriteManager.loadImage("snow.png");
+        }
 
         /*
          * for(int i = 20; i<26; i++){
@@ -60,8 +64,20 @@ public class MapRenderer {
         params.setFill(Color.TRANSPARENT);
         mapCache = cvTemp.snapshot(params, null);
     }
-
+    public void renderSnow(GraphicsContext gc, com.wildlife.model.worldmap.WorldMap map) {
+        if (!map.isWinter) return; // Chưa mùa đông thì không vẽ gì cả
+        
+        for (int y = 0; y < Constants.MAP_HEIGHT; y++) {
+            for (int x = 0; x < Constants.MAP_WIDTH; x++) {
+                if (map.snowMap[y][x]) {
+                    gc.drawImage(snowImg, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+                }
+            }
+        }
+    }
     public Image getMapCache() {
         return mapCache;
     }
+
+    
 }

@@ -18,7 +18,7 @@ public class HunterStrategy_Test {
     private int cycle = 0;
     private Random random = new Random();
 
-    public Vector execute(Predator hunter, WorldMap map, double delta, double speed) {
+    public Vector execute(Predator hunter, WorldMap map) {
         List<BaseEntity> entities = map.getEntity();
         Passive closestPrey = null;
         double minDistance = SCAN_RADIUS;

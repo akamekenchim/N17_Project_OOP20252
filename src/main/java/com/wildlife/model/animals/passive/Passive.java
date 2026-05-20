@@ -10,6 +10,7 @@ import com.wildlife.model.worldmap.WorldMap;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 // Động vật ăn cỏ, kế thừa từ Animal
 public abstract class Passive extends Animal {
     protected Random random = new Random();
@@ -103,6 +104,49 @@ public abstract class Passive extends Animal {
     }
     @Override
     public void render(GraphicsContext gc, boolean isGraphic){
+        if(!Constants.BASIC_VIEW){
+            // 1. Lấy kích thước thật của 1 khung hình (Cắt Spritesheet làm 4 cột, 4 hàng)
+            double frameWidth = img.getWidth() / 4;
+            double frameHeight = img.getHeight() / 4;
+
+            int row = 0; // Mặc định hàng 0 (Đứng im)
+            int col = 0; // Mặc định cột 0
+
+            // 2. Kiểm tra xem con vật có đang di chuyển không
+            boolean isMoving = (this.getDx() != 0 || this.getDy() != 0);
+
+            if (isMoving) {
+                row = 1; // Dùng hàng 1 (Hoạt ảnh chạy)
+                
+                // BÍ QUYẾT ANIMATION STATELESS: 
+                // Cứ mỗi 100ms (0.1s) sẽ nhảy sang cột tiếp theo (0 -> 1 -> 2 -> 3 -> 0)
+                col = (int) ((System.currentTimeMillis() / 100) % 4);
+            } else {
+                row = 0; // Dùng hàng 0 (Đứng im)
+                col = 0; // Tạm thời lấy frame đứng im đầu tiên
+            }
+
+            // 3. Tính toán tọa độ cái "kéo" sẽ cắt trên spritesheet
+            double srcX = col * frameWidth;
+            double srcY = row * frameHeight;
+
+            // 4. Tính toán tọa độ và kích thước sẽ vẽ lên màn hình
+            double destX = getX();
+            double destY = getY();
+            double destW = 32; // Hoặc Constants.TILE_SIZE
+            double destH = 32;
+
+            // 5. LẬT ẢNH (FLIP) CỰC NHANH KHÔNG CẦN SCALE
+            // Spritesheet của bạn đang quay mặt sang TRÁI. 
+            // Nếu con vật đang đi sang PHẢI (dx > 0), ta lật ngược ảnh lại.
+            if (this.getDx() > 0) { 
+                destX = getX() + destW; // Dịch điểm bắt đầu sang mép phải
+                destW = -destW;         // Vẽ với chiều rộng ÂM (JavaFX sẽ tự lật ngược ảnh)
+            }
+
+            // 6. Vẽ mảnh ảnh đã cắt lên màn hình
+            gc.drawImage(img, srcX, srcY, frameWidth, frameHeight, destX, destY, destW, destH);
+        }
         super.render(gc, isGraphic);
     }
 }

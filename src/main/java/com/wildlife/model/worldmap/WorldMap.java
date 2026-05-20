@@ -11,6 +11,13 @@ public class WorldMap {
     private final List<BaseEntity> listEntity = new ArrayList<>();
     private Random random = new Random();
     private final Queue<Tile> growingQueue = new LinkedList<>();
+    
+    // --- CÁC BIẾN CHO MÙA ĐÔNG ---
+    public boolean isWinter = false;
+    public boolean[][] snowMap = new boolean[Constants.MAP_HEIGHT][Constants.MAP_WIDTH];
+    
+    // THÊM MỚI: Biến đánh dấu để chỉ diệt 50% sinh vật ĐÚNG 1 LẦN khi đông tới
+    private boolean isWinterCulled = false;
 
     public WorldMap() {
         tiles = new Tile[Constants.MAP_HEIGHT][Constants.MAP_WIDTH];
@@ -121,16 +128,63 @@ public class WorldMap {
         }
     }
 
+    // 1. Thêm vào phần khai báo biến ở đầu class WorldMap
+    
+
+    // ... (Kéo xuống hàm update) ...
+
     public void update(double delta) {
 
         updateGrassGrowth();
         checkAllTiles();
+        
+        // ==========================================
+        // LOGIC MÙA ĐÔNG (Phủ tuyết & Thanh trừng)
+        // ==========================================
+        if (isWinter) {
+            // 1. Tuyết rơi từ từ (Phủ 5 ô mỗi frame)
+            for(int i = 0; i < 5; i++) {
+                int rx = random.nextInt(Constants.MAP_WIDTH);
+                int ry = random.nextInt(Constants.MAP_HEIGHT);
+                
+                if (MatrixManager.MAP_LAYOUT[ry][rx] == 0 && !snowMap[ry][rx]) {
+                    snowMap[ry][rx] = true;
+                }
+            }
+
+            // 2. THÊM MỚI: Loại bỏ ngẫu nhiên 1/2 sinh vật
+            if (!isWinterCulled) {
+                int killTarget = listEntity.size() / 2; // Tính ra 50% dân số
+                int killedCount = 0;
+                
+                // Quét qua danh sách, mỗi con có 50% tỉ lệ bị chọn
+                for (BaseEntity e : listEntity) {
+                    // Nếu nó còn sống và bị "xui" (random true)
+                    if (e.isAlive() && random.nextBoolean()) {
+                        e.setAlive(false); // Rút máu về 0 (đánh dấu chết)
+                        killedCount++;
+                        
+                        // Đã giết đủ 50% thì dừng tay
+                        if (killedCount >= killTarget) break; 
+                    }
+                }
+                
+                // Khóa cờ lại để các frame sau không bị giết thêm nữa
+                isWinterCulled = true; 
+            }
+            
+        } else {
+            // Mở khóa cờ khi hết mùa đông (để chuẩn bị cho mùa đông năm sau)
+            isWinterCulled = false; 
+        }
+        // ==========================================
+
         for (BaseEntity entity : listEntity) {
             entity.update(delta, this);
-
         }
 
-        cleaning();
+        // Những con bị setAlive(false) ở trên sẽ được hàm này dọn dẹp sạch sẽ khỏi map ngay lập tức
+        cleaning(); 
     }
 
     public void checkAllTiles(){

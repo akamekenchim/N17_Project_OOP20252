@@ -2,6 +2,7 @@ package com.wildlife.model.strategy;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.aggressive.Aggressive;
 import com.wildlife.model.animals.passive.Passive;
 import com.wildlife.model.animals.predator.Predator;
 import com.wildlife.model.plants.Grass;
@@ -19,7 +20,7 @@ public class AggressiveStrategy_Test {
     private int cycle = 0;
     private Random random = new Random();
 
-    public Vector execute(Passive herbivore, WorldMap map) {
+    public Vector execute(Aggressive herbivore, WorldMap map) {
         if (!herbivore.isAlive()) {
             return new Vector(herbivore.getDx(), herbivore.getDy());
         }
@@ -57,8 +58,8 @@ public class AggressiveStrategy_Test {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
                 if (dist < 20 && herbivore.getHunger() < 70) {
                     e.setAlive(false);
-                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 5)); // Cỏ hồi ít
-                    return new Vector(0, 0); // Đứng lại ăn (fix lỗi máy hút bụi)
+                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 10)); // Cỏ hồi ít
+                    //eturn new Vector(0, 0); // Đứng lại ăn (fix lỗi máy hút bụi)
                 }
                 if (dist < minDistFood && dist <= MAX_SCAN) {
                     minDistFood = dist;
@@ -67,12 +68,12 @@ public class AggressiveStrategy_Test {
             }
 
             // 3. THAY ĐỔI 3 - LOGIC LÀM LIỀU: Coi đồng loại như thức ăn nếu isAggressive == true
-            if (isAggressive && e != herbivore && e instanceof Passive && e.isAlive()) {
+            if (isAggressive && e != herbivore && (e instanceof Passive || e instanceof Aggressive) && e.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
                 
                 // Tràn vào cắn xé nhau
                 if (dist < 20) {
-                    int k = random.nextInt(2); // Tỉ lệ 50/50 như Lead thiết kế
+                    int k = random.nextInt((e instanceof Aggressive) ? 2 : 1); // Tỉ lệ 50/50 như Lead thiết kế
                     if (k == 0) {
                         e.setAlive(false); // Giết đồng loại
                         herbivore.setHunger(Math.min(100, herbivore.getHunger() + 40)); // Hồi nhiều no hơn ăn cỏ
@@ -147,7 +148,7 @@ public class AggressiveStrategy_Test {
     }
 
     // Hàm uống nước đã được cập nhật logic tâm (Center Point) mượt mà nhất
-    private Vector findWaterVector(Passive herbivore, WorldMap map) {
+    private Vector findWaterVector(Aggressive herbivore, WorldMap map) {
         double curX = herbivore.getX();
         double curY = herbivore.getY();
         double minDist = Double.MAX_VALUE;

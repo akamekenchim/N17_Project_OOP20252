@@ -6,6 +6,7 @@ import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.model.animals.aggressive.Fox;
 import com.wildlife.model.animals.passive.*;
 import com.wildlife.model.animals.predator.*;
 
@@ -76,6 +77,10 @@ public class InputController {
                     isZoomed = false;
                 case V:
                     Constants.BASIC_VIEW = !(Constants.BASIC_VIEW);
+                    break;
+                case S:
+                    map.isWinter = !(map.isWinter);
+                    break;
                 default:
                     break;
             }

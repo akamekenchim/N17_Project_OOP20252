@@ -67,6 +67,7 @@ public class SimulationController {
                 gc.translate(camX, camY);
                 gc.scale(zoomLevel, zoomLevel);
                 gc.drawImage(renderer.getMapCache(), 0, 0);
+                renderer.renderSnow(gc, map);
                 /*
                  * if(currentTime % 200 == 0 && Grass.grassCount < 30){
                  * int placeX = r.nextInt(36);

@@ -1,4 +1,4 @@
-package com.wildlife.model.animals.predator;
+package com.wildlife.model.animals.aggressive;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.animals.Animal;
@@ -15,10 +15,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 // Động vật ăn thịt, kế thừa từ Animal
-public abstract class Predator extends Animal {
+public abstract class Aggressive extends Animal {
     private Random random = new Random(); 
-    protected HunterStrategy_Test brain = new HunterStrategy_Test();
-    public Predator(double x, double y) {
+    protected AggressiveStrategy_Test brain = new AggressiveStrategy_Test();
+    public Aggressive(double x, double y) {
         super(x, y);
     }
     @Override
@@ -33,8 +33,8 @@ public abstract class Predator extends Animal {
         if (this.avoidanceTimer > 0) this.avoidanceTimer--;
         
         if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
-            this.setHunger(this.getHunger() - (random.nextDouble() / 3));
-            this.setThirst(this.getThirst() - (random.nextDouble() / 8));
+            this.setHunger(this.getHunger() - (random.nextDouble() / 2));
+            this.setThirst(this.getThirst() - (random.nextDouble() / 7));
             //System.out.println("Current hunger: " + this.getHunger());
             direction = brain.execute(this, mp);
             this.setInnerTime(this.getInnerTime() - Constants.UPDATE_INTERVAL);

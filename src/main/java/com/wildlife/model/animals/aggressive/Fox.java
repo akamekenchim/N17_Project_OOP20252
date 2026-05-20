@@ -1,32 +1,34 @@
-package com.wildlife.model.animals.passive;
+package com.wildlife.model.animals.aggressive;
 
 import com.wildlife.constant.*;
 import com.wildlife.view.SpriteManager;
+import com.wildlife.model.animals.predator.Predator;
 import com.wildlife.model.strategy.*;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
-import java.util.Random;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class Deer extends Passive {
-    public Deer(double x, double y) {
+public class Fox extends Aggressive {
+    public Fox(double x, double y) {
         super(x, y);
         this.setDx(0.9);
         this.setDy(0.01);
-        this.speed = Constants.UMA_SPEED;
-        this.img = SpriteManager.loadImage("deerSpriteSheet.png");
+        this.speed = Constants.FOX_SPEED;
+        this.img = SpriteManager.loadImage("foxSpriteSheet.png");
     }
-    @Override
+   @Override
     public void update(double delta, WorldMap mp) {
         super.update(delta, mp);
     }
     @Override
     public void render(GraphicsContext gc, boolean isGraphic) {
+        // 7. Vẽ thanh máu / Giọt nước (kế thừa từ lớp cha)
         super.render(gc, isGraphic);
         if(Constants.BASIC_VIEW){
-            gc.setFill(Color.LIGHTBLUE);
+            gc.setFill(Color.DARKORANGE);
             gc.fillRect(getX(), getY(), Constants.TILE_SIZE, Constants.TILE_SIZE);
         }
     }

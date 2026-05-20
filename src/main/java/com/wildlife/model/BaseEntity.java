@@ -3,12 +3,13 @@ package com.wildlife.model;
 import com.wildlife.model.worldmap.WorldMap;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 public abstract class BaseEntity {
     private double x;
     private double y;
     private boolean isAlive = true;
-    private String spritePath; // Đây là biến lưu đường dẫn đến ảnh động của vật thể
+    protected Image img;
 
     public BaseEntity(double x, double y) {
         this.x = x;
@@ -46,12 +47,11 @@ public abstract class BaseEntity {
     public abstract void render(GraphicsContext gc, boolean isGraphicMode);
 
     // Phương thức để lấy đường dẫn hình ảnh của vật thể
-    public String getSpritePath() {
-        return spritePath;
+    public Image getImg() {
+        return img;
     }
 
-    // Phương thức để cập nhật đường dẫn hình ảnh của vật thể
-    public void setSpritePath(String spritePath) {
-        this.spritePath = spritePath;
+    public void setImg(Image img) {
+        this.img = img;
     }
 }
