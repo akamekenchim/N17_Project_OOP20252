@@ -2,7 +2,6 @@ package com.wildlife.model.animals.passive;
 
 import com.wildlife.model.animals.Animal;
 import com.wildlife.constant.*;
-import com.wildlife.view.SpriteManager;
 import com.wildlife.model.strategy.*;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.Tile;
@@ -145,6 +144,7 @@ public abstract class Passive extends Animal {
             // 6. Vẽ mảnh ảnh đã cắt lên màn hình
             gc.drawImage(img, srcX, srcY, frameWidth, frameHeight, destX, destY, destW, destH);
         }
+
         super.render(gc, isGraphic);
     }
 }
