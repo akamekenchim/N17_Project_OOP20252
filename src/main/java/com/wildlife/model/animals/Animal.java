@@ -18,6 +18,7 @@ public abstract class Animal extends BaseEntity {
     private double innerDirectionTime = 0;
     protected int avoidanceTimer = 0;
     protected double speed = 0;
+    
     protected boolean isDrinking = false;
     protected Image WATER_DROPLET = SpriteManager.loadImage("waterdroplet.png");
     public void setInnerTime(double innerTime) {
@@ -185,5 +186,12 @@ public abstract class Animal extends BaseEntity {
         if(isDrinking){
             gc.drawImage(this.WATER_DROPLET, getX()+30, getY(), 16, 16);
         }
+    }
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 }

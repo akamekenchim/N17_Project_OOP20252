@@ -57,6 +57,7 @@ public class HunterStrategy {
             // Đuổi theo con mồi
             double dx = targetPrey.getX() - hunter.getX();
             double dy = targetPrey.getY() - hunter.getY();
+            hunter.setSpeed(Math.min(hunter.getSpeed()*1.1, Constants.WOLF_SPEED * 1.4));
             double length = Math.sqrt(dx * dx + dy * dy);
             
             if (length > 0) {
@@ -66,6 +67,7 @@ public class HunterStrategy {
             }
         }
         else if (hunter.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL) {
+            hunter.setSpeed(Math.max(hunter.getSpeed()/1.1, Constants.WOLF_SPEED));
             if (hunter.getDx() == 0 && hunter.getDy() == 0) {
                 if(cycle < MAX_CYCLE){
                     cycle++;
@@ -86,6 +88,7 @@ public class HunterStrategy {
             return (new Vector(dx, dy));
 
         } else {
+            hunter.setSpeed(Math.max(hunter.getSpeed()/1.2, Constants.WOLF_SPEED));
             return (new Vector(hunter.getDx(), hunter.getDy()));
         }
     }

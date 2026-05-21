@@ -6,7 +6,9 @@ import com.wildlife.controller.SimulationController;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.view.MapRenderer;
 import com.wildlife.view.SpriteManager; 
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.net.URL;
 import javafx.application.Application;
 import javafx.geometry.Insets; // THÊM MỚI: Để set Margin cho nút
 import javafx.geometry.Pos;
@@ -21,8 +23,25 @@ import javafx.scene.layout.StackPane; // THÊM MỚI: Layout xếp chồng (bán
 import javafx.stage.Stage;
 
 public class AppRunner extends Application {
+    private MediaPlayer bgmPlayer;
     @Override
     public void start(Stage primaryStage) {
+
+        try {
+            // Lấy đường dẫn file nhạc từ thư mục resources/sounds/
+            URL bgmUrl = getClass().getResource("/sounds/" + Constants.BGM_WELCOME);
+            if (bgmUrl != null) {
+                Media bgmMedia = new Media(bgmUrl.toString());
+                bgmPlayer = new MediaPlayer(bgmMedia);
+                
+                // Lặp nhạc vô hạn giống HSR
+                bgmPlayer.setCycleCount(MediaPlayer.INDEFINITE); 
+                bgmPlayer.setVolume(0.1); // Chỉnh âm lượng vừa phải (50%)
+                bgmPlayer.play(); // Bắt đầu phát ngay khi mở app
+            }
+        } catch (Exception e) {
+            System.out.println("Không thể phát nhạc nền Welcome: " + e.getMessage());
+        }
         
         // ==========================================
         // 1. SETUP MÀN HÌNH CHÍNH (MAIN SCENE - CHƯA CHẠY)
@@ -100,6 +119,10 @@ public class AppRunner extends Application {
 
         // 2.3 Gắn sự kiện khi BẤM NÚT START
         startButton.setOnAction(event -> {
+            if (bgmPlayer != null) {
+                bgmPlayer.stop();
+                bgmPlayer.dispose(); // Giải phóng RAM
+            }
             primaryStage.setScene(mainScene); // Chuyển cửa sổ sang màn hình game chính
             GenG.Start(); // Kích hoạt logic game
         });

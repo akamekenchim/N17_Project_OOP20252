@@ -23,5 +23,7 @@ public class Constants {
 
     public static final int THANH_HOA = 36;
 
+    public static final String BGM_WELCOME = "bgm.mp3";
+
     
 }

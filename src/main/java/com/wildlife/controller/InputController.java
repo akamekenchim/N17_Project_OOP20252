@@ -75,6 +75,7 @@ public class InputController {
                     SimulationController.zoomLevel = 1.0;
                     Constants.SIM_SPEED = 1.0;
                     isZoomed = false;
+                    break;
                 case V:
                     Constants.BASIC_VIEW = !(Constants.BASIC_VIEW);
                     break;
