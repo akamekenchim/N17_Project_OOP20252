@@ -8,6 +8,7 @@ import com.wildlife.model.animals.predator.Predator;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
+import com.wildlife.view.SoundManager;
 
 import java.util.List;
 import java.util.Random;
@@ -39,6 +40,7 @@ public class HunterStrategy {
                 
                 // Logic cắn (Giữ nguyên theo ý bạn)
                 if (dist < 25.0) {
+                    //SoundManager.playSound("predatorExecute.wav");
                     hunter.setHunger(Math.min(100, hunter.getHunger() + 40));
                     entity.setAlive(false);
                     return (new Vector(hunter.getDx(), hunter.getDy())); 
@@ -47,7 +49,7 @@ public class HunterStrategy {
         }
         
         // (Logic khát nước giữ nguyên)
-        if (hunter.getThirst() < 40 && hunter.getAvoidanceTimer() <= 0) {
+        if (hunter.getThirst() < 50 && hunter.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(hunter, map);
             if (waterDir != null) return waterDir;
         }

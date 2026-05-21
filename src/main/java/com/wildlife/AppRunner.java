@@ -1,203 +1,318 @@
 package com.wildlife;
 
+// IMPORT MODEL & CONTROLLER
 import com.wildlife.constant.Constants;
 import com.wildlife.controller.InputController;
 import com.wildlife.controller.SimulationController;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.view.MapRenderer;
-import com.wildlife.view.SpriteManager; 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import java.net.URL;
+import com.wildlife.view.SpriteManager;
+import com.wildlife.model.BaseEntity;
+
+// IMPORT JAVAFX CORE & UI
 import javafx.application.Application;
-import javafx.geometry.Insets; // THÊM MỚI: Để set Margin cho nút
-import javafx.geometry.Pos;
-import javafx.scene.Group;
+import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane; // THÊM MỚI: Layout xếp chồng (bánh kẹp)
-import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
+// IMPORT THỜI GIAN & TIỆN ÍCH
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import java.net.URL;
+import java.util.Random;
 
 public class AppRunner extends Application {
-    private MediaPlayer bgmPlayer;
+    private MediaPlayer bgmPlayer; // Giữ lại nhạc nền BGM
+
     @Override
     public void start(Stage primaryStage) {
-
+        
+        // ==========================================
+        // 0. KHỞI TẠO NHẠC NỀN (BGM)
+        // ==========================================
         try {
-            // Lấy đường dẫn file nhạc từ thư mục resources/sounds/
             URL bgmUrl = getClass().getResource("/sounds/" + Constants.BGM_WELCOME);
             if (bgmUrl != null) {
                 Media bgmMedia = new Media(bgmUrl.toString());
                 bgmPlayer = new MediaPlayer(bgmMedia);
-                
-                // Lặp nhạc vô hạn giống HSR
-                bgmPlayer.setCycleCount(MediaPlayer.INDEFINITE); 
-                bgmPlayer.setVolume(0.1); // Chỉnh âm lượng vừa phải (50%)
-                bgmPlayer.play(); // Bắt đầu phát ngay khi mở app
+                bgmPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                bgmPlayer.setVolume(0.1);
+                bgmPlayer.play();
             }
         } catch (Exception e) {
             System.out.println("Không thể phát nhạc nền Welcome: " + e.getMessage());
         }
-        
+
         // ==========================================
-        // 1. SETUP MÀN HÌNH CHÍNH (MAIN SCENE - CHƯA CHẠY)
+        // 1. SETUP MÀN HÌNH CHÍNH (MAIN SCENE)
         // ==========================================
-        Canvas cv = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT); 
-        GraphicsContext gc = cv.getGraphicsContext2D(); 
+        Canvas cv = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        GraphicsContext gc = cv.getGraphicsContext2D();
 
         WorldMap map = new WorldMap();
         MapRenderer WR = new MapRenderer();
         WR.generateMapCache();
         SimulationController GenG = new SimulationController(map, gc, WR);
-        
-        Group gr = new Group(cv);
-        Scene mainScene = new Scene(gr, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+        // ĐÃ SỬA LỖI: createDashboardPanel giờ trả về chuẩn StackPane
+        StackPane rightPanel = createDashboardPanel(map);
+
+        HBox mainLayout = new HBox(cv, rightPanel);
+        mainLayout.setStyle("-fx-background-color: #1a1a2e;");
+
+        Scene mainScene = new Scene(mainLayout, Constants.SCREEN_WIDTH + 300, Constants.SCREEN_HEIGHT);
         InputController.StartListening(mainScene, map);
-        
-        // LƯU Ý QUAN TRỌNG: Ở ĐÂY TA BỎ GỌI GenG.Start() VÌ CHƯA MUỐN VÀO GAME NGAY
-
 
         // ==========================================
-        // 2. SETUP MÀN HÌNH CHÀO MỪNG (WELCOME SCENE)
+        // 2. SETUP MÀN HÌNH CHÀO MỪNG BẰNG ẢNH (KHÔNG DÙNG VIDEO)
         // ==========================================
-        // Dùng StackPane để các thành phần xếp đè lên nhau (Ảnh dưới, nút trên)
-        StackPane welcomeLayout = new StackPane(); 
+        StackPane welcomeLayout = new StackPane();
 
-        // 2.1 Load ảnh Welcome làm nền (Lớp dưới cùng)
+        // 2.1 Load ảnh nền Welcome (Bỏ hoàn toàn Video)
         try {
-            Image welcomeImage = SpriteManager.loadImage("welcome_screen.png"); // Nhớ để ảnh vào assets
-            ImageView welcomeImageView = new ImageView(welcomeImage);
-            
-            // Ép ảnh phủ kín toàn bộ màn hình
-            welcomeImageView.setFitWidth(Constants.SCREEN_WIDTH);
-            welcomeImageView.setFitHeight(Constants.SCREEN_HEIGHT);
-            
-            // Thêm ảnh vào layout (Ảnh vào trước -> Nằm dưới)
-            welcomeLayout.getChildren().add(welcomeImageView);
+            // Thay "welcome_bg.png" bằng tên file ảnh nền bạn có trong thư mục resources/images/
+            Image welcomeImg = SpriteManager.loadImage("welcome_screen.png"); 
+            ImageView welcomeView = new ImageView(welcomeImg);
+            welcomeView.setFitWidth(Constants.SCREEN_WIDTH + 300);
+            welcomeView.setFitHeight(Constants.SCREEN_HEIGHT);
+            welcomeView.setPreserveRatio(false);
+            welcomeLayout.getChildren().add(welcomeView);
         } catch (Exception e) {
-            System.out.println("Không tìm thấy ảnh Welcome, nền sẽ trống.");
-            welcomeLayout.setStyle("-fx-background-color: #1a1a2e;"); 
+            System.out.println("Không tìm thấy ảnh welcome_bg.png, tự động dùng nền tối.");
+            welcomeLayout.setStyle("-fx-background-color: #1a1a2e;");
         }
 
-        // 2.2 Tạo nút START (Play) với style Honkai Star Rail
+        // 2.2 Lớp màng đen mờ
+        Region welcomeOverlay = new Region();
+        welcomeOverlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3);");
+        welcomeOverlay.setPrefSize(Constants.SCREEN_WIDTH + 300, Constants.SCREEN_HEIGHT);
+        welcomeLayout.getChildren().add(welcomeOverlay);
+
+        // 2.3 Nút Start
         Button startButton = new Button("Play");
-        
-        // CSS định dạng nút giống ảnh mẫu
-        String buttonNormalStyle = 
-            "-fx-background-color: #e8e8e8; " +         // Nền màu xám nhạt/trắng đục
-            "-fx-background-radius: 30; " +             // BÍ QUYẾT BO TRÒN: Radius lớn tạo hình viên thuốc
-            "-fx-border-radius: 30; " +                 // Bo tròn cả đường viền
-            "-fx-border-color: #b0b0b0; " +             // Viền xám đậm hơn nền một chút
-            "-fx-border-width: 1.5; " +                 // Độ dày viền
-            "-fx-text-fill: #333333; " +                // Chữ màu xám đen, dễ đọc trên nền sáng
-            "-fx-font-size: 18px; " +                   // Cỡ chữ thu nhỏ lại (bé hơn nút Play cũ)
-            "-fx-font-weight: bold; " +                 // Chữ in đậm
-            "-fx-padding: 8 60 8 60; " +                // Đệm trên/dưới 8px, trái/phải 60px để nút kéo dài
-            "-fx-cursor: hand;";
-            
-        String buttonHoverStyle = 
-            "-fx-background-color: #ffffff; " +         // Khi lia chuột vào: Nền sáng hẳn lên màu trắng
-            "-fx-background-radius: 30; " +
-            "-fx-border-radius: 30; " +
-            "-fx-border-color: #888888; " +             // Viền đậm hơn để nổi bật
-            "-fx-border-width: 1.5; " +
-            "-fx-text-fill: #000000; " +                // Chữ đen tuyền
-            "-fx-font-size: 18px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-padding: 8 60 8 60; " +
-            "-fx-cursor: hand;";
+        String buttonNormalStyle = "-fx-background-color: #e8e8e8; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b0b0b0; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
+        String buttonHoverStyle = "-fx-background-color: #ffffff; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #888888; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
 
         startButton.setStyle(buttonNormalStyle);
-
-        // Hiệu ứng di chuột (Hover) để trải nghiệm giống game xịn
         startButton.setOnMouseEntered(e -> startButton.setStyle(buttonHoverStyle));
         startButton.setOnMouseExited(e -> startButton.setStyle(buttonNormalStyle));
 
-        // 2.3 Gắn sự kiện khi BẤM NÚT START
         startButton.setOnAction(event -> {
             if (bgmPlayer != null) {
                 bgmPlayer.stop();
-                bgmPlayer.dispose(); // Giải phóng RAM
+                bgmPlayer.dispose();
             }
-            primaryStage.setScene(mainScene); // Chuyển cửa sổ sang màn hình game chính
-            GenG.Start(); // Kích hoạt logic game
+            primaryStage.setScene(mainScene);
+            GenG.Start(); 
         });
 
-        // 2.4 Thêm nút vào layout (Nút vào sau -> Nằm đè lên trên ảnh)
         welcomeLayout.getChildren().add(startButton);
-        
-        // Căn chỉnh vị trí của nút (Đẩy xuống nửa dưới màn hình)
         StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-        // Cách đáy 150 pixel để chừa khoảng trống bên dưới giống ảnh HSR
-        StackPane.setMargin(startButton, new Insets(0, 0, 150, 0)); 
+        StackPane.setMargin(startButton, new Insets(0, 0, 150, 0));
 
-        Scene welcomeScene = new Scene(welcomeLayout, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
+        Scene welcomeScene = new Scene(welcomeLayout, Constants.SCREEN_WIDTH + 300, Constants.SCREEN_HEIGHT);
 
         // ==========================================
-        // 3. HIỂN THỊ CỬA SỔ ĐẦU TIÊN (WELCOME)
+        // 3. HIỂN THỊ CỬA SỔ
         // ==========================================
-        primaryStage.setScene(welcomeScene); // Ép Stage hiển thị Welcome Scene trước
-        primaryStage.setTitle("KénChim đáng yêu");
-        primaryStage.show();
+        primaryStage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) { // newValue == true nghĩa là cửa sổ VỪA BỊ THU NHỎ (Minimize)
+                System.out.println("[System] The window has been minimized. Pausing simulation to save resources...");
+                
+                // 1. Gọi lệnh Pause vòng lặp game chính của bạn để cứu GPU
+                GenG.stop(); // Giả sử SimulationController của bạn có hàm stop() / pause()
+                
+            } else { // newValue == false nghĩa là cửa sổ VỪA ĐƯỢC PHÓNG TO LẠI (Restore)
+                System.out.println("[System] The window has been restored. Resuming simulation...");
+                
+                // 2. Kích hoạt cho vòng lặp game chạy tiếp bình thường
+                GenG.Start(); // Gọi lại hàm chạy tiếp
+            }
+        });
+        // ====================================================================
+
+        // Trước đây bạn chỉ để đơn thuần như thế này:
+        primaryStage.setScene(welcomeScene);
+        primaryStage.setTitle("KénChim đáng yêu - Wildlife Eco Simulator");
+        primaryStage.show();;
+    }
+
+    // ====================================================================
+    // 🌟 BẢNG ĐIỀU KHIỂN: NỀN ẢNH, SPAWNER THỦ CÔNG, BỘ ĐẾM 10S
+    // ====================================================================
+    private StackPane createDashboardPanel(WorldMap map) {
+        StackPane hudRoot = new StackPane();
+        hudRoot.setPrefWidth(300);
+
+        // 1. Ảnh nền HUD (Bảo đảm không che các nút)
+        try {
+            // Thay "hud_bg.png" bằng ảnh nền dọc cho bảng điều khiển
+            Image hudBgImage = SpriteManager.loadImage("hud_bg.png");
+            ImageView hudBgView = new ImageView(hudBgImage);
+            hudBgView.setFitWidth(300);
+            hudBgView.setFitHeight(Constants.SCREEN_HEIGHT);
+            hudBgView.setPreserveRatio(false);
+            hudRoot.getChildren().add(hudBgView);
+        } catch (Exception e) {
+            hudRoot.setStyle("-fx-background-color: #2a2a40;");
+        }
+
+        // 2. Container chứa nội dung
+        VBox contentContainer = new VBox(15);
+        contentContainer.setPadding(new Insets(25, 20, 20, 20));
+        contentContainer.setStyle("-fx-background-color: rgba(30, 30, 45, 0.4);"); 
+
+        Label titleLabel = new Label("HỆ THỐNG GIÁM SÁT");
+        titleLabel.setTextFill(javafx.scene.paint.Color.GOLD);
+        titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        titleLabel.setAlignment(Pos.CENTER);
+        titleLabel.setMaxWidth(Double.MAX_VALUE);
+
+        // Khu vực hiển thị Thống kê
+        VBox statsBox = new VBox(8);
+        statsBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 12; -fx-background-radius: 8;");
+
+        Label seasonLabel = new Label("☀️ Mùa hiện tại: Mùa Hè");
+        Label statsLabel = new Label("🐾 Đang thu thập dữ liệu...");
+
+        seasonLabel.setStyle("-fx-text-fill: #e0e0e0; -fx-font-size: 14px; -fx-font-weight: bold;");
+        statsLabel.setStyle("-fx-text-fill: #a0ffd0; -fx-font-size: 13px; -fx-font-weight: bold;");
+        statsBox.getChildren().addAll(seasonLabel, statsLabel);
+
+        // 3. Timeline Đếm thực thể (chu kỳ 10s)
+        Timeline telemetryTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            int countPassive = 0;
+            int countPredator = 0;
+            int countAggressive = 0;
+            int countGrass = 0;
+
+            for (BaseEntity e : map.getEntity()) {
+                if (e.isAlive()) {
+                    if (e instanceof com.wildlife.model.animals.passive.Passive) countPassive++;
+                    else if (e instanceof com.wildlife.model.animals.predator.Predator) countPredator++;
+                    else if (e instanceof com.wildlife.model.animals.aggressive.Aggressive) countAggressive++;
+                    else if (e instanceof com.wildlife.model.plants.Grass) countGrass++;
+                }
+            }
+
+            statsLabel.setText(
+                "🌿 Tổng số Cỏ: " + countGrass + "\n" +
+                "🐇 Động vật ăn cỏ: " + countPassive + "\n" +
+                "🦊 Thú dữ độc hành: " + countAggressive + "\n" +
+                "🐺 Thú săn mồi bầy: " + countPredator
+            );
+        }));
+        telemetryTimeline.setCycleCount(Timeline.INDEFINITE);
+        telemetryTimeline.play();
+
+        // 4. Các nút tạo thủ công (Manual Spawn)
+        Label spawnTitle = new Label("⚡ TRIỆU HỒI THỦ CÔNG");
+        spawnTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+        spawnTitle.setPadding(new Insets(10, 0, 0, 0));
+
+        Button btnSpawnGrass = createStyledButton("🌱 Tạo Cỏ Ngẫu Nhiên");
+        Button btnSpawnRabbit = createStyledButton("🐇 Thả Thỏ (Passive)");
+        Button btnSpawnWolf = createStyledButton("🐺 Thả Sói (Predator)");
+        Button btnSeason = createStyledButton("❄️ Đổi Mùa Đông");
+
+        btnSpawnGrass.setOnAction(e -> manualSpawn(map, "GRASS"));
+        btnSpawnRabbit.setOnAction(e -> manualSpawn(map, "RABBIT"));
+        btnSpawnWolf.setOnAction(e -> manualSpawn(map, "WOLF"));
+
+        btnSeason.setOnAction(e -> {
+            map.isWinter = !map.isWinter;
+            seasonLabel.setText(map.isWinter ? "❄️ Mùa hiện tại: Mùa Đông" : "☀️ Mùa hiện tại: Mùa Hè");
+            btnSeason.setText(map.isWinter ? "☀️ Đổi Mùa Hè" : "❄️ Đổi Mùa Đông");
+        });
+
+        contentContainer.getChildren().addAll(titleLabel, statsBox, spawnTitle, btnSpawnGrass, btnSpawnRabbit, btnSpawnWolf, btnSeason);
+        hudRoot.getChildren().add(contentContainer);
+
+        return hudRoot;
+    }
+
+    // ====================================================================
+    // HÀM BỔ TRỢ: TÌM Ô CỎ TRỐNG VÀ SPAWN
+    // ====================================================================
+    private void manualSpawn(WorldMap map, String entityType) {
+        Random rand = new Random();
+        int maxAttempts = 200;
+
+        for (int i = 0; i < maxAttempts; i++) {
+            int rx = rand.nextInt(Constants.MAP_WIDTH);
+            int ry = rand.nextInt(Constants.MAP_HEIGHT);
+
+            com.wildlife.model.worldmap.Tile tile = map.getTile(rx, ry);
+
+            // 🎯 ĐIỀU KIỆN CHẶT CHẼ: Ô Đất gốc là Cỏ (0) VÀ chưa bị con nào đứng đè lên
+            if (com.wildlife.model.worldmap.MatrixManager.MAP_LAYOUT[ry][rx] == 0 && tile != null && !tile.hasOccupant() &&
+             ry > 0 && ry < Constants.MAP_HEIGHT - 1 && rx > 0 && rx < Constants.MAP_WIDTH - 1) {
+                double pixelX = rx * Constants.TILE_SIZE;
+                double pixelY = ry * Constants.TILE_SIZE;
+
+                BaseEntity newSpawn = null;
+
+                switch (entityType) {
+                    case "GRASS":
+                        newSpawn = new com.wildlife.model.plants.Grass(pixelX, pixelY, 0);
+                        break;
+                    case "RABBIT":
+                        // NOTE: Bạn sửa dòng này thành Class Động vật ăn cỏ của bạn (VD: new Rabbit)
+                        newSpawn = new com.wildlife.model.animals.passive.Rabbit(pixelX, pixelY);
+                        //System.out.println("Hãy bỏ comment dòng 245 và điền class Rabbit của bạn!");
+                        break;
+                    case "WOLF":
+                        // NOTE: Bạn sửa dòng này thành Class Động vật ăn thịt của bạn (VD: new Wolf)
+                        newSpawn = new com.wildlife.model.animals.predator.Wolf(pixelX, pixelY);
+                        //System.out.println("Hãy bỏ comment dòng 250 và điền class Wolf của bạn!");
+                        break;
+                }
+
+                if (newSpawn != null) {
+                    map.addEntity(newSpawn);
+                    System.out.println("Spawned " + entityType + " at tile [" + rx + ", " + ry + "]");
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    // ====================================================================
+    // HÀM BỔ TRỢ: TẠO STYLE CHO NÚT BẤM
+    // ====================================================================
+    private Button createStyledButton(String text) {
+        Button btn = new Button(text);
+        btn.setMaxWidth(Double.MAX_VALUE);
+        btn.setFocusTraversable(false);
+        String normalStyle = "-fx-background-color: #3b3b55; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10;";
+        String hoverStyle = "-fx-background-color: #555577; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10; -fx-cursor: hand;";
+
+        btn.setStyle(normalStyle);
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(normalStyle));
+
+        return btn;
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
-/*
-package com.wildlife;
-
-import com.wildlife.constant.Constants;
-import com.wildlife.controller.InputController;
-import com.wildlife.controller.SimulationController;
-import com.wildlife.model.worldmap.WorldMap;
-import com.wildlife.view.MapRenderer;
-
-//import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-//import javafx.scene.layout.StackPane;
-//import javafx.scene.image.Image;
-import javafx.stage.Stage;
-
-public class AppRunner extends Application {
-    @Override
-    public void start(Stage primaryStage) {
-        Canvas cv = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT); // tạo canvas hoàn toàn trống
-        GraphicsContext gc = cv.getGraphicsContext2D(); // Lấy graphicscontext của canvas vừa tạo
-
-        //Canvas cv_Background = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        // GraphicsContext gc2 = cv_Background.getGraphicsContext2D();
-
-        WorldMap map = new WorldMap();
-        MapRenderer WR = new MapRenderer();
-        WR.generateMapCache();
-        SimulationController GenG = new SimulationController(map, gc, WR);
-        // WorldRender.renderAll(gc2);
-        GenG.Start();
-        // Trong hàm start này có 3 việc: Xóa màn, update trạng thái của WorldMap, rồi
-        // render các thực thể
-        // StackPane root = new StackPane(cv_Background, cv);
-        Group gr = new Group(cv);
-        Scene scene = new Scene(gr, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("KénChim đáng yêu");
-        InputController.StartListening(scene, map);
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-}
-*/

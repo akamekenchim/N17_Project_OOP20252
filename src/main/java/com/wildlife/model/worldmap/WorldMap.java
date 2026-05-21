@@ -61,32 +61,6 @@ public class WorldMap {
         tile.setOccupant(entity);
         listEntity.add(entity);
 
-        if (tile.getType() == TerrainType.DIRT && !tile.hasGrass()) {
-            activateGrowthAt(tx, ty);
-        }
-        return true;
-    }
-
-    public boolean moveEntity(BaseEntity entity, int newTileX, int newTileY) {
-        int oldTileX = (int) entity.getX() / Constants.TILE_SIZE;
-        int oldTileY = (int) entity.getY() / Constants.TILE_SIZE;
-        Tile oldTile = getTile(oldTileX, oldTileY);
-        Tile newTile = getTile(newTileX, newTileY);
-
-        if (newTile == null || !newTile.isPassable() || newTile.hasOccupant())
-            return false;
-
-        if (oldTile != null && oldTile.getOccupant() == entity) {
-            oldTile.removeOccupant();
-        }
-        newTile.setOccupant(entity);
-        entity.setX(newTileX * Constants.TILE_SIZE);
-        entity.setY(newTileY * Constants.TILE_SIZE);
-
-        if (newTile.getType() == TerrainType.DIRT && !newTile.hasGrass()) {
-            activateGrowthAt(newTileX, newTileY);
-        }
-
         return true;
     }
 
@@ -104,39 +78,12 @@ public class WorldMap {
         }
     }
 
-    public void activateGrowthAt(int x, int y) {
-        Tile tile = getTile(x, y);
-        if (tile != null && !tile.isGrowingActive()) {
-            tile.activateGrowth();
-            if (tile.isGrowingActive()) {
-                growingQueue.offer(tile);
-            }
-        }
-    }
-
-    public void updateGrassGrowth() {
-        long currentTime = System.currentTimeMillis();
-        int size = growingQueue.size();
-        for (int i = 0; i < size; i++) {
-            Tile tile = growingQueue.poll();
-            if (tile == null)
-                continue;
-
-            boolean finished = tile.updateGrowth(currentTime);
-            if (!finished) {
-                growingQueue.offer(tile);
-            }
-        }
-    }
-
     // 1. Thêm vào phần khai báo biến ở đầu class WorldMap
     
 
     // ... (Kéo xuống hàm update) ...
 
     public void update(double delta) {
-
-        updateGrassGrowth();
         checkAllTiles();
         
         // ==========================================

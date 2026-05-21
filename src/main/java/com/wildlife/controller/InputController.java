@@ -26,12 +26,12 @@ public class InputController {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case UP:
-                    System.out.println("Pressed UP ARROW");
+                    //System.out.println("Pressed UP ARROW");
                     if (!isPaused)
                         Constants.SIM_SPEED = Math.min(3.0, Constants.SIM_SPEED + 0.25);
                     break;
                 case DOWN:
-                    System.out.println("Pressed DOWN ARROW");
+                    //System.out.println("Pressed DOWN ARROW");
                     if (!isPaused)
                         Constants.SIM_SPEED = Math.max(0.25, Constants.SIM_SPEED - 0.25);
                     break;
@@ -92,7 +92,7 @@ public class InputController {
             int MAP_WIDTH_PIXELS = 37 * Constants.TILE_SIZE;
             int MAP_HEIGHT_PIXELS = 26 * Constants.TILE_SIZE;
             if (rawX < 0 || rawY < 0 || rawX >= MAP_WIDTH_PIXELS || rawY >= MAP_HEIGHT_PIXELS) {
-                System.out.println("Ngoài phạm vi bản đồ!");
+                System.out.println("Out of Bounds");
                 return;
             }
             int parsed_X = (int) (rawX / Constants.TILE_SIZE) * Constants.TILE_SIZE;
@@ -131,7 +131,7 @@ public class InputController {
                         Rock g = new Rock(parsed_X, parsed_Y);
                         map.addEntity(g);
                     } else {
-                        System.out.println("Không thể đặt đá: Có con thú đang ở quá gần!");
+                        System.out.println("Cannot place rock here! An animal is nearby.");
                     }
                 }
                 if (typeAnimal == 2) {

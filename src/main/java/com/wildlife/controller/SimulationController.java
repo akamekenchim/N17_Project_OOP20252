@@ -19,7 +19,7 @@ public class SimulationController {
     public static double camX = 0.0;
     public static double camY = 0.0;
     public static int currentTime = 0;
-
+    public AnimationTimer AT;
     public SimulationController(WorldMap wm, GraphicsContext g, MapRenderer ren) {
         this.map = wm;
         this.gc = g;
@@ -35,7 +35,7 @@ public class SimulationController {
     }
 
     public void Start() {
-        AnimationTimer AT = new AnimationTimer() {
+        AT = new AnimationTimer() {
 
             //Random r = new Random();
             // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
@@ -98,7 +98,12 @@ public class SimulationController {
         };
         AT.start();
     }
-
+    public void stop() {
+        if (AT != null) {
+            AT.stop(); // Lệnh gốc của JavaFX để dừng đóng băng vòng lặp
+            System.out.println("[Engine] Simulation stopped.");
+        }
+    }
     private void renderEntities() {
         List<BaseEntity> listEN = map.getEntity(); // Lấy list thực thể từ map
         for (BaseEntity e : listEN) {

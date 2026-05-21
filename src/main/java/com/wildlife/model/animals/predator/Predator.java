@@ -8,6 +8,7 @@ import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.model.strategy.*;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 // Động vật ăn thịt, kế thừa từ Animal
 public abstract class Predator extends Animal {
     private Random random = new Random(); 
@@ -141,7 +142,9 @@ public abstract class Predator extends Animal {
                 destX = getX() + destW; // Dịch điểm bắt đầu sang mép phải
                 destW = -destW;         // Vẽ với chiều rộng ÂM (JavaFX sẽ tự lật ngược ảnh)
             }
-
+            // Vẽ bóng trước, vẽ con vật đè lên sau
+            gc.setFill(Color.rgb(0, 0, 0, 0.2)); // Màu đen, trong suốt 20%
+            gc.fillOval(getX() + 4, getY() + 24, 24, 8); // Hình oval dẹt dưới chân con vật
             // 6. Vẽ mảnh ảnh đã cắt lên màn hình
             gc.drawImage(img, srcX, srcY, frameWidth, frameHeight, destX, destY, destW, destH);
         }

@@ -9,12 +9,14 @@ import com.wildlife.model.plants.Grass;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
+import com.wildlife.view.SoundManager;
+
 import java.util.*;
 public class PassiveStrategy {
     public static final double MAX_SCAN = 120.0;
     public static final double MAX_WATER_SCAN = 200.0;
     public static final int MAX_CYCLE = 20;
-    public static final int THIRST_THRESHOLD = 40;
+    public static final int THIRST_THRESHOLD = 50;
     private int cycle = 0;
     private Random random = new Random();
     public Vector execute(Passive herbivore, WorldMap map){
@@ -32,6 +34,7 @@ public class PassiveStrategy {
             if(e instanceof Predator && e.isAlive() == true){
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
                 if(dist < 20){
+                    //SoundManager.playSound("predatorExecute.wav");
                     herbivore.setAlive(false);
                     ((Predator) e).setHunger(Math.min(100, ((Predator) e).getHunger() + 40));
                     herbivore.setDrinking(false);
@@ -46,6 +49,7 @@ public class PassiveStrategy {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
                 if(dist < 20 && herbivore.getHunger() < 70){
                     e.setAlive(false);
+                    //SoundManager.playSound("grassEaten.wav");
                     herbivore.setHunger(Math.min(100, herbivore.getHunger() + 5));
                     //System.out.println("New hunger: " + herbivore.getHunger());
                     return new Vector(herbivore.getDx(), herbivore.getDy());
