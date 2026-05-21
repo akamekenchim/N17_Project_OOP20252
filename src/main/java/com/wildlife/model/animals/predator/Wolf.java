@@ -17,7 +17,7 @@ public class Wolf extends Predator {
     }
     @Override
     public void update(double delta, WorldMap mp) {
-        this.speed = Constants.WOLF_SPEED;
+        //this.speed = Constants.WOLF_SPEED;
         super.update(delta, mp);
     }
     @Override
