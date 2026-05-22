@@ -135,8 +135,8 @@ public abstract class Aggressive extends Animal {
             double destH = 32;
 
             // 5. LẬT ẢNH (FLIP) CỰC NHANH KHÔNG CẦN SCALE
-            // Spritesheet của bạn đang quay mặt sang TRÁI. 
-            // Nếu con vật đang đi sang PHẢI (dx > 0), ta lật ngược ảnh lại.
+            // Spritesheet đang quay mặt sang TRÁI. 
+            // Nếu con vật đang đi sang PHẢI (dx > 0) lật ngược ảnh lại.
             if (this.getDx() > 0) { 
                 destX = getX() + destW; // Dịch điểm bắt đầu sang mép phải
                 destW = -destW;         // Vẽ với chiều rộng ÂM (JavaFX sẽ tự lật ngược ảnh)

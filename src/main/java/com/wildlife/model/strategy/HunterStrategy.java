@@ -40,8 +40,6 @@ public class HunterStrategy {
                     minDistance = dist;
                     targetPrey = entity; 
                 }
-                
-                // Logic cắn (Giữ nguyên theo ý bạn)
                 if (dist < 25.0) {
                     //SoundManager.playSound("predatorExecute.wav");
                     hunter.setHunger(Math.min(100, hunter.getHunger() + 40));

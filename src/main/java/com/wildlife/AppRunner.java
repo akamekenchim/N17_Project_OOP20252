@@ -86,7 +86,7 @@ public class AppRunner extends Application {
 
         // 2.1 Load ảnh nền Welcome (Bỏ hoàn toàn Video)
         try {
-            // Thay "welcome_bg.png" bằng tên file ảnh nền bạn có trong thư mục resources/images/
+            // Thay "welcome_bg.png" bằng tên file ảnh nền  có trong thư mục resources/images/
             Image welcomeImg = SpriteManager.loadImage("welcome_screen.png"); 
             ImageView welcomeView = new ImageView(welcomeImg);
             welcomeView.setFitWidth(Constants.SCREEN_WIDTH + 300);
@@ -135,8 +135,8 @@ public class AppRunner extends Application {
             if (newValue) { // newValue == true nghĩa là cửa sổ VỪA BỊ THU NHỎ (Minimize)
                 System.out.println("[System] The window has been minimized. Pausing simulation to save resources...");
                 
-                // 1. Gọi lệnh Pause vòng lặp game chính của bạn để cứu GPU
-                GenG.stop(); // Giả sử SimulationController của bạn có hàm stop() / pause()
+                // 1. Gọi lệnh Pause vòng lặp game chính của  để cứu GPU
+                GenG.stop(); // Giả sử SimulationController của  có hàm stop() / pause()
                 
             } else { // newValue == false nghĩa là cửa sổ VỪA ĐƯỢC PHÓNG TO LẠI (Restore)
                 System.out.println("[System] The window has been restored. Resuming simulation...");
@@ -147,7 +147,7 @@ public class AppRunner extends Application {
         });
         // ====================================================================
 
-        // Trước đây bạn chỉ để đơn thuần như thế này:
+        // Trước đây  chỉ để đơn thuần như thế này:
         primaryStage.setScene(welcomeScene);
         primaryStage.setTitle("KénChim đáng yêu - Wildlife Eco Simulator");
         primaryStage.show();;
@@ -276,14 +276,14 @@ public class AppRunner extends Application {
                         newSpawn = new com.wildlife.model.plants.Grass(pixelX, pixelY, 0);
                         break;
                     case "RABBIT":
-                        // NOTE: Bạn sửa dòng này thành Class Động vật ăn cỏ của bạn (VD: new Rabbit)
+                        // NOTE:  sửa dòng này thành Class Động vật ăn cỏ của  (VD: new Rabbit)
                         newSpawn = new com.wildlife.model.animals.passive.Rabbit(pixelX, pixelY);
-                        //System.out.println("Hãy bỏ comment dòng 245 và điền class Rabbit của bạn!");
+                        //System.out.println("Hãy bỏ comment dòng 245 và điền class Rabbit của !");
                         break;
                     case "WOLF":
-                        // NOTE: Bạn sửa dòng này thành Class Động vật ăn thịt của bạn (VD: new Wolf)
+                        // NOTE:  sửa dòng này thành Class Động vật ăn thịt của  (VD: new Wolf)
                         newSpawn = new com.wildlife.model.animals.predator.Wolf(pixelX, pixelY);
-                        //System.out.println("Hãy bỏ comment dòng 250 và điền class Wolf của bạn!");
+                        //System.out.println("Hãy bỏ comment dòng 250 và điền class Wolf của !");
                         break;
                 }
 
