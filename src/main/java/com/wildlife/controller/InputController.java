@@ -6,6 +6,7 @@ import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.model.Fish;
 import com.wildlife.model.animals.aggressive.Fox;
 import com.wildlife.model.animals.passive.*;
 import com.wildlife.model.animals.predator.*;
@@ -61,6 +62,9 @@ public class InputController {
                     typeAnimal = 7;
                     break;
                 case DIGIT8:
+                    typeAnimal = 8;
+                    break;
+                case DIGIT9:
                     typeAnimal = -2;
                     break;
                 case SPACE:
@@ -161,6 +165,11 @@ public class InputController {
                 if(typeAnimal == 7){
                     Human g = new Human(parsed_X, parsed_Y);
                     map.addEntity(g);
+                }
+                if(typeAnimal == 8 && (map.tiles[snappedTileY][snappedTileX]).getType() == TerrainType.WATER){
+                    System.out.println("Add fish");
+                    Fish f = new Fish(parsed_X, parsed_Y);
+                    map.addFish(f);
                 }
                 
             } else

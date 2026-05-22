@@ -63,6 +63,18 @@ public class WorldMap {
 
         return true;
     }
+    public boolean addFish(BaseEntity entity) {
+        int tx = (int) entity.getX() / Constants.TILE_SIZE;
+        int ty = (int) entity.getY() / Constants.TILE_SIZE;
+        Tile tile = getTile(tx, ty);
+        if (tile == null || tile.isPassable() || tile.hasOccupant()) {
+            return false;
+        }
+        tile.setOccupant(entity);
+        listEntity.add(entity);
+
+        return true;
+    }
 
     public void cleaning() {
         Iterator<BaseEntity> it = listEntity.iterator();
