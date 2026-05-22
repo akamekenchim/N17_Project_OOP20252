@@ -5,6 +5,7 @@ import com.wildlife.model.BaseEntity;
 import com.wildlife.model.animals.aggressive.Aggressive;
 import com.wildlife.model.animals.passive.Passive;
 import com.wildlife.model.animals.predator.Predator;
+import com.wildlife.model.animals.priority.Priority;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class HunterStrategy {
-    private static final double SCAN_RADIUS = 200.0;
+    private static final double SCAN_RADIUS = 150.0;
     private static final double MAX_WATER_SCAN = 300.0;
     private static final int MAX_CYCLE = 15;
     private int cycle = 0;
@@ -31,7 +32,9 @@ public class HunterStrategy {
         for (BaseEntity entity : entities) {
             if ((entity instanceof Passive || entity instanceof Aggressive) && entity.isAlive() && entity != hunter) {
                 double dist = getDistance(hunter.getX(), hunter.getY(), entity.getX(), entity.getY());
-                
+                if (isInForest(entity.getX(), entity.getY())) {
+                    continue; // Mồi đang trong rừng -> Mù dấu, bỏ qua không quét con này nữa!
+                }
                 // 2. SỬA ĐỔI: Gán thẳng mục tiêu gần nhất vào targetPrey
                 if (dist < minDistance && dist > 20) {
                     minDistance = dist;
@@ -47,7 +50,32 @@ public class HunterStrategy {
                 }
             }
         }
-        
+        BaseEntity closestPriority = null;
+        double minPriorityDist = 120.0; // Bán kính nhận diện sự hiện diện của con người (120 pixel)
+
+        for (BaseEntity e : map.getEntity()) {
+            if (e instanceof Priority && e.isAlive()) {
+                double dist = getDistance(hunter.getX(), hunter.getY(), e.getX(), e.getY());
+                if (dist < minPriorityDist) {
+                    minPriorityDist = dist;
+                    closestPriority = e;
+                }
+            }
+        }
+
+        // Nếu thấy con người lởn vởn gần đó
+        if (closestPriority != null) {
+            // Toán học: Tính Vector dạt ra (Tọa độ của mình TRỪ ĐI tọa độ con người)
+            double dx = hunter.getX() - closestPriority.getX();
+            double dy = hunter.getY() - closestPriority.getY();
+            double length = Math.sqrt(dx * dx + dy * dy);
+            
+            if (length > 0) {
+                // Chuẩn hóa vector và rẽ ngang ra để né. 
+                // Không nhân 1.5 tốc độ (vì đây là dạt ra nhường đường chứ không phải hoảng loạn bỏ chạy)
+                return new Vector(dx / length, dy / length);
+            }
+        }
         // (Logic khát nước giữ nguyên)
         if (hunter.getThirst() < 50 && hunter.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(hunter, map);
@@ -178,5 +206,15 @@ public class HunterStrategy {
             return new Vector(moveDx / length, moveDy / length);
         }
         return null;
+    }
+    public boolean isInForest(double x, double y) {
+        double h = Constants.SCREEN_HEIGHT;
+        
+        // Kiểm tra xem tọa độ có lọt vào 1 trong 3 khối hình chữ nhật của rừng không
+        boolean block1 = (x >= 0 && x <= 300) && (y >= h - 200 && y <= h);
+        boolean block2 = (x >= 0 && x <= 250) && (y >= h - 250 && y <= h - 200);
+        boolean block3 = (x >= 300 && x <= 350) && (y >= h - 200 && y <= h - 20); // h - 200 + 180 = h - 20
+
+        return block1 || block2 || block3;
     }
 }

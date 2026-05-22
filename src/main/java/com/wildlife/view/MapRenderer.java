@@ -49,6 +49,12 @@ public class MapRenderer {
                 }
             }
         }
+        gcTemp.setFill(Color.rgb(34, 139, 34, 0.75)); // Màu xanh rừng, độ mờ 25%
+        // Vẽ từ tọa độ X=0, Y=(Chiều cao màn hình - 300) với kích thước 300x300
+        gcTemp.fillRect(0, Constants.SCREEN_HEIGHT - 200, 300, 200);
+        gcTemp.fillRect(0, Constants.SCREEN_HEIGHT - 250, 250, 50);
+        gcTemp.fillRect(300, Constants.SCREEN_HEIGHT - 200, 50, 180);
+
         if (snowImg == null) {
             snowImg = SpriteManager.loadImage("snow.png");
         }
@@ -74,6 +80,11 @@ public class MapRenderer {
                 }
             }
         }
+        gc.setFill(Color.rgb(34, 139, 34, 0.75)); // Màu xanh rừng, độ mờ 25%
+        // Vẽ từ tọa độ X=0, Y=(Chiều cao màn hình - 300) với kích thước 300x300
+        gc.fillRect(0, Constants.SCREEN_HEIGHT - 200, 300, 200);
+        gc.fillRect(0, Constants.SCREEN_HEIGHT - 250, 250, 50);
+        gc.fillRect(300, Constants.SCREEN_HEIGHT - 200, 50, 180);
     }
     public Image getMapCache() {
         return mapCache;

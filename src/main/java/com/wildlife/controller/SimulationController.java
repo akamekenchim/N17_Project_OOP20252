@@ -8,6 +8,7 @@ import java.util.*;
 
 import com.wildlife.constant.Constants;
 import com.wildlife.model.BaseEntity;
+import com.wildlife.model.plants.Grass;
 import com.wildlife.model.worldmap.*;
 import com.wildlife.view.*;
 
@@ -107,7 +108,15 @@ public class SimulationController {
     private void renderEntities() {
         List<BaseEntity> listEN = map.getEntity(); // Lấy list thực thể từ map
         for (BaseEntity e : listEN) {
-            e.render(gc, false); // với mỗi entity có trong listEN, phải render nó
+            if (e instanceof Grass) {
+                e.render(gc, false); // với mỗi entity có trong listEN, phải render nó
+            }
         }
+        for (BaseEntity e : listEN) {
+            if (!(e instanceof Grass)) {
+                e.render(gc, false); // với mỗi entity có trong listEN, phải render nó
+            }
+        }
+        
     }
 }

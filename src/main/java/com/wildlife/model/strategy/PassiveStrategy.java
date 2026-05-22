@@ -13,7 +13,7 @@ import com.wildlife.view.SoundManager;
 
 import java.util.*;
 public class PassiveStrategy {
-    public static final double MAX_SCAN = 120.0;
+    public static final double MAX_SCAN = 220.0;
     public static final double MAX_WATER_SCAN = 200.0;
     public static final int MAX_CYCLE = 20;
     public static final int THIRST_THRESHOLD = 50;
@@ -60,16 +60,65 @@ public class PassiveStrategy {
                 }
             }
         }
-        if (closestPredator != null && herbivore.getAvoidanceTimer() <= 0) {
-            // chạy luôn
-            double dx = -(closestPredator.getX() - herbivore.getX());
-            double dy = -(closestPredator.getY() - herbivore.getY());
-            double length = Math.sqrt(dx * dx + dy * dy);
+        com.wildlife.model.BaseEntity closestPriority = null;
+        double minPriorityDist = 120.0; // Bán kính nhận diện sự hiện diện của con người (120 pixel)
 
-            if (length > 0) {
-                return (new Vector(dx / length, dy / length));
+        for (com.wildlife.model.BaseEntity e : map.getEntity()) {
+            if (e instanceof com.wildlife.model.animals.priority.Priority && e.isAlive()) {
+                double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
+                if (dist < minPriorityDist) {
+                    minPriorityDist = dist;
+                    closestPriority = e;
+                }
             }
-            return (new Vector(herbivore.getDx(), herbivore.getDy()));
+        }
+
+        // Nếu thấy con người lởn vởn gần đó
+        if (closestPriority != null) {
+            // Toán học: Tính Vector dạt ra (Tọa độ của mình TRỪ ĐI tọa độ con người)
+            double dx = herbivore.getX() - closestPriority.getX();
+            double dy = herbivore.getY() - closestPriority.getY();
+            double length = Math.sqrt(dx * dx + dy * dy);
+            
+            if (length > 0) {
+                // Chuẩn hóa vector và rẽ ngang ra để né. 
+                // Không nhân 1.5 tốc độ (vì đây là dạt ra nhường đường chứ không phải hoảng loạn bỏ chạy)
+                return new Vector(dx / length, dy / length);
+            }
+        }
+        if (closestPredator != null) {
+            // 1. Kiểm tra xem con vật ĐÃ CHẠY VÀO TRONG RỪNG CHƯA?
+            if (isInForest(herbivore.getX(), herbivore.getY())) {
+                // Đã an toàn trong rừng -> Đứng im nấp, không tạo tiếng động
+                return new Vector(0, 0); 
+            } else {
+                // 2. TÍNH TOÁN KHOẢNG CÁCH TỚI TÂM KHU RỪNG
+                double targetForestX = 150.0;
+                double targetForestY = Constants.SCREEN_HEIGHT - 100.0;
+                
+                double dxForest = targetForestX - herbivore.getX();
+                double dyForest = targetForestY - herbivore.getY();
+                double distToForest = Math.sqrt(dxForest * dxForest + dyForest * dyForest);
+                
+                // 3. RỪNG Ở GẦN (Trong bán kính 200) -> LAO VÀO RỪNG
+                if (distToForest <= MAX_SCAN) {
+                    if (distToForest > 0) {
+                        // Trả về Vector chạy bứt tốc về phía rừng
+                        return new Vector((dxForest / distToForest) * 1.3, (dyForest / distToForest) * 1.3);
+                    }
+                } 
+                // 4. RỪNG QUÁ XA -> CHẠY NGƯỢC HƯỚNG KẺ THÙ (BẢN NĂNG)
+                else {
+                    double escapeX = herbivore.getX() - closestPredator.getX();
+                    double escapeY = herbivore.getY() - closestPredator.getY();
+                    double escapeDist = Math.sqrt(escapeX * escapeX + escapeY * escapeY);
+                    
+                    if (escapeDist > 0) {
+                        // Trả về Vector chạy bứt tốc ngược lại hướng con thú săn mồi
+                        return new Vector((escapeX / escapeDist) * 1.2, (escapeY / escapeDist) * 1.2);
+                    }
+                }
+            }
         }
         // Ưu tiên 2: GIẢI KHÁT (Chỉ đi tìm khi an toàn)
         if (herbivore.getThirst() < THIRST_THRESHOLD && herbivore.getAvoidanceTimer() <= 0) {
@@ -91,7 +140,7 @@ public class PassiveStrategy {
 
         // Nếu không đói hoặc không thấy thực thể nào phù hợp trong bán kính, di chuyển bừa
         if (herbivore.getInnerDirectionTime() > Constants.DIRECTION_UPDATE_INTERVAL && herbivore.getAvoidanceTimer() <= 0) {
-            if (herbivore.getDx() == 0 && herbivore.getDy() == 0) {
+            if (herbivore.getDx() == 0 && herbivore.getDy() == 0 && closestPredator == null) {
                 if(cycle < MAX_CYCLE){
                     herbivore.setDrinking(true);
                     cycle++;
@@ -199,5 +248,16 @@ public class PassiveStrategy {
             return new Vector(moveDx / length, moveDy / length);
         }
         return null;
+    }
+
+    public boolean isInForest(double x, double y) {
+        double h = Constants.SCREEN_HEIGHT;
+        
+        // Kiểm tra xem tọa độ có lọt vào 1 trong 3 khối hình chữ nhật của rừng không
+        boolean block1 = (x >= 0 && x <= 280) && (y >= h - 180 && y <= h);
+        boolean block2 = (x >= 0 && x <= 250) && (y >= h - 230 && y <= h - 180);
+        boolean block3 = (x >= 280 && x <= 325) && (y >= h - 180 && y <= h - 15); // h - 200 + 180 = h - 20
+
+        return block1 || block2 || block3;
     }
 }
