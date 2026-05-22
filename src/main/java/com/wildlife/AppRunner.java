@@ -201,6 +201,7 @@ public class AppRunner extends Application {
             int countPredator = 0;
             int countAggressive = 0;
             int countGrass = 0;
+            int countFish = 0;
 
             for (BaseEntity e : map.getEntity()) {
                 if (e.isAlive()) {
@@ -208,6 +209,7 @@ public class AppRunner extends Application {
                     else if (e instanceof com.wildlife.model.animals.predator.Predator) countPredator++;
                     else if (e instanceof com.wildlife.model.animals.aggressive.Aggressive) countAggressive++;
                     else if (e instanceof com.wildlife.model.plants.Grass) countGrass++;
+                    else if (e instanceof com.wildlife.model.Fish) countFish++;
                 }
             }
 
@@ -215,7 +217,8 @@ public class AppRunner extends Application {
                 "🌿 Tổng số Cỏ: " + countGrass + "\n" +
                 "🐇 Động vật ăn cỏ: " + countPassive + "\n" +
                 "🦊 Thú dữ độc hành: " + countAggressive + "\n" +
-                "🐺 Thú săn mồi bầy: " + countPredator
+                "🐺 Thú săn mồi bầy: " + countPredator + "\n" + 
+                "🐟 Số lượng Cá: " + countFish
             );
         }));
         telemetryTimeline.setCycleCount(Timeline.INDEFINITE);

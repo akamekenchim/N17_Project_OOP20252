@@ -108,7 +108,7 @@ public class Fish extends Animal {
 
     @Override
     public void render(GraphicsContext gc, boolean isGraphic) {
-        if (SimulationController.zoomLevel < 1.5){
+        if (SimulationController.zoomLevel < 1.3){
             return;
         }
         if (Constants.BASIC_VIEW) {
