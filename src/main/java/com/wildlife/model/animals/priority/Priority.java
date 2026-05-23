@@ -8,7 +8,7 @@ import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.model.strategy.*;
 import javafx.scene.canvas.GraphicsContext;
-import com.wildlife.model.strategy.AggressiveStrategy;
+import javafx.scene.paint.Color;
 
 public class Priority extends Animal{
     private Random random = new Random(); 
@@ -142,7 +142,8 @@ public class Priority extends Animal{
                 destX = getX() + destW; // Dịch điểm bắt đầu sang mép phải
                 destW = -destW;         // Vẽ với chiều rộng ÂM (JavaFX sẽ tự lật ngược ảnh)
             }
-
+            gc.setFill(Color.rgb(0, 0, 0, 0.2)); // Màu đen, trong suốt 20%
+            gc.fillOval(getX() +4, getY() + 35, 28, 8); // Hình oval dẹt dưới chân con vật
             // 6. Vẽ mảnh ảnh đã cắt lên màn hình
             gc.drawImage(img, srcX, srcY, frameWidth, frameHeight, destX, destY, destW, destH);
         }

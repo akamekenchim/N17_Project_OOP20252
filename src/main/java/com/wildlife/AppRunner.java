@@ -17,11 +17,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -38,7 +40,7 @@ import java.net.URL;
 import java.util.Random;
 
 public class AppRunner extends Application {
-    private MediaPlayer bgmPlayer; // Giữ lại nhạc nền BGM
+    private MediaPlayer bgmPlayer;
 
     @Override
     public void start(Stage primaryStage) {
@@ -70,7 +72,6 @@ public class AppRunner extends Application {
         WR.generateMapCache();
         SimulationController GenG = new SimulationController(map, gc, WR);
 
-        // ĐÃ SỬA LỖI: createDashboardPanel giờ trả về chuẩn StackPane
         StackPane rightPanel = createDashboardPanel(map);
 
         HBox mainLayout = new HBox(cv, rightPanel);
@@ -80,13 +81,11 @@ public class AppRunner extends Application {
         InputController.StartListening(mainScene, map);
 
         // ==========================================
-        // 2. SETUP MÀN HÌNH CHÀO MỪNG BẰNG ẢNH (KHÔNG DÙNG VIDEO)
+        // 2. SETUP MÀN HÌNH CHÀO MỪNG (WELCOME SCENE)
         // ==========================================
         StackPane welcomeLayout = new StackPane();
 
-        // 2.1 Load ảnh nền Welcome (Bỏ hoàn toàn Video)
         try {
-            // Thay "welcome_bg.png" bằng tên file ảnh nền  có trong thư mục resources/images/
             Image welcomeImg = SpriteManager.loadImage("welcome_screen.png"); 
             ImageView welcomeView = new ImageView(welcomeImg);
             welcomeView.setFitWidth(Constants.SCREEN_WIDTH + 300);
@@ -94,17 +93,14 @@ public class AppRunner extends Application {
             welcomeView.setPreserveRatio(false);
             welcomeLayout.getChildren().add(welcomeView);
         } catch (Exception e) {
-            System.out.println("Không tìm thấy ảnh welcome_bg.png, tự động dùng nền tối.");
             welcomeLayout.setStyle("-fx-background-color: #1a1a2e;");
         }
 
-        // 2.2 Lớp màng đen mờ
         Region welcomeOverlay = new Region();
         welcomeOverlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3);");
         welcomeOverlay.setPrefSize(Constants.SCREEN_WIDTH + 300, Constants.SCREEN_HEIGHT);
         welcomeLayout.getChildren().add(welcomeOverlay);
 
-        // 2.3 Nút Start
         Button startButton = new Button("Play");
         String buttonNormalStyle = "-fx-background-color: #e8e8e8; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b0b0b0; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
         String buttonHoverStyle = "-fx-background-color: #ffffff; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #888888; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
@@ -132,37 +128,28 @@ public class AppRunner extends Application {
         // 3. HIỂN THỊ CỬA SỔ
         // ==========================================
         primaryStage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) { // newValue == true nghĩa là cửa sổ VỪA BỊ THU NHỎ (Minimize)
+            if (newValue) { 
                 System.out.println("[System] The window has been minimized. Pausing simulation to save resources...");
-                
-                // 1. Gọi lệnh Pause vòng lặp game chính của  để cứu GPU
-                GenG.stop(); // Giả sử SimulationController của  có hàm stop() / pause()
-                
-            } else { // newValue == false nghĩa là cửa sổ VỪA ĐƯỢC PHÓNG TO LẠI (Restore)
+                GenG.stop(); 
+            } else { 
                 System.out.println("[System] The window has been restored. Resuming simulation...");
-                
-                // 2. Kích hoạt cho vòng lặp game chạy tiếp bình thường
-                GenG.Start(); // Gọi lại hàm chạy tiếp
+                GenG.Start(); 
             }
         });
-        // ====================================================================
 
-        // Trước đây  chỉ để đơn thuần như thế này:
         primaryStage.setScene(welcomeScene);
         primaryStage.setTitle("KénChim đáng yêu - Wildlife Eco Simulator");
-        primaryStage.show();;
+        primaryStage.show();
     }
 
     // ====================================================================
-    // 🌟 BẢNG ĐIỀU KHIỂN: NỀN ẢNH, SPAWNER THỦ CÔNG, BỘ ĐẾM 10S
+    // 🌟 BẢNG ĐIỀU KHIỂN: NỀN ẢNH, SPAWNER, BỘ ĐẾM, SLIDER
     // ====================================================================
     private StackPane createDashboardPanel(WorldMap map) {
         StackPane hudRoot = new StackPane();
         hudRoot.setPrefWidth(300);
 
-        // 1. Ảnh nền HUD (Bảo đảm không che các nút)
         try {
-            // Thay "hud_bg.png" bằng ảnh nền dọc cho bảng điều khiển
             Image hudBgImage = SpriteManager.loadImage("hud_bg.png");
             ImageView hudBgView = new ImageView(hudBgImage);
             hudBgView.setFitWidth(300);
@@ -173,10 +160,9 @@ public class AppRunner extends Application {
             hudRoot.setStyle("-fx-background-color: #2a2a40;");
         }
 
-        // 2. Container chứa nội dung
-        VBox contentContainer = new VBox(15);
-        contentContainer.setPadding(new Insets(25, 20, 20, 20));
-        contentContainer.setStyle("-fx-background-color: rgba(30, 30, 45, 0.4);"); 
+        VBox contentContainer = new VBox(10); // Giảm khoảng cách giữa các phần để nhét đủ control
+        contentContainer.setPadding(new Insets(20, 20, 20, 20));
+        contentContainer.setStyle("-fx-background-color: rgba(30, 30, 45, 0.5);"); 
 
         Label titleLabel = new Label("HỆ THỐNG GIÁM SÁT");
         titleLabel.setTextFill(javafx.scene.paint.Color.GOLD);
@@ -184,25 +170,17 @@ public class AppRunner extends Application {
         titleLabel.setAlignment(Pos.CENTER);
         titleLabel.setMaxWidth(Double.MAX_VALUE);
 
-        // Khu vực hiển thị Thống kê
-        VBox statsBox = new VBox(8);
-        statsBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 12; -fx-background-radius: 8;");
-
+        // KHU VỰC 1: THỐNG KÊ
+        VBox statsBox = new VBox(5);
+        statsBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 10; -fx-background-radius: 8;");
         Label seasonLabel = new Label("☀️ Mùa hiện tại: Mùa Hè");
         Label statsLabel = new Label("🐾 Đang thu thập dữ liệu...");
-
-        seasonLabel.setStyle("-fx-text-fill: #e0e0e0; -fx-font-size: 14px; -fx-font-weight: bold;");
+        seasonLabel.setStyle("-fx-text-fill: #e0e0e0; -fx-font-size: 13px; -fx-font-weight: bold;");
         statsLabel.setStyle("-fx-text-fill: #a0ffd0; -fx-font-size: 13px; -fx-font-weight: bold;");
         statsBox.getChildren().addAll(seasonLabel, statsLabel);
 
-        // 3. Timeline Đếm thực thể (chu kỳ 10s)
         Timeline telemetryTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
-            int countPassive = 0;
-            int countPredator = 0;
-            int countAggressive = 0;
-            int countGrass = 0;
-            int countFish = 0;
-
+            int countPassive = 0, countPredator = 0, countAggressive = 0, countGrass = 0, countFish = 0;
             for (BaseEntity e : map.getEntity()) {
                 if (e.isAlive()) {
                     if (e instanceof com.wildlife.model.animals.passive.Passive) countPassive++;
@@ -212,7 +190,6 @@ public class AppRunner extends Application {
                     else if (e instanceof com.wildlife.model.Fish) countFish++;
                 }
             }
-
             statsLabel.setText(
                 "🌿 Tổng số Cỏ: " + countGrass + "\n" +
                 "🐇 Động vật ăn cỏ: " + countPassive + "\n" +
@@ -224,87 +201,104 @@ public class AppRunner extends Application {
         telemetryTimeline.setCycleCount(Timeline.INDEFINITE);
         telemetryTimeline.play();
 
-        // 4. Các nút tạo thủ công (Manual Spawn)
-        Label spawnTitle = new Label("⚡ TRIỆU HỒI THỦ CÔNG");
-        spawnTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
-        spawnTitle.setPadding(new Insets(10, 0, 0, 0));
+        // KHU VỰC 2: CÔNG CỤ CLICK CHUỘT (THAY PHÍM BẤM)
+        Label mouseTitle = new Label("🖱️ CÔNG CỤ ĐẶT CHUỘT");
+        mouseTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+        
+        Label currentToolLabel = new Label("Đang chọn: ❌ Hủy (Không đặt)");
+        currentToolLabel.setStyle("-fx-text-fill: #ffd700; -fx-font-size: 12px; -fx-font-style: italic;");
 
-        Button btnSpawnGrass = createStyledButton("🌱 Tạo Cỏ Ngẫu Nhiên");
-        Button btnSpawnRabbit = createStyledButton("🐇 Thả Thỏ (Passive)");
-        Button btnSpawnWolf = createStyledButton("🐺 Thả Sói (Predator)");
-        Button btnSeason = createStyledButton("❄️ Đổi Mùa Đông");
+        FlowPane toolPane = new FlowPane(5, 5); // Tạo lưới linh hoạt cho các nút nhỏ
+        toolPane.getChildren().addAll(
+            createToolButton("❌ Hủy", -2, currentToolLabel),
+            createToolButton("🌱 Cỏ", 1, currentToolLabel),
+            createToolButton("🪨 Đá", 0, currentToolLabel),
+            createToolButton("🐇 Thỏ", 4, currentToolLabel),
+            createToolButton("🦌 Hươu", 2, currentToolLabel),
+            createToolButton("🐺 Sói", 3, currentToolLabel),
+            createToolButton("🦊 Cáo", 5, currentToolLabel),
+            createToolButton("🐅 Hổ", 6, currentToolLabel),
+            createToolButton("🧍 Người", 7, currentToolLabel),
+            createToolButton("🐟 Cá", 8, currentToolLabel)
+        );
 
-        btnSpawnGrass.setOnAction(e -> manualSpawn(map, "GRASS"));
-        btnSpawnRabbit.setOnAction(e -> manualSpawn(map, "RABBIT"));
-        btnSpawnWolf.setOnAction(e -> manualSpawn(map, "WOLF"));
+        // KHU VỰC 3: SLIDERS ĐIỀU KHIỂN HỆ THỐNG
+        Label sysTitle = new Label("⚙️ ĐIỀU KHIỂN HỆ THỐNG");
+        sysTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+        sysTitle.setPadding(new Insets(10, 0, 0, 0));
 
+        // Slider Tốc độ
+        Label speedLabel = new Label("⚡ Tốc độ thời gian (1.0x)");
+        speedLabel.setStyle("-fx-text-fill: #a0c0ff; -fx-font-size: 12px;");
+        Slider speedSlider = new Slider(0.1, 5.0, Constants.SIM_SPEED);
+        speedSlider.setShowTickMarks(true);
+        speedSlider.setMajorTickUnit(1.0);
+        speedSlider.setFocusTraversable(false);
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            Constants.SIM_SPEED = newVal.doubleValue();
+            speedLabel.setText(String.format("⚡ Tốc độ thời gian (%.1fx)", newVal.doubleValue()));
+        });
+
+        // Slider Zoom
+        Label zoomLabel = new Label("🔍 Độ thu phóng (1.0x)");
+        zoomLabel.setStyle("-fx-text-fill: #a0c0ff; -fx-font-size: 12px;");
+        Slider zoomSlider = new Slider(0.5, 3.0, SimulationController.zoomLevel);
+        zoomSlider.setShowTickMarks(true);
+        zoomSlider.setMajorTickUnit(0.5);
+        zoomSlider.setFocusTraversable(false);
+        zoomSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            SimulationController.zoomLevel = newVal.doubleValue();
+            zoomLabel.setText(String.format("🔍 Độ thu phóng (%.1fx)", newVal.doubleValue()));
+        });
+
+        // Nút Đổi Mùa
+        Button btnSeason = createStyledButton("❄️ Đổi Mùa");
         btnSeason.setOnAction(e -> {
             map.isWinter = !map.isWinter;
             seasonLabel.setText(map.isWinter ? "❄️ Mùa hiện tại: Mùa Đông" : "☀️ Mùa hiện tại: Mùa Hè");
-            btnSeason.setText(map.isWinter ? "☀️ Đổi Mùa Hè" : "❄️ Đổi Mùa Đông");
         });
 
-        contentContainer.getChildren().addAll(titleLabel, statsBox, spawnTitle, btnSpawnGrass, btnSpawnRabbit, btnSpawnWolf, btnSeason);
+        contentContainer.getChildren().addAll(
+            titleLabel, statsBox, 
+            mouseTitle, currentToolLabel, toolPane, 
+            sysTitle, speedLabel, speedSlider, zoomLabel, zoomSlider, btnSeason
+        );
         hudRoot.getChildren().add(contentContainer);
 
         return hudRoot;
     }
 
     // ====================================================================
-    // HÀM BỔ TRỢ: TÌM Ô CỎ TRỐNG VÀ SPAWN
+    // HÀM BỔ TRỢ: TẠO NÚT NHỎ CHO CÔNG CỤ CLICK CHUỘT
     // ====================================================================
-    private void manualSpawn(WorldMap map, String entityType) {
-        Random rand = new Random();
-        int maxAttempts = 200;
-
-        for (int i = 0; i < maxAttempts; i++) {
-            int rx = rand.nextInt(Constants.MAP_WIDTH);
-            int ry = rand.nextInt(Constants.MAP_HEIGHT);
-
-            com.wildlife.model.worldmap.Tile tile = map.getTile(rx, ry);
-
-            // 🎯 ĐIỀU KIỆN CHẶT CHẼ: Ô Đất gốc là Cỏ (0) VÀ chưa bị con nào đứng đè lên
-            if (com.wildlife.model.worldmap.MatrixManager.MAP_LAYOUT[ry][rx] == 0 && tile != null && !tile.hasOccupant() &&
-             ry > 0 && ry < Constants.MAP_HEIGHT - 1 && rx > 0 && rx < Constants.MAP_WIDTH - 1) {
-                double pixelX = rx * Constants.TILE_SIZE;
-                double pixelY = ry * Constants.TILE_SIZE;
-
-                BaseEntity newSpawn = null;
-
-                switch (entityType) {
-                    case "GRASS":
-                        newSpawn = new com.wildlife.model.plants.Grass(pixelX, pixelY, 0);
-                        break;
-                    case "RABBIT":
-                        // NOTE:  sửa dòng này thành Class Động vật ăn cỏ của  (VD: new Rabbit)
-                        newSpawn = new com.wildlife.model.animals.passive.Rabbit(pixelX, pixelY);
-                        //System.out.println("Hãy bỏ comment dòng 245 và điền class Rabbit của !");
-                        break;
-                    case "WOLF":
-                        // NOTE:  sửa dòng này thành Class Động vật ăn thịt của  (VD: new Wolf)
-                        newSpawn = new com.wildlife.model.animals.predator.Wolf(pixelX, pixelY);
-                        //System.out.println("Hãy bỏ comment dòng 250 và điền class Wolf của !");
-                        break;
-                }
-
-                if (newSpawn != null) {
-                    map.addEntity(newSpawn);
-                    System.out.println("Spawned " + entityType + " at tile [" + rx + ", " + ry + "]");
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
+    private Button createToolButton(String text, int animalType, Label statusLabel) {
+        Button btn = new Button(text);
+        btn.setFocusTraversable(false);
+        
+        String normalStyle = "-fx-background-color: #4a4a6a; -fx-text-fill: white; -fx-font-size: 11px; -fx-padding: 6 10; -fx-background-radius: 5;";
+        String hoverStyle = "-fx-background-color: #6a6a8a; -fx-text-fill: #ffd700; -fx-font-size: 11px; -fx-padding: 6 10; -fx-background-radius: 5; -fx-cursor: hand;";
+        
+        btn.setStyle(normalStyle);
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(normalStyle));
+        
+        // Cập nhật loại con vật trực tiếp vào InputController khi bấm nút
+        btn.setOnAction(e -> {
+            InputController.typeAnimal = animalType;
+            statusLabel.setText("Đang chọn: " + text + " (Click để đặt)");
+            System.out.println("[Tool] Đã chuyển công cụ sang: " + text + " (ID: " + animalType + ")");
+        });
+        
+        return btn;
     }
 
     // ====================================================================
-    // HÀM BỔ TRỢ: TẠO STYLE CHO NÚT BẤM
+    // HÀM BỔ TRỢ: TẠO STYLE CHO NÚT BẤM LỚN
     // ====================================================================
     private Button createStyledButton(String text) {
         Button btn = new Button(text);
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setFocusTraversable(false);
+        btn.setFocusTraversable(false); // Tránh cướp focus phím tắt
         String normalStyle = "-fx-background-color: #3b3b55; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10;";
         String hoverStyle = "-fx-background-color: #555577; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10; -fx-cursor: hand;";
 

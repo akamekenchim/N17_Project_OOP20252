@@ -132,8 +132,8 @@ public abstract class Predator extends Animal {
             // 4. Tính toán tọa độ và kích thước sẽ vẽ lên màn hình
             double destX = getX();
             double destY = getY();
-            double destW = 32; // Hoặc Constants.TILE_SIZE
-            double destH = 32;
+            double destW = 40; // Hoặc Constants.TILE_SIZE
+            double destH = 40;
 
             // 5. LẬT ẢNH (FLIP) CỰC NHANH KHÔNG CẦN SCALE
             // Spritesheet đang quay mặt sang TRÁI. 

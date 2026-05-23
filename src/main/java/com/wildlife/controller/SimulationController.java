@@ -38,7 +38,7 @@ public class SimulationController {
     public void Start() {
         AT = new AnimationTimer() {
 
-            //Random r = new Random();
+            Random r = new Random();
             // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
             
             Image geng = SpriteManager.loadImage("haiten.png");
@@ -63,18 +63,18 @@ public class SimulationController {
                 gc.scale(zoomLevel, zoomLevel);
                 gc.drawImage(renderer.getMapCache(), 0, 0);
                 renderer.renderSnow(gc, map);
-                /*
-                 * if(currentTime % 200 == 0 && Grass.grassCount < 30){
-                 * int placeX = r.nextInt(36);
-                 * int placeY = r.nextInt(25);
-                 * if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
-                 * Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
-                 * 0);
-                 * map.addEntity(g);
-                 * }
-                 * 
-                 * }
-                 */ // Logic add cỏ theo thời gian
+                
+                if(currentTime % 200 == 0 && Grass.grassCount < 30){
+                    int placeX = r.nextInt(36);
+                    int placeY = r.nextInt(25);
+                    if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
+                    Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
+                    0);
+                    map.addEntity(g);
+                }
+                
+                }
+                // Logic add cỏ theo thời gian
                 map.update(deltaTime); // update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
                 renderEntities();
                 x += deltaTime * Constants.RABBIT_SPEED;
