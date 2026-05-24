@@ -40,7 +40,7 @@ public class HunterStrategy {
                     minDistance = dist;
                     targetPrey = entity; 
                 }
-                if (dist < 25.0) {
+                if (dist < 25.0 && hunter.getHunger() < 80) { // Đủ gần để tấn công, và sói chưa quá no
                     //SoundManager.playSound("predatorExecute.wav");
                     hunter.setHunger(Math.min(100, hunter.getHunger() + 40));
                     entity.setAlive(false);
@@ -81,7 +81,7 @@ public class HunterStrategy {
         }
         
         // 3. SỬA ĐỔI: Cho sói đuổi theo targetPrey (áp dụng cho cả Thỏ và Cáo)
-        if (targetPrey != null) {
+        if (targetPrey != null && hunter.getHunger() < 80) { // Chỉ đuổi nếu chưa quá no, tránh tình trạng sói đuổi mồi rồi bỏ đói meo không ăn
             // Đuổi theo con mồi
             double dx = targetPrey.getX() - hunter.getX();
             double dy = targetPrey.getY() - hunter.getY();

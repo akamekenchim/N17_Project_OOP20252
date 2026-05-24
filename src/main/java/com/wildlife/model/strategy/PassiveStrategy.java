@@ -33,7 +33,7 @@ public class PassiveStrategy {
         for(BaseEntity e : allEntities){
             if(e instanceof Predator && e.isAlive() == true){
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
-                if(dist < 20){
+                if(dist < 20 && e.getHunger() < 80){
                     //SoundManager.playSound("predatorExecute.wav");
                     herbivore.setAlive(false);
                     ((Predator) e).setHunger(Math.min(100, ((Predator) e).getHunger() + 40));
@@ -50,7 +50,7 @@ public class PassiveStrategy {
                 if(dist < 20 && herbivore.getHunger() < 70){
                     e.setAlive(false);
                     //SoundManager.playSound("grassEaten.wav");
-                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 5));
+                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 30));
                     //System.out.println("New hunger: " + herbivore.getHunger());
                     return new Vector(herbivore.getDx(), herbivore.getDy());
                 }

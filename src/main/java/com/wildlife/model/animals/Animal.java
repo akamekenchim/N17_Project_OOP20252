@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public abstract class Animal extends BaseEntity {
-    private double hunger = 100;
     private double thirst = 100;
     private double tiredness = 100;
     private double dx = 0;
@@ -51,14 +50,6 @@ public abstract class Animal extends BaseEntity {
 
     public void setDy(double dy) {
         this.dy = dy;
-    }
-
-    public double getHunger() {
-        return hunger;
-    }
-
-    public void setHunger(double hunger) {
-        this.hunger = hunger;
     }
 
     public Animal(double x, double y) {

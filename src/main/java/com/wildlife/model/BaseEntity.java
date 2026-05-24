@@ -10,6 +10,14 @@ public abstract class BaseEntity {
     private double y;
     private boolean isAlive = true;
     protected Image img;
+    protected double hunger = 50;
+
+    public void setHunger(double hunger) {
+        this.hunger = hunger;
+    }
+    public double getHunger() {
+        return hunger;
+    }
 
     public BaseEntity(double x, double y) {
         this.x = x;

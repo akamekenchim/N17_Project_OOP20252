@@ -1,5 +1,11 @@
 package com.wildlife;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 // IMPORT MODEL & CONTROLLER
 import com.wildlife.constant.Constants;
 import com.wildlife.controller.InputController;
@@ -36,8 +42,9 @@ import javafx.geometry.Pos;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+
 import java.net.URL;
-import java.util.Random;
+
 
 public class AppRunner extends Application {
     private MediaPlayer bgmPlayer;
@@ -102,8 +109,8 @@ public class AppRunner extends Application {
         welcomeLayout.getChildren().add(welcomeOverlay);
 
         Button startButton = new Button("Play");
-        String buttonNormalStyle = "-fx-background-color: #e8e8e8; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b0b0b0; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
-        String buttonHoverStyle = "-fx-background-color: #ffffff; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #888888; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
+        String buttonNormalStyle = "-fx-background-color: #c8c4c4; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b0b0b0; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
+        String buttonHoverStyle = "-fx-background-color: #ffffff; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #535151; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
 
         startButton.setStyle(buttonNormalStyle);
         startButton.setOnMouseEntered(e -> startButton.setStyle(buttonHoverStyle));
@@ -179,6 +186,27 @@ public class AppRunner extends Application {
         statsLabel.setStyle("-fx-text-fill: #a0ffd0; -fx-font-size: 13px; -fx-font-weight: bold;");
         statsBox.getChildren().addAll(seasonLabel, statsLabel);
 
+        // ==========================================================
+        // 🌟 [BỔ SUNG] TỰ ĐỘNG KHỞI TẠO FILE LOG EXCEL (.CSV)
+        // ==========================================================
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String logFilePath = "logs/simulation_" + timeStamp + ".csv";
+        File logDir = new File("logs");
+        if (!logDir.exists()) {
+            logDir.mkdirs(); // Tự động tạo thư mục "logs" nếu máy chưa có
+        }
+        
+        // Ghi tiêu đề các cột (Header) cho file CSV
+        try (PrintWriter pw = new PrintWriter(new FileWriter(logFilePath, true))) {
+            pw.println("ThoiGian_Giay,SoCo,Tho_AnCo,Cao_DocHanh,Soi_SanMoi,Ca");
+        } catch (Exception e) {
+            System.out.println("[Log System] Không thể tạo file CSV: " + e.getMessage());
+        }
+
+        // Biến mảng 1 phần tử để lưu thời gian đã trôi qua (bắt buộc dùng mảng để update trong lambda)
+        int[] elapsedSeconds = {0}; 
+        // ==========================================================
+
         Timeline telemetryTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
             int countPassive = 0, countPredator = 0, countAggressive = 0, countGrass = 0, countFish = 0;
             for (BaseEntity e : map.getEntity()) {
@@ -190,6 +218,8 @@ public class AppRunner extends Application {
                     else if (e instanceof com.wildlife.model.Fish) countFish++;
                 }
             }
+            
+            // Cập nhật text lên màn hình
             statsLabel.setText(
                 "🌿 Tổng số Cỏ: " + countGrass + "\n" +
                 "🐇 Động vật ăn cỏ: " + countPassive + "\n" +
@@ -197,6 +227,16 @@ public class AppRunner extends Application {
                 "🐺 Thú săn mồi bầy: " + countPredator + "\n" + 
                 "🐟 Số lượng Cá: " + countFish
             );
+
+            // ==========================================================
+            // 🌟 [BỔ SUNG] GHI SỐ LIỆU VÀO FILE EXCEL MỖI 10 GIÂY
+            // ==========================================================
+            elapsedSeconds[0] += 10;
+            try (PrintWriter pw = new PrintWriter(new FileWriter(logFilePath, true))) {
+                pw.println(elapsedSeconds[0] + "," + countGrass + "," + countPassive + "," + countAggressive + "," + countPredator + "," + countFish);
+            } catch (Exception e) {
+                // Im lặng bỏ qua nếu lỗi để không gián đoạn game
+            }
         }));
         telemetryTimeline.setCycleCount(Timeline.INDEFINITE);
         telemetryTimeline.play();

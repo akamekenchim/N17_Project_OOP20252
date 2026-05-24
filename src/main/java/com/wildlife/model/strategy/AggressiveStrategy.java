@@ -42,7 +42,7 @@ public class AggressiveStrategy {
             // 1. KẺ THÙ (Sói) - Vẫn sợ sói như bình thường
             if (e instanceof Predator && e.isAlive()) {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
-                if (dist < 20) {
+                if (dist < 20 && e.getHunger() < 80) {
                     herbivore.setAlive(false);
                     ((Predator) e).setHunger(Math.min(100, ((Predator) e).getHunger() + 40));
                     return new Vector(0, 0); 
@@ -58,7 +58,7 @@ public class AggressiveStrategy {
                 double dist = getDistance(herbivore.getX(), herbivore.getY(), e.getX(), e.getY());
                 if (dist < 20 && herbivore.getHunger() < 70) {
                     e.setAlive(false);
-                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 10)); // Cỏ hồi ít
+                    herbivore.setHunger(Math.min(100, herbivore.getHunger() + 20)); // Cỏ hồi ít
                     //eturn new Vector(0, 0); // Đứng lại ăn (fix lỗi máy hút bụi)
                 }
                 if (dist < minDistFood && dist <= MAX_SCAN) {

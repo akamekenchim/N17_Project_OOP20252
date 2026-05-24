@@ -15,6 +15,7 @@ public abstract class Passive extends Animal {
     protected PassiveStrategy brain = new PassiveStrategy();
     public Passive(double x, double y) {
         super(x, y);
+        this.setHunger(50);
     }
     @Override 
     public void update(double delta, WorldMap mp){
@@ -28,7 +29,7 @@ public abstract class Passive extends Animal {
         if (this.avoidanceTimer > 0) this.avoidanceTimer--;
         
         if (this.getInnerTime() > Constants.UPDATE_INTERVAL) {
-            this.setHunger(this.getHunger() - (random.nextDouble() / 5));
+            this.setHunger(this.getHunger() - (random.nextDouble() / 6));
             this.setThirst(this.getThirst() - (random.nextDouble() / 8));
             //System.out.println("Current hunger: " + this.getHunger());
             direction = brain.execute(this, mp);

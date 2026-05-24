@@ -21,6 +21,7 @@ public class SimulationController {
     public static double camY = 0.0;
     public static int currentTime = 0;
     public AnimationTimer AT;
+    private int birthCooldown = 0; // Hạn chế sinh sản quá nhanh, mỗi 200 frames mới được sinh sản một lần
     public SimulationController(WorldMap wm, GraphicsContext g, MapRenderer ren) {
         this.map = wm;
         this.gc = g;
@@ -64,18 +65,97 @@ public class SimulationController {
                 gc.drawImage(renderer.getMapCache(), 0, 0);
                 renderer.renderSnow(gc, map);
                 
-                if(currentTime % 200 == 0 && Grass.grassCount < 30){
+                if(currentTime % 100 == 0 && Grass.grassCount < 100 && Constants.SIM_SPEED > 0 ){
                     int placeX = r.nextInt(36);
                     int placeY = r.nextInt(25);
                     if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
-                    Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
-                    0);
-                    map.addEntity(g);
-                }
-                
+                        Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
+                        0);
+                        map.addEntity(g);
+                    }
+                    placeX = r.nextInt(36);
+                    placeY = r.nextInt(25);
+                    if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
+                        Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
+                        0);
+                        map.addEntity(g);
+                    }
+                    placeX = r.nextInt(36);
+                    placeY = r.nextInt(25);
+                    if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
+                        Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
+                        0);
+                        map.addEntity(g);
+                    }
                 }
                 // Logic add cỏ theo thời gian
-                map.update(deltaTime); // update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
+                map.update(deltaTime); 
+                birthCooldown += Constants.SIM_SPEED;// update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
+                if (birthCooldown >= 1000) {
+                    // ====================================================================
+                    // 🌟 [BỔ SUNG] CƠ CHẾ SINH SẢN TỰ NHIÊN (REPRODUCTION)
+                    // ====================================================================
+                    List<BaseEntity> newBabies = new ArrayList<>(); // "Phòng sinh" tạm thời
+                    
+                    for (BaseEntity e : map.getEntity()) {
+                        if (e.isAlive()) {
+                            // 1. Nếu là Động vật ăn cỏ (Passive) - Ví dụ: Thỏ, Hươu
+                            if (e instanceof com.wildlife.model.animals.passive.Passive) {
+                                com.wildlife.model.animals.passive.Passive p = (com.wildlife.model.animals.passive.Passive) e;
+                                if (p.getHunger() >= 85) { // Ăn quá no
+                                    
+                                    // Tính trước tọa độ tương lai
+                                    double newX = p.getX() + 10;
+                                    double newY = p.getY() + 10;
+                                    int tileX = (int) (newX / Constants.TILE_SIZE);
+                                    int tileY = (int) (newY / Constants.TILE_SIZE);
+                                    
+                                    // 🌟 CHỐT CHẶN: Chỉ đẻ nếu KHÔNG nằm ở 4 mép tường ma trận
+                                    if (tileX > 0 && tileX < Constants.MAP_WIDTH - 1 && tileY > 0 && tileY < Constants.MAP_HEIGHT - 1 && !map.isObstacle(tileX, tileY, e)) {
+                                        p.setHunger(50); // Trừ điểm no khi đẻ thành công
+                                        
+                                        if (p instanceof com.wildlife.model.animals.passive.Rabbit) {
+                                            newBabies.add(new com.wildlife.model.animals.passive.Rabbit(newX, newY));
+                                        } else if (p instanceof com.wildlife.model.animals.passive.Deer) {
+                                            newBabies.add(new com.wildlife.model.animals.passive.Deer(newX, newY));
+                                        }
+                                    }
+                                }
+                            }
+                            // 2. Nếu là Động vật ăn thịt (Predator) - Ví dụ: Sói, Cáo, Hổ
+                            else if (e instanceof com.wildlife.model.animals.predator.Predator) {
+                                com.wildlife.model.animals.predator.Predator p = (com.wildlife.model.animals.predator.Predator) e;
+                                if (p.getHunger() >= 90) { // Sói sinh sản khó hơn thỏ (cần 90 điểm)
+                                    
+                                    // Tính trước tọa độ tương lai
+                                    double newX = p.getX() + 10;
+                                    double newY = p.getY() + 10;
+                                    int tileX = (int) (newX / Constants.TILE_SIZE);
+                                    int tileY = (int) (newY / Constants.TILE_SIZE);
+
+                                    // 🌟 CHỐT CHẶN: Chỉ đẻ nếu KHÔNG nằm ở 4 mép tường ma trận
+                                    if (tileX > 0 && tileX < Constants.MAP_WIDTH - 1 && tileY > 0 && tileY < Constants.MAP_HEIGHT - 1 && !map.isObstacle(tileX, tileY, e)) {
+                                        p.setHunger(50); // Trừ điểm no khi đẻ thành công
+                                        
+                                        if (p instanceof com.wildlife.model.animals.predator.Wolf) {
+                                            newBabies.add(new com.wildlife.model.animals.predator.Wolf(newX, newY));
+                                        } else if (p instanceof com.wildlife.model.animals.predator.Tiger) {
+                                            newBabies.add(new com.wildlife.model.animals.predator.Tiger(newX, newY));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Nhập hộ khẩu cho các cháu bé mới đẻ vào bản đồ chính
+                    for (BaseEntity baby : newBabies) {
+                        map.addEntity(baby);
+                    }
+                    birthCooldown = 0; // Reset cooldown sau khi sinh sản
+                }
+                // ====================================================================
+
                 renderEntities();
                 x += deltaTime * Constants.RABBIT_SPEED;
                 if (x >= Constants.SCREEN_WIDTH)
