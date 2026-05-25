@@ -11,7 +11,6 @@ public class WorldMap {
     public final Tile[][] tiles;
     private final List<BaseEntity> listEntity = new ArrayList<>();
     private Random random = new Random();
-    private final Queue<Tile> growingQueue = new LinkedList<>();
     
     // --- CÁC BIẾN CHO MÙA ĐÔNG ---
     public boolean isWinter = false;
@@ -197,55 +196,8 @@ public class WorldMap {
         return nearbyEntities;
     }
 
-    // xem sói có thấy thỏ sau đá/trong bụi cây không
-    boolean canSee(BaseEntity observer, BaseEntity target) {
-        int observerTileX = (int) observer.getX() / Constants.TILE_SIZE;
-        int observerTileY = (int) observer.getY() / Constants.TILE_SIZE;
-
-        int targetTileX = (int) target.getX() / Constants.TILE_SIZE;
-        int targetTileY = (int) target.getY() / Constants.TILE_SIZE;
-
-        int dx = Math.abs(targetTileX - observerTileX);
-        int dy = Math.abs(targetTileY - observerTileY);
-
-        int stepX = (targetTileX > observerTileX) ? 1 : (targetTileX < observerTileX) ? -1 : 0;
-        int stepY = (targetTileY > observerTileY) ? 1 : (targetTileY < observerTileY) ? -1 : 0;
-
-        int err = dx - dy;
-
-        double visibility = 1.0;
-
-        while (true) {
-            Tile tile = getTile(observerTileX, observerTileY);
-
-            if (tile != null) {
-                visibility *= tile.getOpacity();
-                if (visibility < 0.1)
-                    return false; // cái này có thể thay đổi tùy vào độ nhạy của mắt các con vật
-            }
-
-            if (observerTileX == targetTileX && observerTileY == targetTileY) {
-                return true;
-            }
-
-            int err2 = err * 2;
-            if (err2 > -dy) {
-                err -= dy;
-                observerTileX += stepX;
-            }
-            if (err2 < dx) {
-                err += dx;
-                observerTileY += stepY;
-            }
-        }
-    }
-
     public List<BaseEntity> getEntity() {
         return listEntity;
-    }
-
-    public int getGrowingQueueSize() {
-        return growingQueue.size();
     }
 
     // 1. KIỂM TRA CHƯỚNG NGẠI VẬT CỨNG (Phải xoay đầu)
