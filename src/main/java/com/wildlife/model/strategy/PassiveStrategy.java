@@ -9,7 +9,7 @@ import com.wildlife.model.plants.Grass;
 import com.wildlife.model.worldmap.TerrainType;
 import com.wildlife.model.worldmap.Tile;
 import com.wildlife.model.worldmap.WorldMap;
-import com.wildlife.view.SoundManager;
+//import com.wildlife.view.SoundManager;
 
 import java.util.*;
 public class PassiveStrategy {

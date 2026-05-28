@@ -42,7 +42,7 @@ public class SimulationController {
             Random r = new Random();
             // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
             
-            Image geng = SpriteManager.loadImage("haiten.png");
+            Image logo = SpriteManager.loadImage("haiten.png");
             double x = 0;
             long lastTime = 0;
 
@@ -73,8 +73,8 @@ public class SimulationController {
                         0);
                         map.addEntity(g);
                     }
-                    placeX = r.nextInt(36);
-                    placeY = r.nextInt(25);
+                    placeX = r.nextInt(34);
+                    placeY = r.nextInt(23);
                     if(MatrixManager.MAP_LAYOUT[placeY][placeX] == 0){
                         Grass g = new Grass(placeX*Constants.TILE_SIZE, placeY*Constants.TILE_SIZE,
                         0);
@@ -93,7 +93,7 @@ public class SimulationController {
                 birthCooldown += Constants.SIM_SPEED;// update tat ca trang thai cua ban do hien tai (hàm trong WorldMap)
                 if (birthCooldown >= 1000) {
                     // ====================================================================
-                    // 🌟 [BỔ SUNG] CƠ CHẾ SINH SẢN TỰ NHIÊN (REPRODUCTION)
+                    // CƠ CHẾ SINH SẢN TỰ NHIÊN (REPRODUCTION)
                     // ====================================================================
                     List<BaseEntity> newBabies = new ArrayList<>(); // "Phòng sinh" tạm thời
                     
@@ -109,9 +109,9 @@ public class SimulationController {
                                     double newY = p.getY() + 10;
                                     int tileX = (int) (newX / Constants.TILE_SIZE);
                                     int tileY = (int) (newY / Constants.TILE_SIZE);
-                                    
+                                    int ff = r.nextInt(2);
                                     // 🌟 CHỐT CHẶN: Chỉ đẻ nếu KHÔNG nằm ở 4 mép tường ma trận
-                                    if (tileX > 0 && tileX < Constants.MAP_WIDTH - 1 && tileY > 0 && tileY < Constants.MAP_HEIGHT - 1 && !map.isObstacle(tileX, tileY, e)) {
+                                    if (tileX > 0 && tileX < Constants.MAP_WIDTH - 1 && tileY > 0 && tileY < Constants.MAP_HEIGHT - 1 && !map.isObstacle(tileX, tileY, e) && ff == 0) {
                                         p.setHunger(50); // Trừ điểm no khi đẻ thành công
                                         
                                         if (p instanceof com.wildlife.model.animals.passive.Rabbit) {
@@ -132,9 +132,9 @@ public class SimulationController {
                                     double newY = p.getY() + 10;
                                     int tileX = (int) (newX / Constants.TILE_SIZE);
                                     int tileY = (int) (newY / Constants.TILE_SIZE);
-
-                                    // 🌟 CHỐT CHẶN: Chỉ đẻ nếu KHÔNG nằm ở 4 mép tường ma trận
-                                    if (tileX > 0 && tileX < Constants.MAP_WIDTH - 1 && tileY > 0 && tileY < Constants.MAP_HEIGHT - 1 && !map.isObstacle(tileX, tileY, e)) {
+                                    int ff = r.nextInt(2);
+                                    // Chỉ đẻ nếu KHÔNG nằm ở 4 mép tường ma trận
+                                    if (tileX > 0 && tileX < Constants.MAP_WIDTH - 1 && tileY > 0 && tileY < Constants.MAP_HEIGHT - 1 && !map.isObstacle(tileX, tileY, e) && ff == 0) {
                                         p.setHunger(50); // Trừ điểm no khi đẻ thành công
                                         
                                         if (p instanceof com.wildlife.model.animals.predator.Wolf) {
@@ -148,7 +148,6 @@ public class SimulationController {
                         }
                     }
                     
-                    // Nhập hộ khẩu cho các cháu bé mới đẻ vào bản đồ chính
                     for (BaseEntity baby : newBabies) {
                         map.addEntity(baby);
                     }
@@ -167,7 +166,7 @@ public class SimulationController {
                  * isGraphic = true (chắc thế)
                  */
                 
-                gc.drawImage(geng, 15, 15, 50, 50);
+                gc.drawImage(logo, 15, 15, 50, 50);
                 // gc.setStroke(Color.PINK);
                 // gc.strokeRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE,
                 // Constants.TILE_SIZE);

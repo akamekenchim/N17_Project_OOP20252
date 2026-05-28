@@ -125,7 +125,7 @@ public class InputController {
                     
                     boolean hasAnimalNearby = false;
 
-                    // Gọi hàm getEntitiesInRange của Lead để lấy các thực thể trong bán kính 32 pixel
+                    // Gọi hàm getEntitiesInRange để lấy các thực thể trong bán kính 32 pixel
                     for (BaseEntity e : map.getEntitiesInRange(centerX, centerY, 35)) {
                         // Nếu trong vùng quét có con vật (Passive hoặc Predator) đang đứng
                         if (e instanceof Passive || e instanceof Predator) {
@@ -248,8 +248,6 @@ public class InputController {
         });
         scene.setOnMouseDragged(event -> {
             if (isZoomed) {
-                // double cur_x = SimEngine.screenToWorldX(event.getSceneX());
-                // double cur_y = SimEngine.screenToWorldY(event.getSceneY());
                 double deltaX = (event.getSceneX() - lastMouseX) * Constants.PANNING_SPEED;
                 double deltaY = (event.getSceneY() - lastMouseY) * Constants.PANNING_SPEED;
                 double nextCamX = SimulationController.camX + (deltaX / SimulationController.zoomLevel);
@@ -271,21 +269,6 @@ public class InputController {
                 } else {
                     SimulationController.camY = 0;
                 }
-                /*
-                 * double temp1 = SimEngine.camX;
-                 * double temp2 = SimEngine.camY;
-                 * //if(SimEngine.camX + (deltaX / SimEngine.zoomLevel) > 1184 || SimEngine.camX
-                 * + (deltaX / SimEngine.zoomLevel) < 0 ) SimEngine.camX = 0;
-                 * SimEngine.camX += (deltaX / SimEngine.zoomLevel);
-                 * System.out.println("Hien tai dang o: "+SimEngine.camX);
-                 * if(SimEngine.camX > 0 || SimEngine.camX < Constants.SCREEN_WIDTH -
-                 * Constants.SCREEN_WIDTH * SimEngine.zoomLevel) SimEngine.camX = temp1;
-                 * //if(SimEngine.camY + (deltaY / SimEngine.zoomLevel) > 832 || SimEngine.camY
-                 * + (deltaY / SimEngine.zoomLevel) < 0) SimEngine.camY = 0;
-                 * SimEngine.camY += (deltaY/ SimEngine.zoomLevel);
-                 * if(SimEngine.camY > 0 || SimEngine.camY < Constants.SCREEN_HEIGHT -
-                 * Constants.SCREEN_HEIGHT * SimEngine.zoomLevel) SimEngine.camY = temp2;
-                 */
                 lastMouseX = event.getSceneX();
                 lastMouseY = event.getSceneY();
             }

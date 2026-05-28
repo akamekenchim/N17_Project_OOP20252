@@ -7,13 +7,11 @@ import com.wildlife.model.animals.Animal;
 import com.wildlife.model.worldmap.WorldMap;
 import com.wildlife.view.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+//import javafx.scene.image.Image;
 
 public class Fish extends Animal {
     //private static Image fishImg; 
     private Random random = new Random();
-    
-    // === THAM SỐ HOẠT ẢNH SPRITESHEET ===
     private double frameTimer = 0;
     private int currentFrame = 0;
     private final int totalFrames = 4; // Giả định chuỗi ảnh động bơi có 4 khung hình theo chiều ngang

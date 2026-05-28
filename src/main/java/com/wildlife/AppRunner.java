@@ -77,7 +77,7 @@ public class AppRunner extends Application {
         WorldMap map = new WorldMap();
         MapRenderer WR = new MapRenderer();
         WR.generateMapCache();
-        SimulationController GenG = new SimulationController(map, gc, WR);
+        SimulationController gameSimulator = new SimulationController(map, gc, WR);
 
         StackPane rightPanel = createDashboardPanel(map);
 
@@ -122,7 +122,7 @@ public class AppRunner extends Application {
                 bgmPlayer.dispose();
             }
             primaryStage.setScene(mainScene);
-            GenG.Start(); 
+            gameSimulator.Start(); 
         });
 
         welcomeLayout.getChildren().add(startButton);
@@ -137,10 +137,10 @@ public class AppRunner extends Application {
         primaryStage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) { 
                 System.out.println("[System] The window has been minimized. Pausing simulation to save resources...");
-                GenG.stop(); 
+                gameSimulator.stop(); 
             } else { 
                 System.out.println("[System] The window has been restored. Resuming simulation...");
-                GenG.Start(); 
+                gameSimulator.Start(); 
             }
         });
 

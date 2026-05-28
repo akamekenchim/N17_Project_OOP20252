@@ -3,13 +3,6 @@ import java.io.InputStream;
 import java.util.*;
 
 import javafx.scene.paint.*;
-/*import com.wildlife.core.Constants;
-import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;*/
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
