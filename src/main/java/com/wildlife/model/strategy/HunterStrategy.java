@@ -15,9 +15,10 @@ import java.util.List;
 import java.util.Random;
 
 public class HunterStrategy {
-    private static final double SCAN_RADIUS = 150.0;
+    private static final double SCAN_RADIUS = 200.0;
     private static final double MAX_WATER_SCAN = 300.0;
     private static final int MAX_CYCLE = 15;
+    private static final double WATER_THRESHOLD = 50.0;
     private int cycle = 0;
     private Random random = new Random();
 
@@ -75,7 +76,7 @@ public class HunterStrategy {
             }
         }
         // (Logic khát nước giữ nguyên)
-        if (hunter.getThirst() < 50 && hunter.getAvoidanceTimer() <= 0) {
+        if (hunter.getThirst() < WATER_THRESHOLD && hunter.getAvoidanceTimer() <= 0) {
             Vector waterDir = findWaterVector(hunter, map);
             if (waterDir != null) return waterDir;
         }

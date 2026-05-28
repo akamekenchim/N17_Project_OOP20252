@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 // IMPORT MODEL & CONTROLLER
 import com.wildlife.constant.Constants;
@@ -44,7 +45,6 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 import java.net.URL;
-
 
 public class AppRunner extends Application {
     private MediaPlayer bgmPlayer;
@@ -108,26 +108,48 @@ public class AppRunner extends Application {
         welcomeOverlay.setPrefSize(Constants.SCREEN_WIDTH + 300, Constants.SCREEN_HEIGHT);
         welcomeLayout.getChildren().add(welcomeOverlay);
 
-        Button startButton = new Button("Play");
-        String buttonNormalStyle = "-fx-background-color: #c8c4c4; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b0b0b0; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
-        String buttonHoverStyle = "-fx-background-color: #ffffff; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #535151; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 8 60 8 60; -fx-cursor: hand;";
+        // ==========================================
+        // 🌟 TẠO 2 NÚT BẤM (TRỐNG VÀ CÓ SẴN THÚ)
+        // ==========================================
+        String buttonNormalStyle = "-fx-background-color: #e8e8e8; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b0b0b0; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30 10 30; -fx-cursor: hand;";
+        String buttonHoverStyle = "-fx-background-color: #ffffff; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #888888; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30 10 30; -fx-cursor: hand;";
 
+        // Nút 1: Chơi bản đồ trống
+        Button startButton = new Button("Play (Bản đồ trống)");
         startButton.setStyle(buttonNormalStyle);
         startButton.setOnMouseEntered(e -> startButton.setStyle(buttonHoverStyle));
         startButton.setOnMouseExited(e -> startButton.setStyle(buttonNormalStyle));
-
         startButton.setOnAction(event -> {
-            if (bgmPlayer != null) {
-                bgmPlayer.stop();
-                bgmPlayer.dispose();
-            }
+            if (bgmPlayer != null) { bgmPlayer.stop(); bgmPlayer.dispose(); }
             primaryStage.setScene(mainScene);
             gameSimulator.Start(); 
         });
 
-        welcomeLayout.getChildren().add(startButton);
-        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-        StackPane.setMargin(startButton, new Insets(0, 0, 150, 0));
+        // Nút 2: Quick Start (Tạo sẵn hệ sinh thái)
+        Button quickStartButton = new Button("🚀 Quick Start (Hệ sinh thái mẫu)");
+        String highlightNormal = "-fx-background-color: #ffcc00; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b38f00; -fx-border-width: 1.5; -fx-text-fill: #333333; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30 10 30; -fx-cursor: hand;";
+        String highlightHover = "-fx-background-color: #ffe680; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #b38f00; -fx-border-width: 1.5; -fx-text-fill: #000000; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30 10 30; -fx-cursor: hand;";
+        quickStartButton.setStyle(highlightNormal);
+        quickStartButton.setOnMouseEntered(e -> quickStartButton.setStyle(highlightHover));
+        quickStartButton.setOnMouseExited(e -> quickStartButton.setStyle(highlightNormal));
+        quickStartButton.setOnAction(event -> {
+            if (bgmPlayer != null) { bgmPlayer.stop(); bgmPlayer.dispose(); }
+            
+            // Gọi hàm sinh thái mẫu trước khi chạy
+            prePopulateMap(map);
+            
+            primaryStage.setScene(mainScene);
+            gameSimulator.Start(); 
+        });
+
+        // Nhóm 2 nút vào một HBox (Xếp theo chiều ngang)
+        HBox buttonLayout = new HBox(30); // Khoảng cách 30px giữa 2 nút
+        buttonLayout.setAlignment(Pos.CENTER);
+        buttonLayout.getChildren().addAll(startButton, quickStartButton);
+
+        welcomeLayout.getChildren().add(buttonLayout);
+        StackPane.setAlignment(buttonLayout, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(buttonLayout, new Insets(0, 0, 150, 0));
 
         Scene welcomeScene = new Scene(welcomeLayout, Constants.SCREEN_WIDTH + 300, Constants.SCREEN_HEIGHT);
 
@@ -136,7 +158,7 @@ public class AppRunner extends Application {
         // ==========================================
         primaryStage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) { 
-                System.out.println("[System] The window has been minimized. Pausing simulation to save resources...");
+                System.out.println("[System] The window has been minimized. Pausing simulation...");
                 gameSimulator.stop(); 
             } else { 
                 System.out.println("[System] The window has been restored. Resuming simulation...");
@@ -148,6 +170,70 @@ public class AppRunner extends Application {
         primaryStage.setTitle("KénChim đáng yêu - Wildlife Eco Simulator");
         primaryStage.show();
     }
+
+    // ====================================================================
+    // 🌟 KHỐI LOGIC: KHỞI TẠO HỆ SINH THÁI MẪU (PRESET SCENARIO)
+    // ====================================================================
+    private void prePopulateMap(WorldMap map) {
+        System.out.println("[System] Đang khởi tạo hệ sinh thái mẫu...");
+
+        // (1) 4 Thỏ ở góc trên bên trái (X: 2->12, Y: 2->10)
+        spawnEntitiesInArea(map, "RABBIT", 5, 2, 12, 2, 10);
+        
+        // (2) 4 Hươu ở vùng rừng góc dưới trái (X: 2->15, Y: 15->24)
+        spawnEntitiesInArea(map, "DEER", 5, 2, 15, 15, 24);
+        
+        // (3) 4 Sói và 2 Hổ ở góc phải bản đồ (X: 22->34, Y: 5->20)
+        spawnEntitiesInArea(map, "WOLF", 4, 22, 34, 5, 20);
+        spawnEntitiesInArea(map, "TIGER", 2, 22, 34, 5, 20);
+        
+        // (4) 20 Ngọn cỏ rải rác toàn bản đồ (Nhưng vẫn phải tuân thủ né Nước và mép)
+        // Giả sử lưới ma trận rộng khoảng 37x26 (theo InputController)
+        spawnEntitiesInArea(map, "GRASS", 20, 2, 34, 2, 23);
+        
+        System.out.println("[System] Đã tạo xong hệ sinh thái mẫu!");
+    }
+
+    /**
+     * Hàm sinh thực thể vào một khu vực (Bounding Box) chỉ định
+     * Đảm bảo không đè lên Nước và không dính sát viền bản đồ
+     */
+    private void spawnEntitiesInArea(WorldMap map, String type, int count, int minTileX, int maxTileX, int minTileY, int maxTileY) {
+        Random rand = new Random();
+        int spawned = 0;
+        int attempts = 0; // Tránh vòng lặp vô hạn nếu map quá chật
+        
+        while(spawned < count && attempts < 500) {
+            int tileX = minTileX + rand.nextInt(maxTileX - minTileX + 1);
+            int tileY = minTileY + rand.nextInt(maxTileY - minTileY + 1);
+
+            // Kiểm tra an toàn: Không nằm sát mép (mép = 0)
+            if (tileX > 1 && tileY > 1) {
+                // Kiểm tra loại địa hình: Chỉ đặt nếu là Đất/Cỏ (Mã = 0)
+                if (com.wildlife.model.worldmap.MatrixManager.MAP_LAYOUT[tileY][tileX] == 0) {
+                    
+                    double pixelX = tileX * Constants.TILE_SIZE;
+                    double pixelY = tileY * Constants.TILE_SIZE;
+                    BaseEntity entity = null;
+
+                    switch(type) {
+                        case "RABBIT": entity = new com.wildlife.model.animals.passive.Rabbit(pixelX, pixelY); break;
+                        case "DEER":   entity = new com.wildlife.model.animals.passive.Deer(pixelX, pixelY); break;
+                        case "WOLF":   entity = new com.wildlife.model.animals.predator.Wolf(pixelX, pixelY); break;
+                        case "TIGER":  entity = new com.wildlife.model.animals.predator.Tiger(pixelX, pixelY); break;
+                        case "GRASS":  entity = new com.wildlife.model.plants.Grass(pixelX, pixelY, 0); break;
+                    }
+
+                    if (entity != null) {
+                        map.addEntity(entity);
+                        spawned++;
+                    }
+                }
+            }
+            attempts++;
+        }
+    }
+    // ====================================================================
 
     // ====================================================================
     // 🌟 BẢNG ĐIỀU KHIỂN: NỀN ẢNH, SPAWNER, BỘ ĐẾM, SLIDER
@@ -167,7 +253,7 @@ public class AppRunner extends Application {
             hudRoot.setStyle("-fx-background-color: #2a2a40;");
         }
 
-        VBox contentContainer = new VBox(10); // Giảm khoảng cách giữa các phần để nhét đủ control
+        VBox contentContainer = new VBox(10);
         contentContainer.setPadding(new Insets(20, 20, 20, 20));
         contentContainer.setStyle("-fx-background-color: rgba(30, 30, 45, 0.5);"); 
 
@@ -186,26 +272,15 @@ public class AppRunner extends Application {
         statsLabel.setStyle("-fx-text-fill: #a0ffd0; -fx-font-size: 13px; -fx-font-weight: bold;");
         statsBox.getChildren().addAll(seasonLabel, statsLabel);
 
-        // ==========================================================
-        // 🌟 [BỔ SUNG] TỰ ĐỘNG KHỞI TẠO FILE LOG EXCEL (.CSV)
-        // ==========================================================
+        // Ghi Log CSV
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String logFilePath = "logs/simulation_" + timeStamp + ".csv";
         File logDir = new File("logs");
-        if (!logDir.exists()) {
-            logDir.mkdirs(); // Tự động tạo thư mục "logs" nếu máy chưa có
-        }
-        
-        // Ghi tiêu đề các cột (Header) cho file CSV
+        if (!logDir.exists()) { logDir.mkdirs(); }
         try (PrintWriter pw = new PrintWriter(new FileWriter(logFilePath, true))) {
             pw.println("ThoiGian_Giay,SoCo,Tho_AnCo,Cao_DocHanh,Soi_SanMoi,Ca");
-        } catch (Exception e) {
-            System.out.println("[Log System] Không thể tạo file CSV: " + e.getMessage());
-        }
-
-        // Biến mảng 1 phần tử để lưu thời gian đã trôi qua (bắt buộc dùng mảng để update trong lambda)
+        } catch (Exception e) {}
         int[] elapsedSeconds = {0}; 
-        // ==========================================================
 
         Timeline telemetryTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
             int countPassive = 0, countPredator = 0, countAggressive = 0, countGrass = 0, countFish = 0;
@@ -218,8 +293,6 @@ public class AppRunner extends Application {
                     else if (e instanceof com.wildlife.model.Fish) countFish++;
                 }
             }
-            
-            // Cập nhật text lên màn hình
             statsLabel.setText(
                 "🌿 Tổng số Cỏ: " + countGrass + "\n" +
                 "🐇 Động vật ăn cỏ: " + countPassive + "\n" +
@@ -228,27 +301,20 @@ public class AppRunner extends Application {
                 "🐟 Số lượng Cá: " + countFish
             );
 
-            // ==========================================================
-            // 🌟 [BỔ SUNG] GHI SỐ LIỆU VÀO FILE EXCEL MỖI 10 GIÂY
-            // ==========================================================
             elapsedSeconds[0] += 10;
             try (PrintWriter pw = new PrintWriter(new FileWriter(logFilePath, true))) {
                 pw.println(elapsedSeconds[0] + "," + countGrass + "," + countPassive + "," + countAggressive + "," + countPredator + "," + countFish);
-            } catch (Exception e) {
-                // Im lặng bỏ qua nếu lỗi để không gián đoạn game
-            }
+            } catch (Exception e) {}
         }));
         telemetryTimeline.setCycleCount(Timeline.INDEFINITE);
         telemetryTimeline.play();
 
-        // KHU VỰC 2: CÔNG CỤ CLICK CHUỘT (THAY PHÍM BẤM)
+        // KHU VỰC 2: CÔNG CỤ CLICK CHUỘT
         Label mouseTitle = new Label("🖱️ CÔNG CỤ ĐẶT CHUỘT");
         mouseTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
-        
         Label currentToolLabel = new Label("Đang chọn: ❌ Hủy (Không đặt)");
         currentToolLabel.setStyle("-fx-text-fill: #ffd700; -fx-font-size: 12px; -fx-font-style: italic;");
-
-        FlowPane toolPane = new FlowPane(5, 5); // Tạo lưới linh hoạt cho các nút nhỏ
+        FlowPane toolPane = new FlowPane(5, 5); 
         toolPane.getChildren().addAll(
             createToolButton("❌ Hủy", -2, currentToolLabel),
             createToolButton("🌱 Cỏ", 1, currentToolLabel),
@@ -266,8 +332,7 @@ public class AppRunner extends Application {
         Label sysTitle = new Label("⚙️ ĐIỀU KHIỂN HỆ THỐNG");
         sysTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
         sysTitle.setPadding(new Insets(10, 0, 0, 0));
-
-        // Slider Tốc độ
+        
         Label speedLabel = new Label("⚡ Tốc độ thời gian (1.0x)");
         speedLabel.setStyle("-fx-text-fill: #a0c0ff; -fx-font-size: 12px;");
         Slider speedSlider = new Slider(0.1, 5.0, Constants.SIM_SPEED);
@@ -279,7 +344,6 @@ public class AppRunner extends Application {
             speedLabel.setText(String.format("⚡ Tốc độ thời gian (%.1fx)", newVal.doubleValue()));
         });
 
-        // Slider Zoom
         Label zoomLabel = new Label("🔍 Độ thu phóng (1.0x)");
         zoomLabel.setStyle("-fx-text-fill: #a0c0ff; -fx-font-size: 12px;");
         Slider zoomSlider = new Slider(0.5, 3.0, SimulationController.zoomLevel);
@@ -291,7 +355,6 @@ public class AppRunner extends Application {
             zoomLabel.setText(String.format("🔍 Độ thu phóng (%.1fx)", newVal.doubleValue()));
         });
 
-        // Nút Đổi Mùa
         Button btnSeason = createStyledButton("❄️ Đổi Mùa");
         btnSeason.setOnAction(e -> {
             map.isWinter = !map.isWinter;
@@ -308,44 +371,30 @@ public class AppRunner extends Application {
         return hudRoot;
     }
 
-    // ====================================================================
-    // HÀM BỔ TRỢ: TẠO NÚT NHỎ CHO CÔNG CỤ CLICK CHUỘT
-    // ====================================================================
     private Button createToolButton(String text, int animalType, Label statusLabel) {
         Button btn = new Button(text);
         btn.setFocusTraversable(false);
-        
         String normalStyle = "-fx-background-color: #4a4a6a; -fx-text-fill: white; -fx-font-size: 11px; -fx-padding: 6 10; -fx-background-radius: 5;";
         String hoverStyle = "-fx-background-color: #6a6a8a; -fx-text-fill: #ffd700; -fx-font-size: 11px; -fx-padding: 6 10; -fx-background-radius: 5; -fx-cursor: hand;";
-        
         btn.setStyle(normalStyle);
         btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
         btn.setOnMouseExited(e -> btn.setStyle(normalStyle));
-        
-        // Cập nhật loại con vật trực tiếp vào InputController khi bấm nút
         btn.setOnAction(e -> {
             InputController.typeAnimal = animalType;
             statusLabel.setText("Đang chọn: " + text + " (Click để đặt)");
-            System.out.println("[Tool] Đã chuyển công cụ sang: " + text + " (ID: " + animalType + ")");
         });
-        
         return btn;
     }
 
-    // ====================================================================
-    // HÀM BỔ TRỢ: TẠO STYLE CHO NÚT BẤM LỚN
-    // ====================================================================
     private Button createStyledButton(String text) {
         Button btn = new Button(text);
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setFocusTraversable(false); // Tránh cướp focus phím tắt
+        btn.setFocusTraversable(false); 
         String normalStyle = "-fx-background-color: #3b3b55; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10;";
         String hoverStyle = "-fx-background-color: #555577; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10; -fx-cursor: hand;";
-
         btn.setStyle(normalStyle);
         btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
         btn.setOnMouseExited(e -> btn.setStyle(normalStyle));
-
         return btn;
     }
 

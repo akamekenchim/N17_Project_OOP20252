@@ -128,8 +128,8 @@ public class SimulationController {
                                 if (p.getHunger() >= 90) { // Sói sinh sản khó hơn thỏ (cần 90 điểm)
                                     
                                     // Tính trước tọa độ tương lai
-                                    double newX = p.getX() + 10;
-                                    double newY = p.getY() + 10;
+                                    double newX = p.getX() + 20;
+                                    double newY = p.getY() + 20;
                                     int tileX = (int) (newX / Constants.TILE_SIZE);
                                     int tileY = (int) (newY / Constants.TILE_SIZE);
                                     int ff = r.nextInt(2);
