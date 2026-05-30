@@ -23,6 +23,10 @@ public class HunterStrategy {
     private Random random = new Random();
 
     public Vector execute(Predator hunter, WorldMap map) {
+        if(isInWater(hunter.getX(), hunter.getY(), map)){
+            hunter.setAlive(false);
+            return (new Vector(hunter.getDx(), hunter.getDy())); 
+        }
         List<BaseEntity> entities = map.getEntity();
         
         // 1. SỬA ĐỔI: Dùng 1 biến BaseEntity duy nhất để lưu con mồi (không phân biệt Thỏ hay Cáo)
@@ -215,5 +219,9 @@ public class HunterStrategy {
         boolean block3 = (x >= 300 && x <= 350) && (y >= h - 200 && y <= h - 20); // h - 200 + 180 = h - 20
 
         return block1 || block2 || block3;
+    }
+
+    public boolean isInWater(double x, double y, WorldMap m) {
+        return ((m.getTile(x, y)).getType() == TerrainType.WATER);
     }
 }

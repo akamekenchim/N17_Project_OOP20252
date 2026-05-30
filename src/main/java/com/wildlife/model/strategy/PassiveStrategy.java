@@ -20,6 +20,10 @@ public class PassiveStrategy {
     private int cycle = 0;
     private Random random = new Random();
     public Vector execute(Passive herbivore, WorldMap map){
+        if(isInWater(herbivore.getX(), herbivore.getY(), map)){
+            herbivore.setAlive(false);
+            return (new Vector(herbivore.getDx(), herbivore.getDy())); 
+        }
         if(herbivore.isAlive() == false){
             return new Vector(herbivore.getDx(), herbivore.getDy());
         }
@@ -259,5 +263,9 @@ public class PassiveStrategy {
         boolean block3 = (x >= 280 && x <= 325) && (y >= h - 180 && y <= h - 15); // h - 200 + 180 = h - 20
 
         return block1 || block2 || block3;
+    }
+
+    public boolean isInWater(double x, double y, WorldMap m) {
+        return ((m.getTile(x, y)).getType() == TerrainType.WATER);
     }
 }
