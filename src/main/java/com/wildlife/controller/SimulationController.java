@@ -42,7 +42,7 @@ public class SimulationController {
             Random r = new Random();
             // Image testError = SpriteManager.loadImage("femboy_cute.jpg"); // ảnh không tồn tại
             
-            Image logo = SpriteManager.loadImage("haiten.png");
+            Image logo = SpriteManager.loadImage("geng.png");
             double x = 0;
             long lastTime = 0;
 
@@ -166,7 +166,7 @@ public class SimulationController {
                  * isGraphic = true (chắc thế)
                  */
                 
-                gc.drawImage(logo, 15, 15, 50, 50);
+                gc.drawImage(logo, 15, 15, 40, 40);
                 // gc.setStroke(Color.PINK);
                 // gc.strokeRect(InputControl.hoverx, InputControl.hovery, Constants.TILE_SIZE,
                 // Constants.TILE_SIZE);

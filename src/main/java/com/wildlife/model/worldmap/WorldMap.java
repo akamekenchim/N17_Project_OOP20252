@@ -242,11 +242,11 @@ public class WorldMap {
                 double distSq = (centerX - eCenterX) * (centerX - eCenterX) + (centerY - eCenterY) * (centerY - eCenterY);
                 
                 if (distSq < 400) { 
-                    // PHÁ VỠ THẾ BẾ TẮC: Chỉ dừng lại nếu con vật kia có "độ ưu tiên" cao hơn
-                    // Chúng ta dùng System.identityHashCode để so sánh ngẫu nhiên nhưng cố định
+
                     if (System.identityHashCode(self) < System.identityHashCode(e)) {
                         return true; 
                     }
+                    
                 }
             }
         }
