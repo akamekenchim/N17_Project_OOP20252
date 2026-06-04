@@ -93,7 +93,7 @@ public class AppRunner extends Application {
         StackPane welcomeLayout = new StackPane();
 
         try {
-            Image welcomeImg = SpriteManager.loadImage("welcome_screen.png"); 
+            Image welcomeImg = SpriteManager.loadImage("genshinbg.png"); 
             ImageView welcomeView = new ImageView(welcomeImg);
             welcomeView.setFitWidth(Constants.SCREEN_WIDTH + 300);
             welcomeView.setFitHeight(Constants.SCREEN_HEIGHT);
