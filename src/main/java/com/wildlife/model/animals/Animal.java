@@ -66,7 +66,7 @@ public abstract class Animal extends BaseEntity {
     }
 
     public void setThirst(double thirst) {
-        this.thirst = thirst;
+        this.thirst = Math.min(100, Math.max(0, thirst)); // Đảm bảo thirst luôn trong khoảng 0-100
     }
 
     public double getTiredness() {
@@ -74,7 +74,7 @@ public abstract class Animal extends BaseEntity {
     }
 
     public void setTiredness(double tiredness) {
-        this.tiredness = tiredness;
+        this.tiredness = Math.min(100, Math.max(0, tiredness)); // Đảm bảo tiredness luôn trong khoảng 0-100
     }
     public boolean isDrinking() {
         return isDrinking;

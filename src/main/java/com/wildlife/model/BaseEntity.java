@@ -13,7 +13,7 @@ public abstract class BaseEntity {
     protected double hunger = 50;
 
     public void setHunger(double hunger) {
-        this.hunger = hunger;
+        this.hunger = Math.min(100, Math.max(0, hunger)); // Đảm bảo hunger luôn trong khoảng 0-100 
     }
     public double getHunger() {
         return hunger;
